@@ -9,7 +9,7 @@ const VerifyEmail = () => {
   const navigate = useNavigate();
 
   const verifyEmail = async () => {
-    const res = await fetch(`${process.env.REACT_APP_}/api/user/verifyemail/${token}`, {
+    const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/api/user/verifyemail/${token}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json"

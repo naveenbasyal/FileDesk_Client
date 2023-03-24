@@ -66,11 +66,12 @@ const App = () => {
             <Route path="/tools/convert-zip" element={<ConvertToZip />} />
             <Route path="/dashboard/shop" element={<Shop />} />
             <Route path="/dashboard/orders" element={<Orders />} />
-            <Route path="/resetpassword" element={<Reset />} />
+            <Route path="/resetpassword/:token" element={<Reset />} />
             
             <Route path="/auth" element={<Auth />} />
             <Route path="/forgotpassword" element={<ForgotPassword />} />
             <Route path="/verifyemail/:token" element={<VerifyEmail />} />
+            
           </Routes>
         </div>
       </BrowserRouter>

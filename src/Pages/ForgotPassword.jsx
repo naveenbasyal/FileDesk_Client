@@ -16,7 +16,7 @@ const ForgotPassword = () => {
       return toast.error("Please enter email");
     }
 
-    const res = await fetch("http://localhost:5000/api/user/forgotpassword", {
+    const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/api/user/forgotpassword`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

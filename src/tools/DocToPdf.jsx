@@ -20,7 +20,7 @@ const DocToPdf = () => {
         }
         console.log(data)
         setPdf(
-            `${import.meta.env.VITE_APP_API_URL}/${data.path}`
+            `${process.env.REACT_APP_SERVER_URL}/${data.path}`
         )
     }
     console.log(pdf)

@@ -34,7 +34,7 @@ const LoginSignUp = () => {
       return;
     }
     const res = await fetch(
-      `${import.meta.env.VITE_APP_API_URL}/api/user/register`,
+      `${process.env.REACT_APP_SERVER_URL}/api/user/register`,
       {
         method: "POST",
         headers: {
@@ -65,7 +65,7 @@ const LoginSignUp = () => {
       return;
     }
     const res = await fetch(
-      `${import.meta.env.VITE_APP_API_URL}/api/user/login`,
+      `${process.env.REACT_APP_SERVER_URL}/api/user/login`,
       {
         method: "POST",
         headers: {

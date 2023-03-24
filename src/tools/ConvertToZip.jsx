@@ -21,7 +21,7 @@ const ConvertToZip = () => {
         }
         console.log(data)
         setZip(
-            `${import.meta.env.VITE_APP_API_URL}/${data.path}`
+            `${process.env.REACT_APP_SERVER_URL}/${data.path}`
         )
     }
     console.log(zip)

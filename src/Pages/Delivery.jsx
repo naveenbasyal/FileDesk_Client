@@ -52,7 +52,7 @@ const Delivery = ({ scrollToTop }) => {
 
   const getShop = async () => {
     const res = await fetch(
-      `${import.meta.env.VITE_APP_API_URL}/api/shop/details`,
+      `${process.env.REACT_APP_SERVER_URL}/api/shop/details`,
       {
         method: "GET",
         headers: {
@@ -143,7 +143,7 @@ const Delivery = ({ scrollToTop }) => {
           <i className="fa fa-arrow-up" aria-hidden="true"></i>
         </motion.span>
         {/* ------------Main Delivery section---------- */}
-        {!shop?.orderAccepting ? (
+        {shop?.orderAccepting ? (
           <div className="row mx-5 pop main_delivery_section">
             <motion.div
               initial={{ scale: 0 }}
@@ -154,7 +154,7 @@ const Delivery = ({ scrollToTop }) => {
             </motion.div>
             {/* -------Choose File----------- */}
 
-            {!token ? (
+            {token ? (
               <div className="col-lg-8 col-sm-12 px-5 Options">
                 <div className="mx-4">
                   {totalFiles === 0 ? (
@@ -170,6 +170,7 @@ const Delivery = ({ scrollToTop }) => {
                         id="formFileLg"
                         type="file"
                         onChange={handleFileChange}
+                        accept=".pdf"
                       />
                     </motion.label>
                   ) : null}

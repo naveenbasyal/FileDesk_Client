@@ -19,8 +19,8 @@ const Navbar = ({ scrollToTop }) => {
         <div className="navbar-brand d-inline-block fs-1 ls-2">
           <Link
             to="/"
-            // onClick={scrollToTop}
-            className="brand stroke"
+            className="brand stroke tt"
+            data-tooltip="Home"
             onClick={() => handleLinkClick("home")}
           >
             <span className="rubber stroke ">F</span>
@@ -36,36 +36,37 @@ const Navbar = ({ scrollToTop }) => {
         <div className="nav-items">
           <Link
             to="/"
-            className={`links ${
+            className={`links tt ${
               activeLink === "home"
                 ? "stroke shadow-in px-3 py-2 roundedBorder"
                 : "stroke-grey"
             }`}
-            title="Tools"
+            data-tooltip="Home"
             onClick={() => handleLinkClick("home")}
           >
             <i class="fa-solid fa-house-chimney"></i>
           </Link>
           <Link
             to="/tools"
-            className={`links ${
+            className={`links tt ${
               activeLink === "tools"
                 ? "stroke shadow-in p-2 roundedBorder"
                 : "stroke-grey"
             }`}
-            title="Tools"
+            data-tooltip="Tools"
+
             onClick={() => handleLinkClick("tools")}
           >
             <i className="fa-solid fa-screwdriver-wrench p-2"></i>
           </Link>
           <Link
             to="/dashboard"
-            className={`links ${
+            className={`links tt ${
               activeLink === "dashboard"
                 ? "stroke shadow-in p-2 roundedBorder"
                 : "stroke-grey"
             }`}
-            title="Dashboard"
+            data-tooltip="Dashboard"
             onClick={() => handleLinkClick("dashboard")}
           >
             <i class="fa-solid p-2 fa-gauge"></i>
@@ -73,12 +74,12 @@ const Navbar = ({ scrollToTop }) => {
           {token ? (
             <Link
               to="/"
-              className={`links ${
+              className={`links tt ${
                 activeLink === "logout"
                   ? "stroke shadow-in p-2 roundedBorder"
                   : "stroke-grey"
               }`}
-              title="Logout"
+              data-tooltip="Logout"
               onClick={() => {
                 handleLinkClick("logout");
                 localStorage.removeItem("filedesk");
@@ -94,7 +95,7 @@ const Navbar = ({ scrollToTop }) => {
                   ? "stroke shadow-in p-2 roundedBorder"
                   : "stroke-grey"
               }`}
-              title="auth"
+              data-tooltip="Login/Signup"
               onClick={() => handleLinkClick("auth")}
             >
               <i className="fas fa-sign-in-alt  p-2"></i>

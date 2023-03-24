@@ -2,15 +2,15 @@ import React, { useState, useEffect } from "react";
 import BindingCharges from "../delivery/Charges/BindingCharges";
 import PaperCharges from "../delivery/Charges/PrintingCharges";
 import TotalPrices from "../delivery/Charges/TotalPrices";
-import { Link } from "react-router-dom";
 import Bind from "../delivery/components/Bind";
 import Colors from "../delivery/components/Colors";
 import DeliveryHeader from "../delivery/components/DeliveryHeader";
 import SetupPrint from "../delivery/components/SetupPrint";
 import "../styles/delivery.css";
+import { pdfjsLib } from "pdfjs-dist";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion"; // Framer Motion for cursor animation
 import getToken from "../utils/getToken";
-import {pdfjsLib} from 'pdfjs-dist';
 
 const Copies = () => {
   const [copies, setCopies] = useState(1);
@@ -137,10 +137,10 @@ const Delivery = ({ scrollToTop }) => {
         <DeliveryHeader />
         <motion.span
           whileHover={{ scale: 1.2 }}
-          className="shadow-out arrowUp stroke "
+          className="shadow-out arrowUp stroke pointer "
           onClick={scrollToTop}
         >
-          <i className="fa fa-arrow-up" aria-hidden="true"></i>
+          <i className="fa fa-arrow-up " aria-hidden="true"></i>
         </motion.span>
         {/* ------------Main Delivery section---------- */}
         {shop?.orderAccepting ? (

@@ -188,7 +188,7 @@ const DeliveryHeader = () => {
                 // damping: 5,
               }}
               animate={{ y: 0 }}
-              className="rubber stroke"
+              className="rubber stroke p-1"
             >
               :
             </motion.span>

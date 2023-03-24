@@ -1,8 +1,13 @@
 import React from "react";
+import { BrowserRouter as Router , Routes, Route } from "react-router-dom";
 import "../styles/Auth.css"
 
 const Shop = () => {
+
+
   return (
+
+    
     <div className="container pop my-5">
       <div className="row center">
         <div className="col-lg-6">

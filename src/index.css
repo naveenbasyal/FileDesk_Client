@@ -187,7 +187,61 @@ body {
   place-items: center;
 }
 
+/* _______ToolTip_____ */
+.tt {
+  position: relative;
+}
 
+.tt::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  height: auto;
+  width: auto;
+  padding: 5px 15px;
+  color: var(--primary);
+  font-size: 1rem;
+  top: 130%;
+  left: -20%;
+  opacity: 0;
+  pointer-events: none;
+  border-radius: 5px;
+  transform: translateY(30px);
+  transition: transform 0.2s;
+  font-family: "Poppins", sans-serif;
+  background: var(--greyLight-1);
+  box-shadow: var(--shadow-in);
+  border: 2px solid var(--primary-lighter);
+  z-index: 11;
+}
+
+/* .tt::before {
+  content: "";
+  position: absolute;
+  height: 1.2rem;
+  width: 1.2rem;
+  top: -12%;
+  left: calc(125% - 19px);
+  z-index: 1;
+  opacity: 0;
+  transition: transform 0.2s;
+  transform: translateY(130px);
+  border: 2px solid var(--primary);
+  box-shadow: var(--shadow-out);
+} */
+
+.tt:hover::after {
+  opacity: 1;
+  transform:  translateY(0px);
+}
+
+/* .tt:hover::before {
+  opacity: 1;
+  background-color: var(--primary);
+  top: 95%;
+  z-index: 1;
+  left: calc(80% - 1rem);
+  transform:rotate(45deg) translateY(10px);
+} */
 @media screen and (max-width: 450px) {
   .card_tools {
     margin-left: 1rem !important;

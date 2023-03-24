@@ -10,7 +10,7 @@ const LoginSignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-
+  const [showPass, setshowPass] = useState(false);
 
   const navigate = useNavigate();
   const token = getToken();
@@ -20,7 +20,7 @@ const LoginSignUp = () => {
       navigate("/");
     }
   }, [token, navigate]);
-  
+
   const handleSignUp = async (e) => {
     setSignUp(true);
     setSignIn(false);
@@ -97,7 +97,7 @@ const LoginSignUp = () => {
       <motion.div
         initial={{ x: "-100vw" }}
         animate={{ x: 0 }}
-        transition={{ duration: 0.5 ,bounce: 0.5,type:"spring"}}
+        transition={{ duration: 0.5, bounce: 0.5, type: "spring" }}
         className={`container ${signUp ? "right-panel-active" : ""}  `}
         id="container "
       >
@@ -175,14 +175,22 @@ const LoginSignUp = () => {
             />
             <input
               className="form-control pop shadow-in input"
-              type="password"
+              type={showPass ? "text" : "password"}
               placeholder="Password"
               name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            <Link className="forgotpass p-1" to="/forgotpassword">Forgot your password?</Link>
+            <i
+              onClick={() => setshowPass(!showPass)}
+              className={`fa-solid fa-eye p-2 mt-3  ${
+                showPass ? "shadow-in dim" : "shadow-out "
+              } shadow-btn pointer center`}
+            ></i>
+            <Link className="forgotpass p-1" to="/forgotpassword">
+              Forgot your password?
+            </Link>
             <button onClick={handleSignUp} className="signUp-1" id="signUp-1">
               Sign Up
             </button>

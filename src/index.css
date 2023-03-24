@@ -17,7 +17,7 @@
   --shadow-in: inset 0.2rem 0.2rem 0.5rem var(--greyLight-2),
     inset -0.2rem -0.2rem 0.5rem var(--white);
 }
-a{
+a {
   text-decoration: none;
 }
 
@@ -98,7 +98,7 @@ body {
 .rubber:hover {
   animation: rubberband 800ms alternate ease-out;
 }
-.forgotpass:hover .ring{
+.forgotpass:hover .ring {
   display: none;
 }
 @keyframes rubberband {
@@ -162,7 +162,6 @@ body {
   border: none;
 }
 
-
 .roundedBorder {
   border-radius: 45% !important;
 }
@@ -214,39 +213,17 @@ body {
   z-index: 11;
 }
 
-/* .tt::before {
-  content: "";
-  position: absolute;
-  height: 1.2rem;
-  width: 1.2rem;
-  top: -12%;
-  left: calc(125% - 19px);
-  z-index: 1;
-  opacity: 0;
-  transition: transform 0.2s;
-  transform: translateY(130px);
-  border: 2px solid var(--primary);
-  box-shadow: var(--shadow-out);
-} */
-
 .tt:hover::after {
   opacity: 1;
-  transform:  translateY(0px);
+  transform: translateY(0px);
 }
 
-/* .tt:hover::before {
-  opacity: 1;
-  background-color: var(--primary);
-  top: 95%;
-  z-index: 1;
-  left: calc(80% - 1rem);
-  transform:rotate(45deg) translateY(10px);
-} */
 @media screen and (max-width: 450px) {
   .card_tools {
     margin-left: 1rem !important;
   }
-  .ring,.dot{
+  .ring,
+  .dot {
     display: none;
   }
 }

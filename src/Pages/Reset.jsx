@@ -6,7 +6,7 @@ const Reset = () => {
   const [showPass, setshowPass] = useState(false);
   const { token } = useParams();
   const navigate = useNavigate();
-   const { decodedToken, isExpired } = useJwt(token);
+  const { decodedToken, isExpired } = useJwt(token);
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
 
@@ -79,11 +79,10 @@ const Reset = () => {
             />
 
             <i
-              style={{ width: "2rem" }}
-              className={` fa-solid p-1 mt-4 pointer fa-eye ${
-                showPass ? "dim" : ""
-              } center shadow-btn shadow-out`}
               onClick={() => setshowPass(!showPass)}
+              className={`fa-solid fa-eye p-2 mt-3  ${
+                showPass ? "shadow-in dim" : "shadow-out "
+              } shadow-btn pointer center`}
             ></i>
           </div>
           <button

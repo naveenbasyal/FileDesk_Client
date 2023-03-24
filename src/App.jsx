@@ -22,6 +22,9 @@ import DocToPdf from "./tools/DocToPdf";
 import ConvertToZip from "./tools/ConvertToZip";
 import ForgotPassword from "./Pages/ForgotPassword";
 import VerifyEmail from "./Pages/VerifyEmail";
+import Shop from "./Pages/Shop";
+import Orders from "./Pages/Orders";
+import Reset from "./Pages/Reset";
 
 
 const scrollToTop = () => {
@@ -61,6 +64,9 @@ const App = () => {
             <Route path="/tools/create-pdf" element={<PdfMaker />} />
             <Route path="/tools/doc-to-pdf" element={<DocToPdf />} />
             <Route path="/tools/convert-zip" element={<ConvertToZip />} />
+            <Route path="/dashboard/shop" element={<Shop />} />
+            <Route path="/dashboard/orders" element={<Orders />} />
+            <Route path="/resetpassword" element={<Reset />} />
             
             <Route path="/auth" element={<Auth />} />
             <Route path="/forgotpassword" element={<ForgotPassword />} />

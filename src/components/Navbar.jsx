@@ -5,6 +5,7 @@ import getToken from "../utils/getToken";
 
 const Navbar = ({ scrollToTop }) => {
   const [activeLink, setActiveLink] = useState("home");
+  const [showSidebar, setShowSidebar] = useState(false);
   const token = getToken();
   console.log(token);
 
@@ -13,6 +14,10 @@ const Navbar = ({ scrollToTop }) => {
     scrollToTop();
   };
 
+// sidebar Function
+  const handleToggleSidebar = () => {
+    setShowSidebar(!showSidebar);
+  };
   return (
     <>
       <div className="navbar d-flex shadow-out">
@@ -33,7 +38,7 @@ const Navbar = ({ scrollToTop }) => {
             <span className="rubber stroke ">K</span>
           </Link>
         </div>
-        <div className="nav-items">
+        <div className={`nav-items ${showSidebar ? 'show': ''}`}>
           <Link
             to="/"
             className={`links tt ${
@@ -45,6 +50,7 @@ const Navbar = ({ scrollToTop }) => {
             onClick={() => handleLinkClick("home")}
           >
             <i class="fa-solid fa-house-chimney"></i>
+            <span className="link-name px-3">Home</span>
           </Link>
           <Link
             to="/tools"
@@ -54,10 +60,10 @@ const Navbar = ({ scrollToTop }) => {
                 : "stroke-grey"
             }`}
             data-tooltip="Tools"
-
             onClick={() => handleLinkClick("tools")}
           >
             <i className="fa-solid fa-screwdriver-wrench p-2"></i>
+            <span className="link-name px-3">Tools</span>
           </Link>
           <Link
             to="/dashboard"
@@ -70,6 +76,7 @@ const Navbar = ({ scrollToTop }) => {
             onClick={() => handleLinkClick("dashboard")}
           >
             <i class="fa-solid p-2 fa-gauge"></i>
+            <span className="link-name px-3">Dashboard</span>
           </Link>
           {token ? (
             <Link
@@ -99,6 +106,7 @@ const Navbar = ({ scrollToTop }) => {
               onClick={() => handleLinkClick("auth")}
             >
               <i className="fas fa-sign-in-alt  p-2"></i>
+              <span className="link-name px-3">Login/Signup</span>
             </Link>
           )}
         </div>
@@ -109,6 +117,11 @@ const Navbar = ({ scrollToTop }) => {
         >
           hh
         </button> */}
+
+        {/* MenuBar */}
+        <div className="menubar" onClick={handleToggleSidebar}>
+          <i className="fa-solid fa-bars stroke-gray p-2"></i>
+        </div>
       </div>
       {/* <div className={`sidebar ${sidebarActive ? "sidebarActive" : ""}`}>
         <div className="sidebar_items d-flex flex-column center my-4">

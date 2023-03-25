@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { toast } from 'react-hot-toast'
-
+import {Link} from 'react-router-dom'
 const ConvertToZip = () => {
     const [file, setFile] = useState({})
     const [zip, setZip] = useState('')
@@ -9,7 +9,7 @@ const ConvertToZip = () => {
     const convert = async () => {
         const formData = new FormData()
         formData.append('file', file)
-        const res = await fetch('http://localhost:5000/file/zip', {
+        const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/file/zip`, {
             method: 'POST',
             body: formData
         })
@@ -42,6 +42,7 @@ const ConvertToZip = () => {
                 <h1 className="stroke ls-2 mx-4 center">
                     Convert any file to zip file
                 </h1>
+                
                 {
                     zip ? (
                         <div className="d-flex my-5 justify-content-around center">

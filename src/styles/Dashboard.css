@@ -1,0 +1,17 @@
+.dashboard a:active{
+    box-shadow: var(--shadow-in)!important;
+}
+.fancyinput{
+    border-bottom-color: var(--primary-lighter);
+    outline: none;
+    border-top-color: transparent;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    background: var(--greyLight-1);
+    padding: .4rem 1rem;
+    transition: .4s ease;
+}
+.fancyinput:focus{
+    caret-color: var(--primary);
+    border-bottom-color: var(--primary-dark);
+}

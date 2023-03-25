@@ -1,13 +1,15 @@
-import React from "react";
+import React,{useEffect} from "react";
 import { Link } from "react-router-dom";
-import Orders from "./Orders";
-import Shop from "./Shop";
 import "../styles/Dashboard.css";
 
 const Dashboard = () => {
+  useEffect(() => {
+    document.title = "FileDesk | Dashboard";
+  }, [])
+
   return (
     <>
-      <div className="container pop my-5">
+      <div className="container pop my-5 dashboard">
         <div className="container center ">
           <div className="d-flex">
             <Link
@@ -26,9 +28,7 @@ const Dashboard = () => {
             </Link>
           </div>
         </div>
-        <div className="row center">
-          <div className="col-lg-6"></div>
-        </div>
+        
       </div>
     </>
   );

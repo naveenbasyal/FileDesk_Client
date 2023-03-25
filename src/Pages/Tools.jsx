@@ -1,9 +1,13 @@
-import React from "react";
+import React,{useEffect} from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import ToolsHeader from "../components/ToolsHeader";
 
 const Tools = ({ scrollToTop }) => {
+  useEffect(() => {
+    document.title = "FileDesk | Tools";
+  }, [])
+  
   const tools = [
     {
       id: 1,

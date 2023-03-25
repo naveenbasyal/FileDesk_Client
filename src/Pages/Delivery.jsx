@@ -45,7 +45,7 @@ const Delivery = ({ scrollToTop }) => {
   const [selectedFiles, setSelectedFiles] = useState({});
   const [totalFiles, setTotalFiles] = useState(0);
   const [error, setError] = useState("");
-  const [totalPrice, setTotalPrice] = useState(0); // new state variable for total price
+  // const [totalPrice, setTotalPrice] = useState(0); // new state variable for total price
 
   const [shop, setShop] = useState({});
   const token = getToken();
@@ -65,13 +65,11 @@ const Delivery = ({ scrollToTop }) => {
     if (data.error) {
       console.log(data.error);
     }
-    // console.log(data)
-
     setShop(data.msg);
   };
 
   useEffect(() => {
-    console.log("shop");
+    document.title = "FileDesk | Delivery";
     getShop();
   }, []);
 
@@ -193,75 +191,67 @@ const Delivery = ({ scrollToTop }) => {
                     </span>
                   </div>
                   {/* ------------------------Main Content------------------- */}
-                  {Object.keys(selectedFiles).length === 0 ? (
-                    <div className="container my-5 center py-5">
-                      <span className="fs-3 py-5 text-danger">
-                        {/* Please choose a file   */}
-                      </span>
-                    </div>
-                  ) : (
-                    <div>
-                      {Object.entries(selectedFiles).map(
-                        ([name, file], index) => (
-                          <motion.div whileHover={{ scale: 1.05 }}>
-                            <motion.div
-                              initial={{ x: "-100vw" }}
-                              animate={{ x: 0 }}
-                              transition={{
-                                duration: 0.6,
-                                type: "spring",
-                                bounce: 0.5,
-                                // damping: 5,
-                              }}
-                              key={index}
-                              className="my-5 row shadow-out py-3"
-                            >
-                              <div className="col-lg-3 center">
-                                {/* ------Thumbnail---------- */}
-                                <motion.img
-                                  whileHover={{ scale: 1.2 }}
-                                  src={file.imageDataUri}
-                                  className="img-fluid pdfImg shadow-out p-1"
-                                  alt=""
-                                />
-                                {/* ---------Copies------ */}
-                                {[...Array(1)].map((e, i) => (
-                                  <Copies key={i} />
-                                ))}
+
+                  <div>
+                    {Object.entries(selectedFiles).map(
+                      ([name, file], index) => (
+                        <motion.div whileHover={{ scale: 1.05 }}>
+                          <motion.div
+                            initial={{ x: "-100vw" }}
+                            animate={{ x: 0 }}
+                            transition={{
+                              duration: 0.6,
+                              type: "spring",
+                              bounce: 0.5,
+                              // damping: 5,
+                            }}
+                            key={index}
+                            className="my-5 row shadow-out py-3"
+                          >
+                            <div className="col-lg-3 center">
+                              {/* ------Thumbnail---------- */}
+                              <motion.img
+                                whileHover={{ scale: 1.2 }}
+                                src={file.imageDataUri}
+                                className="img-fluid pdfImg shadow-out p-1"
+                                alt=""
+                              />
+                              {/* ---------Copies------ */}
+                              {[...Array(1)].map((e, i) => (
+                                <Copies key={i} />
+                              ))}
+                            </div>
+                            <div className="col-lg-7 py-3">
+                              <h4 className="dim fs-5">
+                                {name} (Pages: {file.pages})
+                              </h4>
+                              <Bind />
+                              <SetupPrint />
+                              <Colors />
+                            </div>
+                            {/* ------Delete Icon -------*/}
+                            <div className="col-lg-2 py-4">
+                              <button className="shadow-out shadow-btn text-danger px-2 center ">
+                                <i
+                                  className="fa fa-trash "
+                                  aria-hidden="true"
+                                  onClick={() =>
+                                    handleDeleteFile(name, file.price)
+                                  }
+                                ></i>
+                              </button>
+                              {/* ------------- Single Pdf Price------- */}
+                              <div className="position-absolute bottom-0 pb-5 mb-2">
+                                <i className="fas stroke p-1 fa-inr"></i>
+                                <span className="dim">{file.pages * 1.5}</span>
                               </div>
-                              <div className="col-lg-7 py-3">
-                                <h4 className="dim fs-5">
-                                  {name} (Pages: {file.pages})
-                                </h4>
-                                <Bind />
-                                <SetupPrint />
-                                <Colors />
-                              </div>
-                              {/* ------Delete Icon -------*/}
-                              <div className="col-lg-2 py-4">
-                                <button className="shadow-out shadow-btn text-danger px-2 center ">
-                                  <i
-                                    className="fa fa-trash "
-                                    aria-hidden="true"
-                                    onClick={() =>
-                                      handleDeleteFile(name, file.price)
-                                    }
-                                  ></i>
-                                </button>
-                                {/* ------------- Single Pdf Price------- */}
-                                <div className="position-absolute bottom-0 pb-5 mb-2">
-                                  <i className="fas stroke p-1 fa-inr"></i>
-                                  <span className="dim">
-                                    {file.pages * 1.5}
-                                  </span>
-                                </div>
-                              </div>
-                            </motion.div>
+                            </div>
                           </motion.div>
-                        )
-                      )}
-                    </div>
-                  )}
+                        </motion.div>
+                      )
+                    )}
+                  </div>
+
                   {/* -----------Upload More----------- */}
                   {totalFiles > 0 ? (
                     <div className="container center py-5">

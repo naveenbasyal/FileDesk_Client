@@ -161,7 +161,14 @@ body {
   outline: none;
   border: none;
 }
+.outline-none{
+  outline: none;
+}
 
+.outline-none:focus,.outline-none:active{
+  outline: none;
+  box-shadow: var(--shadow-out);
+}
 .roundedBorder {
   border-radius: 45% !important;
 }

@@ -28,13 +28,10 @@
   margin: 15px 0;
 }
 
-.auth button {
+/* .auth button {
   border-radius: 6px;
-  /* box-shadow: var(--shadow-out  ); */
-  /* border: 1px solid var(--primary); */
   background-color: var(--greyLight-1);
   border: none;
-  /* color: #ffffff; */
   font-size: 12px;
   font-weight: bold;
   padding: 12px 45px;
@@ -45,8 +42,7 @@
 
 .auth button:active {
   transform: scale(0.95);
-  box-shadow: var(--shadow-in);
-}
+} */
 .social:hover {
   color: var(--primary);
 }
@@ -81,16 +77,16 @@
 
 .auth .input {
   box-shadow: var(--shadow-in);
+  outline: none;
   background: var(--greyLight-1);
   margin: 0.5rem 0;
   padding: 0.5rem 0.5rem;
+  border-radius: 6px;
 }
-.auth .form-control:focus,
-.auth .form-control:active {
+.auth .input:focus {
   outline: none !important;
-  background: var(--greyLight-1);
-  box-shadow: var(--shadow-out) !important;
-  border: none;
+  /* box-shadow: var(--shadow-out) !important; */
+  border: var(--primary)!important;
 }
 .auth .container {
   background-color: #fff;

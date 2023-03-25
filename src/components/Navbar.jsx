@@ -1,20 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../styles/Navbar.css";
 import getToken from "../utils/getToken";
 
 const Navbar = ({ scrollToTop }) => {
+  const sw = window.screen.width;
   const [activeLink, setActiveLink] = useState("home");
   const [showSidebar, setShowSidebar] = useState(false);
   const token = getToken();
-  console.log(token);
+  // console.log(token);
 
   const handleLinkClick = (link) => {
     setActiveLink(link);
     scrollToTop();
+    setShowSidebar(false);
   };
 
-// sidebar Function
+  // sidebar Function
   const handleToggleSidebar = () => {
     setShowSidebar(!showSidebar);
   };
@@ -24,7 +26,7 @@ const Navbar = ({ scrollToTop }) => {
         <div className="navbar-brand d-inline-block fs-1 ls-2">
           <Link
             to="/"
-            className="brand stroke tt"
+            className={`brand stroke ${sw > 500 ? "tt" : ""}`}
             data-tooltip="Home"
             onClick={() => handleLinkClick("home")}
           >
@@ -38,10 +40,10 @@ const Navbar = ({ scrollToTop }) => {
             <span className="rubber stroke ">K</span>
           </Link>
         </div>
-        <div className={`nav-items ${showSidebar ? 'show': ''}`}>
+        <div className={`nav-items ${showSidebar ? "show" : ""}`}>
           <Link
             to="/"
-            className={`links tt ${
+            className={`links ${sw > 500 ? "tt" : ""} ${
               activeLink === "home"
                 ? "stroke shadow-in px-3 py-2 roundedBorder"
                 : "stroke-grey"
@@ -54,7 +56,7 @@ const Navbar = ({ scrollToTop }) => {
           </Link>
           <Link
             to="/tools"
-            className={`links tt ${
+            className={`links ${sw > 500 ? "tt" : ""} ${
               activeLink === "tools"
                 ? "stroke shadow-in p-2 roundedBorder"
                 : "stroke-grey"
@@ -67,7 +69,7 @@ const Navbar = ({ scrollToTop }) => {
           </Link>
           <Link
             to="/dashboard"
-            className={`links tt ${
+            className={`links ${sw > 500 ? "tt" : ""} ${
               activeLink === "dashboard"
                 ? "stroke shadow-in p-2 roundedBorder"
                 : "stroke-grey"
@@ -81,7 +83,7 @@ const Navbar = ({ scrollToTop }) => {
           {token ? (
             <Link
               to="/"
-              className={`links tt ${
+              className={`links ${sw > 500 ? "tt" : ""} ${
                 activeLink === "logout"
                   ? "stroke shadow-in p-2 roundedBorder"
                   : "stroke-grey"
@@ -120,16 +122,10 @@ const Navbar = ({ scrollToTop }) => {
 
         {/* MenuBar */}
         <div className="menubar" onClick={handleToggleSidebar}>
-          <i className="fa-solid fa-bars stroke-gray p-2"></i>
+          <i className= {`fa-solid fa-bars  ${showSidebar ? 'stroke shadow-in' :"stroke-grey"} p-2`}></i>
         </div>
       </div>
-      {/* <div className={`sidebar ${sidebarActive ? "sidebarActive" : ""}`}>
-        <div className="sidebar_items d-flex flex-column center my-4">
-          <a href="">Home</a>
-          <a href="">service</a>
-          <a href="">About</a>
-        </div>
-      </div> */}
+     
     </>
   );
 };

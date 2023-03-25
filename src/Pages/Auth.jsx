@@ -22,8 +22,8 @@ const LoginSignUp = () => {
   }, [token, navigate]);
 
   const handleSignUp = async (e) => {
-    setSignUp(true);
-    setSignIn(false);
+    setSignUp(!signUp);
+    setSignIn(!signIn);
   };
 
   const handleRegister = async (e) => {
@@ -88,8 +88,8 @@ const LoginSignUp = () => {
   };
 
   const handleSignIn = () => {
-    setSignUp(false);
-    setSignIn(true);
+    setSignUp(!signUp);
+    setSignIn(!signIn);
   };
 
   return (
@@ -118,34 +118,45 @@ const LoginSignUp = () => {
             </div>
             <span>or use your email for registration</span>
             <input
-              className="form-control pop shadow-in input "
+              style={{ width: "90%" }}
               type="text"
-              placeholder="Name"
-              name="name"
+              id="name"
+              className="fancyinput my-2 "
               value={name}
+              placeholder="Name"
               onChange={(e) => setName(e.target.value)}
-              required
             />
+
             <input
-              className="form-control pop shadow-in input "
-              type="email"
-              placeholder="Email"
-              name="email"
+              style={{ width: "90%" }}
+              type="text"
+              id="email"
+              className="fancyinput my-2 "
               value={email}
+              placeholder="Email"
               onChange={(e) => setEmail(e.target.value)}
-              required
             />
             <input
-              className="form-control pop shadow-in input "
-              type="password"
-              placeholder="Password"
-              name="password"
+              style={{ width: "90%" }}
+              type={showPass ? "text" : "password"}
+              id="password"
+              className="fancyinput my-2 "
               value={password}
+              placeholder="Password"
               onChange={(e) => setPassword(e.target.value)}
-              required
             />
-            <button className="shadow-out dim my-2">Sign Up</button>
-            <button onClick={handleSignIn}>Login</button>
+            <div className="d-flex">
+              <Link onClick={handleSignIn} className="me-2 text-decoration-underline">Already have account? Login</Link>
+              <i
+                onClick={() => setshowPass(!showPass)}
+                className={`fa-solid fa-eye center ${
+                  showPass ? "dim" : ""
+                } shadow-btn pointer center`}
+              ></i>
+            </div>
+            <button className="shadow-out shadow-btn my-2 dim fw-bold">
+              Sign Up
+            </button>
           </form>
         </div>
         {/* ---------------SignIn---------- */}
@@ -165,36 +176,40 @@ const LoginSignUp = () => {
             </div>
             <span>or use your account</span>
             <input
-              className="form-control pop shadow-in input"
-              type="email"
-              placeholder="Email"
-              name="email"
+              style={{ width: "90%" }}
+              type="text"
+              id="email"
+              className="fancyinput my-2 "
               value={email}
+              placeholder="Email"
               onChange={(e) => setEmail(e.target.value)}
-              required
             />
             <input
-              className="form-control pop shadow-in input"
+              style={{ width: "90%" }}
               type={showPass ? "text" : "password"}
-              placeholder="Password"
-              name="password"
+              id="password"
+              className="fancyinput my-2 "
               value={password}
+              placeholder="Password"
               onChange={(e) => setPassword(e.target.value)}
-              required
             />
-            <i
-              onClick={() => setshowPass(!showPass)}
-              className={`fa-solid fa-eye p-2 mt-3  ${
-                showPass ? "shadow-in dim" : "shadow-out "
-              } shadow-btn pointer center`}
-            ></i>
-            <Link className="forgotpass p-1" to="/forgotpassword">
-              Forgot your password?
-            </Link>
-            <button onClick={handleSignUp} className="signUp-1" id="signUp-1">
-              Sign Up
+            <div className="d-flex ">
+              <Link className="forgotpass me-4 text-danger p-1" to="/forgotpassword">
+                Forgot your password?
+              </Link>
+              <i
+                onClick={() => setshowPass(!showPass)}
+                className={`fa-solid fa-eye center ${
+                  showPass ? "dim" : ""
+                } shadow-btn pointer center`}
+              ></i>
+            </div>
+            <button className="shadow-out shadow-btn my-2 dim fw-bold">
+              Sign In
             </button>
-            <button className="shadow-out dim">Sign In</button>
+            <Link onClick={handleSignUp} className="text-decoration-underline border-none bg-color">
+              Create new account? Register here!
+            </Link>
           </form>
         </div>
         <div className="overlay-container col-sm-12">
@@ -204,14 +219,22 @@ const LoginSignUp = () => {
               <p>
                 To keep connected with us please login with your personal info
               </p>
-              <button onClick={handleSignIn} className="ghost" id="signIn">
+              <button
+                onClick={handleSignIn}
+                className="ghost shadow-btn"
+                id="signIn"
+              >
                 Sign In
               </button>
             </div>
             <div className="overlay-panel overlay-right">
               <h1>Hello, Friend!</h1>
               <p>Enter your personal details and start journey with us</p>
-              <button onClick={handleSignUp} className="ghost " id="signUp">
+              <button
+                onClick={handleSignUp}
+                className="ghost shadow-btn "
+                id="signUp"
+              >
                 Sign Up
               </button>
             </div>

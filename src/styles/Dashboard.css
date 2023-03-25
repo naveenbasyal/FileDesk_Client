@@ -8,7 +8,7 @@
     border-left-color: transparent;
     border-right-color: transparent;
     background: var(--greyLight-1);
-    padding: .4rem 1rem;
+    padding: .4rem .5rem;
     transition: .4s ease;
 }
 .fancyinput:focus{

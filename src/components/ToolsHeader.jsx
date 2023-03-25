@@ -3,11 +3,11 @@ import { motion } from "framer-motion";
 const ToolsHeader = () => {
   return (
     <>
-      <div className="tools_header p-1 row">
+      <div className="tools_header p-2 row">
         <motion.img
           whileDrag={{ scale: 1.2 }}
           whileHover={{ scale: 1.2 }}
-          initial={{ x: "100vw" }}
+          initial={{ x: "100vw"}}
           transition={{
             duration: 0.7,
             type: "spring",

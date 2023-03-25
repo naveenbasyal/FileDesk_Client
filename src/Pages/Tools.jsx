@@ -87,6 +87,7 @@ const Tools = ({ scrollToTop }) => {
                     animate={{ x: 0, opacity: 1 }}
                     transition={{ duration: 0.2 ,bounce:.2,type:"tween"}}
                     style={{ height: "10rem" }}
+                    
                     whileHover={{ scale: 1.1 }}
                     className="card  m-2 bg-color border-none pointer shadow-out"
                   >

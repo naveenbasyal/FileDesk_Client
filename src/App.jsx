@@ -32,6 +32,7 @@ const scrollToTop = () => {
     behavior: "smooth",
   });
 };
+
 const App = () => {
   const { scrollYProgress } = useScroll();
   useEffect(() => {}, [localStorage]);

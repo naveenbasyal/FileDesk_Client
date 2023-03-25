@@ -45,6 +45,7 @@ const Shop = () => {
                 Spiral Price:{" "}
               </label>
               <input
+              style={{width:"5rem"}}
                 type="text"
                 id="spiral"
                 className="fancyinput "
@@ -59,6 +60,7 @@ const Shop = () => {
                 Cover Price:{" "}
               </label>
               <input
+              style={{width:"5rem"}}
                 type="text"
                 id="cover"
                 className="fancyinput "
@@ -81,6 +83,7 @@ const Shop = () => {
                 Black & White:
               </label>
               <input
+              style={{width:"5rem"}}
                 type="text"
                 id="bwPrice"
                 className="fancyinput "
@@ -93,6 +96,7 @@ const Shop = () => {
                 Coloured:
               </label>
               <input
+              style={{width:"5rem"}}
                 type="text"
                 id="colorPrice"
                 className="fancyinput"

@@ -2,16 +2,13 @@ import React, { useState, useEffect } from "react";
 import BindingCharges from "../delivery/Charges/BindingCharges";
 import PaperCharges from "../delivery/Charges/PrintingCharges";
 import TotalPrices from "../delivery/Charges/TotalPrices";
-import Bind from "../delivery/components/Bind";
-import Colors from "../delivery/components/Colors";
 import DeliveryHeader from "../delivery/components/DeliveryHeader";
-import SetupPrint from "../delivery/components/SetupPrint";
 import "../styles/delivery.css";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion"; // Framer Motion for cursor animation
 import getToken from "../utils/getToken";
-import { toast } from "react-hot-toast";
-import { RingLoader } from "react-spinners";
+import { MoonLoader } from "react-spinners";
+import * as pdfjsLibs from "pdfjs-dist/webpack";
 
 const Copies = () => {
   const [copies, setCopies] = useState(1);
@@ -265,8 +262,8 @@ const Delivery = ({ scrollToTop }) => {
 
         {/* ------------Main Delivery section---------- */}
         {loading && (
-          <div className="center">
-            <RingLoader color="#f50057" size={100} />
+          <div className="center my-5 my-5">
+            <MoonLoader color="#5b4af1" size={60} />
           </div>
         )}
         {shop?.orderAccepting ? (
@@ -413,21 +410,25 @@ const Delivery = ({ scrollToTop }) => {
             )}
 
             {/*  ----------- Prices Chart------------ */}
-            <div className="col-lg-4 col-sm-12 jsf my-5 price_chart">
-              <h2 className="text-center  ls-2 fw-bold stroke pop">
-                Prices Chart
-              </h2>
-              <BindingCharges
-                spiral={shop?.spiralPrice}
-                cover={shop?.coverPrice}
-              />
-              <PaperCharges
-                bwSingle={shop?.bwSingle}
-                bwDouble={shop?.bwDouble}
-                color={shop?.colorPrice}
-              />
-            </div>
-            <TotalPrices />
+            {token && (
+              <>
+                <div className="col-lg-4 col-sm-12 jsf my-5 price_chart">
+                  <h2 className="text-center  ls-2 fw-bold stroke pop">
+                    Prices Chart
+                  </h2>
+                  <BindingCharges
+                    spiral={shop?.spiralPrice}
+                    cover={shop?.coverPrice}
+                  />
+                  <PaperCharges
+                    bwSingle={shop?.bwSingle}
+                    bwDouble={shop?.bwDouble}
+                    color={shop?.colorPrice}
+                  />
+                </div>
+                <TotalPrices />
+              </>
+            )}
           </div>
         ) : (
           !loading && (

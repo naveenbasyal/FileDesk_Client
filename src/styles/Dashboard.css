@@ -1,17 +1,35 @@
-.dashboard a:active{
-    box-shadow: var(--shadow-in)!important;
+.dashboard a:active {
+  box-shadow: var(--shadow-in) !important;
 }
-.fancyinput{
-    border-bottom-color: var(--primary-lighter);
-    outline: none;
-    border-top-color: transparent;
-    border-left-color: transparent;
-    border-right-color: transparent;
-    background: var(--greyLight-1);
-    padding: .4rem .5rem;
-    transition: .4s ease;
+.fancyinput {
+  border-bottom-color: var(--primary-lighter);
+  outline: none;
+  border-top-color: transparent;
+  border-left-color: transparent;
+  border-right-color: transparent;
+  background: var(--greyLight-1);
+  padding: 0.4rem 0.5rem;
+  transition: 0.4s ease;
 }
-.fancyinput:focus{
-    caret-color: var(--primary);
-    border-bottom-color: var(--primary-dark);
+.fancyinput:focus {
+  caret-color: var(--primary);
+  border-bottom-color: var(--primary-dark);
+}
+
+.shop .updateCharges {
+  text-transform: uppercase;
+  color: var(--primary);
+  border: 2px solid var(--primary);
+  border-radius: 6px;
+  padding: 1rem 1rem;
+  cursor: pointer;
+  background-color: var(--greyLight-1);
+
+}
+.shop .updateCharges :hover {
+  background-color: var(--primary);
+  color: var(--greyLight-1);
+  border: 2px solid var(--greyLight-1);
+  border-radius: 6px;
+  cursor: pointer;
 }

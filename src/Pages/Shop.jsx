@@ -1,33 +1,38 @@
 import React, { useEffect, useState, useContext } from "react";
 import Dashboard from "./Dashboard";
 import { motion } from "framer-motion";
-import { RingLoader } from "react-spinners";
-import {toast} from 'react-hot-toast'
+import { MoonLoader } from "react-spinners";
+import { toast } from "react-hot-toast";
 const Shop = () => {
   const [shop, setShop] = useState({});
   const [disabled, setdisabled] = useState(true);
-  const [inputDetails, setInputDetails] = useState({})
-
+  const [inputDetails, setInputDetails] = useState({});
 
   const handleChange = (e) => {
-    const { name, value } = e.target
-    const intVal = parseInt(value)
+    const { name, value } = e.target;
+    const intVal = parseInt(value);
     if (intVal < 1) {
-      return
+      return;
     }
 
-    setInputDetails({ ...inputDetails, [name]: intVal })
+    setInputDetails({ ...inputDetails, [name]: intVal });
   };
 
-
   useEffect(() => {
-    if (shop?.bwSingle === inputDetails?.bwSingle && shop?.colorPrice === inputDetails?.colorPrice && shop?.spiralPrice === inputDetails?.spiralPrice && shop?.coverPrice === inputDetails?.coverPrice && shop?.bwDouble === inputDetails?.bwDouble && shop?.deliveryPrice === inputDetails?.deliveryPrice && shop?.fastDeliveryPrice === inputDetails?.fastDeliveryPrice) {
-      setdisabled(true)
+    if (
+      shop?.bwSingle === inputDetails?.bwSingle &&
+      shop?.colorPrice === inputDetails?.colorPrice &&
+      shop?.spiralPrice === inputDetails?.spiralPrice &&
+      shop?.coverPrice === inputDetails?.coverPrice &&
+      shop?.bwDouble === inputDetails?.bwDouble &&
+      shop?.deliveryPrice === inputDetails?.deliveryPrice &&
+      shop?.fastDeliveryPrice === inputDetails?.fastDeliveryPrice
+    ) {
+      setdisabled(true);
     } else {
-      setdisabled(false)
+      setdisabled(false);
     }
-
-  }, [inputDetails])
+  }, [inputDetails]);
 
   const getShop = async () => {
     const res = await fetch(
@@ -44,32 +49,59 @@ const Shop = () => {
     if (data.error) {
       console.log(data.error);
     }
-    console.log(data.msg)
+    console.log(data.msg);
     setShop(data.msg);
-    setInputDetails(data.msg)
+    setInputDetails(data.msg);
   };
 
+  const handleUpdateCharges = async () => {
+    const res = await fetch(
+      `${process.env.REACT_APP_SERVER_URL}/api/shop/editdetails`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          // "x-auth-token": localStorage.getItem("filedesk"),
+        },
+        body: JSON.stringify(inputDetails),
+      }
+    );
+    const data = await res.json();
+    if (data.error) {
+      toast.error(data.error);
+      console.log(data.error);
+      return;
+    }
+    if (data.msg) {
+      setInputDetails(data.shop);
+      setShop(data.shop);
+      toast.success(data.msg);
+    }
+    console.log(data);
+  };
   useEffect(() => {
     document.title = "FileDesk | Dashboard | Shop";
     getShop();
-
   }, []);
 
   return (
     <div className="container pop my-1">
-      <div className="row center">
-        <Dashboard />
-        {
-          shop?.colorPrice ? (
-            <div className="col-lg-5 col-sm-12 p-3 ">
+      <Dashboard />
+      {shop?.colorPrice ? (
+        <>
+          <div className="row justify-content-around">
+            <div className="col-lg-3 col-sm-12 p-3 ">
               <motion.div
                 whileHover={{ scale: 1.03 }}
                 initial={{ x: "-100vw" }}
                 animate={{ x: 0 }}
                 transition={{ type: "spring", duration: 0.7, bounce: 0.5 }}
               >
-                <h4 className="dim center fs-4">Binding Charges</h4>
-                <div className="d-flex my-3 center justify-content-around">
+                <div className="d-flex justify-content-between">
+                  <h4 className="dim fs-5">Binding Charges</h4>
+                  <i className="fa-solid center dim p-2 fw-bold fa-inr"></i>
+                </div>
+                <div className="d-flex my-3 center justify-content-between">
                   <label htmlFor="spiral" className="mt-3">
                     Spiral Price:{" "}
                   </label>
@@ -80,11 +112,10 @@ const Shop = () => {
                     name="spiralPrice"
                     className="fancyinput "
                     value={inputDetails?.spiralPrice}
-                    onChange={handleChange
-                    }
+                    onChange={handleChange}
                   />
                 </div>
-                <div className="d-flex my-2 center justify-content-around">
+                <div className="d-flex my-2 center justify-content-between">
                   <label htmlFor="coverPrice" className="mt-3">
                     Cover Price:{" "}
                   </label>
@@ -95,19 +126,23 @@ const Shop = () => {
                     name="coverPrice"
                     className="fancyinput "
                     value={inputDetails?.coverPrice}
-                    onChange={handleChange
-                    }
+                    onChange={handleChange}
                   />
                 </div>
               </motion.div>
+            </div>
+            <div className="col-lg-3  col-sm-12 p-3 ">
               <motion.div
                 whileHover={{ scale: 1.03 }}
                 initial={{ x: "100vw" }}
                 animate={{ x: 0 }}
                 transition={{ type: "spring", duration: 0.7, bounce: 0.5 }}
               >
-                <h4 className="dim mt-5 center fs-4">Printing Charges</h4>
-                <div className="d-flex my-3 center justify-content-around">
+                <div className="d-flex justify-content-between">
+                  <h4 className="dim fs-5">Printing Charges</h4>
+                  <i className="fa-solid center dim p-2 fw-bold fa-inr"></i>
+                </div>
+                <div className="d-flex my-3 center justify-content-between">
                   <label htmlFor="bwSingle" className="mt-3">
                     Black & White: <i>Single</i>
                   </label>
@@ -121,7 +156,7 @@ const Shop = () => {
                     onChange={handleChange}
                   />
                 </div>
-                <div className="d-flex my-3 center justify-content-around">
+                <div className="d-flex my-3 center justify-content-between">
                   <label htmlFor="bwDouble" className="mt-3">
                     Black & White: <i>Double</i>
                   </label>
@@ -135,7 +170,7 @@ const Shop = () => {
                     onChange={handleChange}
                   />
                 </div>
-                <div className="d-flex my-2 center justify-content-around">
+                <div className="d-flex my-2 center justify-content-between">
                   <label htmlFor="colorPrice" className="mt-3">
                     Coloured:
                   </label>
@@ -146,21 +181,23 @@ const Shop = () => {
                     name="colorPrice"
                     className="fancyinput"
                     value={inputDetails?.colorPrice}
-                    onChange={
-
-                      handleChange
-                    }
+                    onChange={handleChange}
                   />
                 </div>
               </motion.div>
+            </div>
+            <div className="col-lg-3 col-sm-12 p-3 ">
               <motion.div
                 whileHover={{ scale: 1.03 }}
                 initial={{ x: "100vw" }}
                 animate={{ x: 0 }}
                 transition={{ type: "spring", duration: 0.7, bounce: 0.5 }}
               >
-                <h4 className="dim mt-5 center fs-4">Delivery Charges</h4>
-                <div className="d-flex my-3 center justify-content-around">
+                <div className="d-flex justify-content-between">
+                  <h4 className="dim fs-5">Delivery Charges</h4>
+                  <i className="fa-solid center dim p-2 fw-bold fa-inr"></i>
+                </div>
+                <div className="d-flex my-3 center justify-content-between">
                   <label htmlFor="deliveryPrice" className="mt-3">
                     Delivery Price
                   </label>
@@ -174,9 +211,9 @@ const Shop = () => {
                     onChange={handleChange}
                   />
                 </div>
-                <div className="d-flex my-3 center justify-content-around">
+                <div className="d-flex my-3 center justify-content-between">
                   <label htmlFor="fastDeliveryPrice" className="mt-3">
-                   Fast Delivery Price
+                    Fast Delivery Price
                   </label>
                   <input
                     style={{ width: "5rem" }}
@@ -188,58 +225,26 @@ const Shop = () => {
                     onChange={handleChange}
                   />
                 </div>
-                
               </motion.div>
-
-              <motion.button
-                whileHover={{ scale: 1.03 }}
-                initial={{ x: "-100vw" }}
-                animate={{ x: 0 }}
-                transition={{ type: "spring", duration: 0.7, bounce: 0.5 }}
-                className="u-f-b mt-5 center m-auto"
-                onClick={async () => {
-                 
-                
-
-                  const res = await fetch(
-                    `${process.env.REACT_APP_SERVER_URL}/api/shop/editdetails`,
-                    {
-                      method: "PUT",
-                      headers: {
-                        "Content-Type": "application/json",
-                        // "x-auth-token": localStorage.getItem("filedesk"),
-                      },
-                      body: JSON.stringify(inputDetails),
-                    }
-                  );
-                  const data = await res.json();
-                  if (data.error) {
-                    toast.error(data.error);
-                    console.log(data.error);
-                    return
-                  }
-                  if (data.msg) {
-                    setInputDetails(data.shop);
-                    setShop(data.shop);
-                    toast.success(data.msg);
-                  }
-                  console.log(data);
-                }}
-                disabled={disabled}
-              >
-                Update
-              </motion.button>
-
             </div>
-          ) : (
-            <div className="center mt-5">
-
-              <RingLoader color="#3f51b5" size={100} />
-            </div>
-          )
-
-        }
-      </div>
+          </div>
+          <motion.button
+            whileHover={{ scale: 1.03 }}
+            initial={{ x: "-100vw" }}
+            animate={{ x: 0 }}
+            transition={{ type: "spring", duration: 0.7, bounce: 0.5 }}
+            className="u-f-b  mt-5 center m-auto"
+            onClick={handleUpdateCharges}
+            disabled={disabled}
+          >
+            Update
+          </motion.button>
+        </>
+      ) : (
+        <div className="center py-5 mt-5">
+          <MoonLoader color="#5b4af1" size={60} />
+        </div>
+      )}
     </div>
   );
 };

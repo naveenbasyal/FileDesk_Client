@@ -10,9 +10,8 @@ import "../styles/delivery.css";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion"; // Framer Motion for cursor animation
 import getToken from "../utils/getToken";
-// import {pdfjsLib} from "pdfjs-dist"
-import * as pdfjsLibs from "pdfjs-dist/webpack";
-
+import { toast } from "react-hot-toast";
+import { RingLoader } from "react-spinners";
 
 const Copies = () => {
   const [copies, setCopies] = useState(1);
@@ -168,7 +167,7 @@ const Delivery = ({ scrollToTop }) => {
   const [totalFiles, setTotalFiles] = useState(0);
   const [error, setError] = useState("");
 
-  //_____GetShop_____
+  const [loading, setLoading] = useState(false);
 
   const [shop, setShop] = useState({});
   const token = getToken();
@@ -188,9 +187,11 @@ const Delivery = ({ scrollToTop }) => {
       console.log(data.error);
     }
     setShop(data.msg);
+    setLoading(false);
   };
 
   useEffect(() => {
+    setLoading(true);
     document.title = "FileDesk | Delivery";
     getShop();
   }, []);
@@ -261,7 +262,13 @@ const Delivery = ({ scrollToTop }) => {
         >
           <i className="fa fa-arrow-up " aria-hidden="true"></i>
         </motion.span>
+
         {/* ------------Main Delivery section---------- */}
+        {loading && (
+          <div className="center">
+            <RingLoader color="#f50057" size={100} />
+          </div>
+        )}
         {shop?.orderAccepting ? (
           <div className="row mx-5 pop main_delivery_section">
             <motion.div
@@ -414,18 +421,24 @@ const Delivery = ({ scrollToTop }) => {
                 spiral={shop?.spiralPrice}
                 cover={shop?.coverPrice}
               />
-              <PaperCharges bw={shop?.bwPrice} color={shop?.colorPrice} />
+              <PaperCharges
+                bwSingle={shop?.bwSingle}
+                bwDouble={shop?.bwDouble}
+                color={shop?.colorPrice}
+              />
             </div>
             <TotalPrices />
           </div>
         ) : (
-          <>
-            <div className="container center py-5">
-              <p className="fs-3 py-5 px-4 text-danger center">
-                Sorry! We are not accepting orders right now.
-              </p>
-            </div>
-          </>
+          !loading && (
+            <>
+              <div className="container center py-5">
+                <p className="fs-3 py-5 px-4 text-danger center">
+                  Sorry! We are not accepting orders right now.
+                </p>
+              </div>
+            </>
+          )
         )}
       </section>
     </>

@@ -101,6 +101,17 @@ body {
 .forgotpass:hover .ring {
   display: none;
 }
+button:disabled{
+  cursor: not-allowed;
+  background: var(--greyLight-1);
+  color: var(--greyDark);
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 @keyframes rubberband {
   0% {
     transform: scaleX(1);

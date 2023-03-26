@@ -8,7 +8,7 @@ const DocToPdf = () => {
     const convert = async () => {
         const formData = new FormData()
         formData.append('file', file)
-        const res = await fetch('http://localhost:5000/file/doctopdf', {
+        const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/file/doctopdf`, {
             method: 'POST',
             body: formData
         })

@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-const PaperCharges = ({bw, color}) => {
+const PaperCharges = ({bwSingle, bwDouble, color}) => {
   return (
     <>
       <motion.table
@@ -27,15 +27,15 @@ const PaperCharges = ({bw, color}) => {
         <tbody>
           <tr>
             <td> Black and White per page 
-              {/* (Single Side) */}
+              (Single Side)
 
             </td>
-            <td>₹{bw}.00</td>
+            <td>₹{bwSingle}.00</td>
           </tr>
-          {/* <tr>
+          <tr>
             <td>Black and White per page (Both Side)</td>
-            <td>₹2.00</td>
-          </tr> */}
+            <td>₹{bwDouble}.00</td>
+          </tr>
           <tr>
             <td> Color printing per page
               {/* (Single Side) */}

@@ -65,7 +65,7 @@ function App() {
   return (
     <div className="container center my-5 row pop">
       <div className="col-lg-6 col-md-9 col-sm-12 ">
-        <h2 className="stroke u-f-b fs-2 p-1 ls-1 my-2 center">
+        <h2 className="stroke fs-2 p-1 ls-1 my-2 center">
           Add multiple images to PDF
         </h2>
 
@@ -81,7 +81,7 @@ function App() {
             {images.length == 0 ? "Upload Files" : "Upload More?"}
             <input
               multiple
-              className="form-control form-control-lg choosefile shadow-in hidden"
+              className="form-control u-f-b form-control-lg choosefile shadow-in hidden"
               id="formFileLg"
               accept="image/*"
               type="file"

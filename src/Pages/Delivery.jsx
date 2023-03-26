@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, lazy,Suspense } from "react";
 
-import BindingCharges from "../delivery/Charges/BindingCharges";
-import PaperCharges from "../delivery/Charges/PrintingCharges";
 import TotalPrices from "../delivery/Charges/TotalPrices";
 import DeliveryHeader from "../delivery/components/DeliveryHeader";
 import "../styles/delivery.css";
@@ -10,6 +8,8 @@ import { motion } from "framer-motion"; // Framer Motion for cursor animation
 import getToken from "../utils/getToken";
 import { MoonLoader } from "react-spinners";
 import * as pdfjsLibs from "pdfjs-dist/webpack";
+const BindingCharges = lazy(() => import("../delivery/Charges/BindingCharges"));
+const PaperCharges = lazy(() => import("../delivery/Charges/PrintingCharges"));
 
 const Copies = () => {
   const [copies, setCopies] = useState(1);
@@ -418,15 +418,17 @@ const Delivery = ({ scrollToTop }) => {
                   <h2 className="text-center  ls-2 fw-bold stroke pop">
                     Prices Chart
                   </h2>
-                  <BindingCharges
-                    spiral={shop?.spiralPrice}
-                    cover={shop?.coverPrice}
-                  />
-                  <PaperCharges
-                    bwSingle={shop?.bwSingle}
-                    bwDouble={shop?.bwDouble}
-                    color={shop?.colorPrice}
-                  />
+                  <Suspense fallback={<h1>Loading...</h1>}>
+                    <BindingCharges
+                      spiral={shop?.spiralPrice}
+                      cover={shop?.coverPrice}
+                    />
+                    <PaperCharges
+                      bwSingle={shop?.bwSingle}
+                      bwDouble={shop?.bwDouble}
+                      color={shop?.colorPrice}
+                    />
+                  </Suspense>
                 </div>
                 <TotalPrices />
               </>

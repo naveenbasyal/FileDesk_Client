@@ -62,6 +62,10 @@ body {
 .ls-1 {
   letter-spacing: 0.1rem;
 }
+.lazyLoader{
+  height: 100vh;
+  
+}
 .primary {
   color: var(--primary);
 }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+
 import BindingCharges from "../delivery/Charges/BindingCharges";
 import PaperCharges from "../delivery/Charges/PrintingCharges";
 import TotalPrices from "../delivery/Charges/TotalPrices";
@@ -21,6 +22,7 @@ const Copies = () => {
   const handlePlusButton = () => {
     setCopies(copies + 1);
   };
+ 
   return (
     <div className="copies d-flex">
       <button onClick={handleMinusButton} className="center shadow-out ">
@@ -40,7 +42,7 @@ const Copies = () => {
 };
 
 // ___________ Delivery Options ___________
-const DeliveryOptions = ({}) => {
+const DeliveryOptions = () => {
   // ______ Binding_____
   const [spiralBinding, setSpiralBinding] = useState(false);
   const [plasticCover, setPlasticCover] = useState(false);

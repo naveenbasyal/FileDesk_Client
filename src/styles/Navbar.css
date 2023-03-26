@@ -72,18 +72,23 @@
   right: -100%;
   z-index: 111;
 }
-/* @media screen and (max-width: 450px) {
-  .navbar .nav-items {
-   display:none;
-  }
-  .bar{
-    display: block;
-  }
-  .sidebarActive > .sidebar{
-    height: 100vh;
-  }
-} */
 
+.nav-items .logout{
+  text-transform: capitalize;
+  color: var(--primary);
+  border: 2px solid var(--primary);
+  border-radius: 6px;
+
+  cursor: pointer;
+}
+.nav-items .logout:hover{
+  background-color: var(--primary);
+  color: var(--greyLight-1);
+  border: 2px solid var(--primary);
+  border-radius: 6px;
+  cursor: pointer;
+  
+}
 /* SideBar */
 
 @media screen and (max-width: 945px) {

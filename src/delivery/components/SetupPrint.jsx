@@ -35,7 +35,7 @@ const SetupPrint = () => {
                 onChange={handleSingleChange}
                 id="ss"
               />
-              <label className="form-check-label" htmlFor="ss">
+              <label className="form-check-label" >
                 Single Side
               </label>
             </div>
@@ -50,7 +50,7 @@ const SetupPrint = () => {
                 value=""
                 id="bs"
               />
-              <label className="form-check-label" htmlFor="bs">
+              <label className="form-check-label" >
                 Both Side
               </label>
             </div>

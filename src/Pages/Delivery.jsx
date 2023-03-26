@@ -7,10 +7,12 @@ import Colors from "../delivery/components/Colors";
 import DeliveryHeader from "../delivery/components/DeliveryHeader";
 import SetupPrint from "../delivery/components/SetupPrint";
 import "../styles/delivery.css";
-import { pdfjsLib } from "pdfjs-dist";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion"; // Framer Motion for cursor animation
 import getToken from "../utils/getToken";
+// import {pdfjsLib} from "pdfjs-dist"
+import * as pdfjsLibs from "pdfjs-dist/webpack";
+
 
 const Copies = () => {
   const [copies, setCopies] = useState(1);
@@ -41,15 +43,135 @@ const Copies = () => {
   );
 };
 
+// ___________ Delivery Options ___________
+const DeliveryOptions = ({}) => {
+  // ______ Binding_____
+  const [spiralBinding, setSpiralBinding] = useState(false);
+  const [plasticCover, setPlasticCover] = useState(false);
+
+  const handleSpiralBindingChange = (e) => {
+    setSpiralBinding(true);
+    setPlasticCover(false);
+  };
+
+  const handlePlasticCoverChange = (e) => {
+    setPlasticCover(true);
+    setSpiralBinding(false);
+  };
+  // _______Setup______
+  const [singleSide, setSingleSide] = useState(true);
+  const [bothside, setBothSide] = useState(false);
+  const handleSingleChange = () => {
+    setSingleSide(true);
+    setBothSide(false);
+  };
+  const handleBothChange = () => {
+    setSingleSide(false);
+    setBothSide(true);
+  };
+  // _____Colors____-
+  const [color, setColor] = useState("bw");
+  return (
+    <div>
+      {/* ___Bind____ */}
+      <div className="d-flex my-3 row bind">
+        <div className="col-lg-3">
+          <span className="fw-bold mx-4">Bindings:</span>
+        </div>
+        <div className="col-lg-9 d-flex">
+          <div className="col-lg-5">
+            <div className="form-check mx-3">
+              <label className="form-check-label">
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  checked={spiralBinding}
+                  onChange={handleSpiralBindingChange}
+                  id="spiralBinding"
+                />
+                Spiral Binding
+              </label>
+            </div>
+          </div>
+          <div className="col-lg-5">
+            <div className="form-check mx-3">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                checked={plasticCover}
+                onChange={handlePlasticCoverChange}
+                id="plasticCover"
+              />
+              <label className="form-check-label">Plastic Cover</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* ___ Setup____ */}
+      <div className="d-flex my-3 setup row">
+        <div className="col-lg-3">
+          <span className="fw-bold mx-4">Sides:</span>
+        </div>
+        <div className="col-lg-9 d-flex optionIcon">
+          <div className="col-lg-5 ">
+            <div className="form-check mx-3">
+              <input
+                className="form-check-input"
+                type="checkbox"
+                value=""
+                checked={singleSide}
+                onChange={handleSingleChange}
+                id="ss"
+              />
+              <label className="form-check-label">Single Side</label>
+            </div>
+          </div>
+          <div className="col-lg-5">
+            <div className="form-check mx-3">
+              <input
+                checked={bothside}
+                onChange={handleBothChange}
+                className="form-check-input"
+                type="checkbox"
+                value=""
+                id="bs"
+              />
+              <label className="form-check-label">Both Side</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* Colors */}
+      <div className="d-flex my-3 setup row">
+        <div className="col-lg-3">
+          <span className="fw-bold mx-4">Colors:</span>
+        </div>
+        <div className="col-lg-9 d-flex ">
+          <div
+            className={`bwBox tt mx-4 ${color === "bw" ? "active" : ""}`}
+            data-tooltip="Black and White"
+            onClick={() => setColor("bw")}
+          ></div>
+          <div
+            className={`colorBox tt mx-4 ${color === "color" ? "active" : ""}`}
+            data-tooltip="Coloured"
+            onClick={() => setColor("color")}
+          ></div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const Delivery = ({ scrollToTop }) => {
   const [selectedFiles, setSelectedFiles] = useState({});
   const [totalFiles, setTotalFiles] = useState(0);
   const [error, setError] = useState("");
-  // const [totalPrice, setTotalPrice] = useState(0); // new state variable for total price
+
+  //_____GetShop_____
 
   const [shop, setShop] = useState({});
   const token = getToken();
-
   const getShop = async () => {
     const res = await fetch(
       `${process.env.REACT_APP_SERVER_URL}/api/shop/details`,
@@ -73,7 +195,6 @@ const Delivery = ({ scrollToTop }) => {
     getShop();
   }, []);
 
-  console.log(shop);
   const handleFileChange = (e) => {
     const files = e.target.files;
     const fileArray = Array.from(files);
@@ -90,7 +211,7 @@ const Delivery = ({ scrollToTop }) => {
       reader.onload = (e) => {
         const bufferArray = e.target.result;
         const uint8Array = new Uint8Array(bufferArray);
-        const pdfDoc = pdfjsLib.getDocument({ data: uint8Array });
+        const pdfDoc = pdfjsLibs.getDocument({ data: uint8Array });
         pdfDoc.promise.then((pdf) => {
           const pages = pdf._pdfInfo.numPages; // get number of pages
           pdf.getPage(1).then((page) => {
@@ -225,9 +346,7 @@ const Delivery = ({ scrollToTop }) => {
                               <h4 className="dim fs-5">
                                 {name} (Pages: {file.pages})
                               </h4>
-                              <Bind />
-                              <SetupPrint />
-                              <Colors />
+                              <DeliveryOptions />
                             </div>
                             {/* ------Delete Icon -------*/}
                             <div className="col-lg-2 py-4">

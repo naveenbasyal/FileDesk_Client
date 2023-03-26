@@ -83,23 +83,19 @@ const Navbar = ({ scrollToTop }) => {
           {token ? (
             <Link
               to="/"
-              className={`links ${sw > 500 ? "tt" : ""} ${
-                activeLink === "logout"
-                  ? "stroke shadow-in p-2 roundedBorder"
-                  : "stroke-grey"
-              }`}
+              className={`links pop logout ${sw > 500 ? "tt" : ""} p-2`}
               data-tooltip="Logout"
               onClick={() => {
                 handleLinkClick("logout");
                 localStorage.removeItem("filedesk");
               }}
             >
-              logout
+              Logout
             </Link>
           ) : (
             <Link
               to="/auth"
-              className={`links ${
+              className={`links tt ${
                 activeLink === "auth"
                   ? "stroke shadow-in p-2 roundedBorder"
                   : "stroke-grey"
@@ -122,10 +118,13 @@ const Navbar = ({ scrollToTop }) => {
 
         {/* MenuBar */}
         <div className="menubar" onClick={handleToggleSidebar}>
-          <i className= {`fa-solid fa-bars  ${showSidebar ? 'stroke shadow-in' :"stroke-grey"} p-2`}></i>
+          <i
+            className={`fa-solid fa-bars  ${
+              showSidebar ? "stroke shadow-in" : "stroke-grey"
+            } p-2`}
+          ></i>
         </div>
       </div>
-     
     </>
   );
 };

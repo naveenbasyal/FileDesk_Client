@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import Dashboard from "./Dashboard";
 import { motion } from "framer-motion";
 
+
 const Shop = () => {
   const [shop, setShop] = useState({});
 

@@ -4,12 +4,12 @@ const Bind = () => {
   const [spiralBinding, setSpiralBinding] = useState(false);
   const [plasticCover, setPlasticCover] = useState(false);
 
-  const handleSpiralBindingChange = () => {
+  const handleSpiralBindingChange = (e) => {
     setSpiralBinding(true);
     setPlasticCover(false);
   };
 
-  const handlePlasticCoverChange = () => {
+  const handlePlasticCoverChange = (e) => {
     setPlasticCover(true);
     setSpiralBinding(false);
   };
@@ -30,7 +30,7 @@ const Bind = () => {
                 onChange={handleSpiralBindingChange}
                 id="spiralBinding"
               />
-              <label className="form-check-label" htmlFor="spiralBinding">
+              <label className="form-check-label" >
                 Spiral Binding
               </label>
             </div>
@@ -44,7 +44,7 @@ const Bind = () => {
                 onChange={handlePlasticCoverChange}
                 id="plasticCover"
               />
-              <label className="form-check-label" htmlFor="plasticCover">
+              <label className="form-check-label">
                 Plastic Cover
               </label>
             </div>

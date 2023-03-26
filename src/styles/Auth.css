@@ -229,6 +229,7 @@
   cursor: pointer;
 }
 
+
 @media screen and (max-width: 450px) {
   .overlay-container {
     width: 0%;

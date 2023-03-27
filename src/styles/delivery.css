@@ -204,6 +204,26 @@ a.u-f-b:hover{
   .totalPrice .container {
     width: 80%;
   }
+  .pdfImg {
+    width: 6.5rem;
+    margin: 1rem 0;
+  }
+  .deliveryCard h4{
+    display: grid;
+    place-items: center;
+  font-size: 1.03rem!important;
+
+  }
+  .deleteIcon{
+    display: flex!important;
+    padding: 1rem 1rem;
+  }
+  .filePrice{
+    padding-bottom: 0!important;
+    margin-bottom: 0!important;
+    right: 0;
+    padding: 0 1rem;
+  }
   .arrowUp{
     right: 1.8rem;
     bottom: 2.5rem;

@@ -51,7 +51,7 @@ const Navbar = ({ scrollToTop }) => {
             data-tooltip="Home"
             onClick={() => handleLinkClick("home")}
           >
-            <i class="fa-solid fa-house-chimney"></i>
+            <i className="fa-solid fa-house-chimney"></i>
             <span className="link-name px-3">Home</span>
           </Link>
           <Link
@@ -77,7 +77,7 @@ const Navbar = ({ scrollToTop }) => {
             data-tooltip="Dashboard"
             onClick={() => handleLinkClick("dashboard")}
           >
-            <i class="fa-solid p-2 fa-gauge"></i>
+            <i className="fa-solid p-2 fa-gauge"></i>
             <span className="link-name px-3">Dashboard</span>
           </Link>
           {token ? (

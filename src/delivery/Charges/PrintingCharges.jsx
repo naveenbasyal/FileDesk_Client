@@ -17,10 +17,10 @@ const PaperCharges = ({bwSingle, bwDouble, color}) => {
         <thead>
           <tr>
             <th scope="col" className="dim" title="print">
-              <i class="p-1 stroke fa-sharp fa-solid fa-print"></i>
+              <i className="p-1 stroke fa-sharp fa-solid fa-print"></i>
             </th>
             <th scope="col" className="dim">
-              <i class="stroke p-1 fa-solid fa-hand-holding-dollar"></i>
+              <i className="stroke p-1 fa-solid fa-hand-holding-dollar"></i>
             </th>
           </tr>
         </thead>

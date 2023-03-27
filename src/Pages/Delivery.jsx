@@ -1,4 +1,4 @@
-import React, { useState, useEffect, lazy,Suspense } from "react";
+import React, { useState, useEffect, lazy, Suspense } from "react";
 
 import TotalPrices from "../delivery/Charges/TotalPrices";
 import DeliveryHeader from "../delivery/components/DeliveryHeader";
@@ -18,11 +18,10 @@ const Copies = () => {
       setCopies(copies - 1);
     }
   };
-
   const handlePlusButton = () => {
     setCopies(copies + 1);
   };
- 
+
   return (
     <div className="copies d-flex">
       <button onClick={handleMinusButton} className="center shadow-out ">
@@ -41,130 +40,20 @@ const Copies = () => {
   );
 };
 
-// ___________ Delivery Options ___________
-const DeliveryOptions = () => {
-  // ______ Binding_____
-  const [spiralBinding, setSpiralBinding] = useState(false);
-  const [plasticCover, setPlasticCover] = useState(false);
-
-  const handleSpiralBindingChange = (e) => {
-    setSpiralBinding(true);
-    setPlasticCover(false);
-  };
-
-  const handlePlasticCoverChange = (e) => {
-    setPlasticCover(true);
-    setSpiralBinding(false);
-  };
-  // _______Setup______
-  const [singleSide, setSingleSide] = useState(true);
-  const [bothside, setBothSide] = useState(false);
-  const handleSingleChange = () => {
-    setSingleSide(true);
-    setBothSide(false);
-  };
-  const handleBothChange = () => {
-    setSingleSide(false);
-    setBothSide(true);
-  };
-  // _____Colors____-
-  const [color, setColor] = useState("bw");
-  return (
-    <div>
-      {/* ___Bind____ */}
-      <div className="d-flex my-3 row bind">
-        <div className="col-lg-3">
-          <span className="fw-bold mx-4">Bindings:</span>
-        </div>
-        <div className="col-lg-9 d-flex">
-          <div className="col-lg-5">
-            <div className="form-check mx-3">
-              <label className="form-check-label">
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  checked={spiralBinding}
-                  onChange={handleSpiralBindingChange}
-                  id="spiralBinding"
-                />
-                Spiral Binding
-              </label>
-            </div>
-          </div>
-          <div className="col-lg-5">
-            <div className="form-check mx-3">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                checked={plasticCover}
-                onChange={handlePlasticCoverChange}
-                id="plasticCover"
-              />
-              <label className="form-check-label">Plastic Cover</label>
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* ___ Setup____ */}
-      <div className="d-flex my-3 setup row">
-        <div className="col-lg-3">
-          <span className="fw-bold mx-4">Sides:</span>
-        </div>
-        <div className="col-lg-9 d-flex optionIcon">
-          <div className="col-lg-5 ">
-            <div className="form-check mx-3">
-              <input
-                className="form-check-input"
-                type="checkbox"
-                value=""
-                checked={singleSide}
-                onChange={handleSingleChange}
-                id="ss"
-              />
-              <label className="form-check-label">Single Side</label>
-            </div>
-          </div>
-          <div className="col-lg-5">
-            <div className="form-check mx-3">
-              <input
-                checked={bothside}
-                onChange={handleBothChange}
-                className="form-check-input"
-                type="checkbox"
-                value=""
-                id="bs"
-              />
-              <label className="form-check-label">Both Side</label>
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* Colors */}
-      <div className="d-flex my-3 setup row">
-        <div className="col-lg-3">
-          <span className="fw-bold mx-4">Colors:</span>
-        </div>
-        <div className="col-lg-9 d-flex ">
-          <div
-            className={`bwBox tt mx-4 ${color === "bw" ? "active" : ""}`}
-            data-tooltip="Black and White"
-            onClick={() => setColor("bw")}
-          ></div>
-          <div
-            className={`colorBox tt mx-4 ${color === "color" ? "active" : ""}`}
-            data-tooltip="Coloured"
-            onClick={() => setColor("color")}
-          ></div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 const Delivery = ({ scrollToTop }) => {
   const [selectedFiles, setSelectedFiles] = useState({});
   const [totalFiles, setTotalFiles] = useState(0);
   const [error, setError] = useState("");
+  //  __ Binding ___
+  const [spiralBinding, setSpiralBinding] = useState(false);
+  const [plasticCover, setPlasticCover] = useState(false);
+
+  // _______Setup______
+  const [singleSide, setSingleSide] = useState(true);
+  const [bothside, setBothSide] = useState(false);
+
+  // _____Colors____-
+  const [color, setColor] = useState("bw");
 
   const [loading, setLoading] = useState(false);
 
@@ -226,8 +115,20 @@ const Delivery = ({ scrollToTop }) => {
             };
             page.render(renderContext).promise.then(() => {
               const imageDataUri = canvas.toDataURL();
+              const uId = Math.floor(Math.random() * 1000000000);
 
-              newFiles[file.name] = { pages, imageDataUri }; // add file name, number of pages, price, and image data URI to newFiles object
+              newFiles[file.name] = {
+                pages,
+                imageDataUri,
+                id: uId,
+                qty: 1,
+                spiral: false,
+                cover: false,
+                single: true,
+                both: false,
+                color: false,
+                blackandwhite: true,
+              }; // add file name, number of pages, price, and image data URI to newFiles object
               setSelectedFiles((prev) => {
                 return { ...prev, ...newFiles }; // merge newFiles with previously selected files
               });
@@ -322,7 +223,8 @@ const Delivery = ({ scrollToTop }) => {
                   <div>
                     {Object.entries(selectedFiles).map(
                       ([name, file], index) => (
-                        <motion.div whileHover={{ scale: 1.05 }}>
+                        <motion.div key={index} whileHover={{ scale: 1.05 }}>
+                          {console.log(file)}
                           <motion.div
                             initial={{ x: "-100vw" }}
                             animate={{ x: 0 }}
@@ -332,8 +234,7 @@ const Delivery = ({ scrollToTop }) => {
                               bounce: 0.5,
                               // damping: 5,
                             }}
-                            key={index}
-                            className="my-5 row shadow-out py-3"
+                            className="my-5 row shadow-out py-3 deliveryCard"
                           >
                             <div className="col-lg-3 center">
                               {/* ------Thumbnail---------- */}
@@ -352,11 +253,199 @@ const Delivery = ({ scrollToTop }) => {
                               <h4 className="dim fs-5">
                                 {name} (Pages: {file.pages})
                               </h4>
-                              <DeliveryOptions />
+                              {/* ___Bind____ */}
+                              <div className="d-flex my-3 row bind">
+                                <div className="col-lg-3">
+                                  <span className="fw-bold mx-4">
+                                    Bindings:
+                                  </span>
+                                </div>
+                                <div className="col-lg-9 d-flex">
+                                  <div className="col-lg-5">
+                                    <div className="form-check mx-3">
+                                      <label className="form-check-label">
+                                        <input
+                                          onClick={() =>
+                                            setSpiralBinding(!spiralBinding)
+                                          }
+                                          className="form-check-input"
+                                          type="checkbox"
+                                          checked={file?.spiral}
+                                          onChange={(e) => {
+                                            const value = e.target.checked;
+                                            console.log(value);
+                                            setSelectedFiles((prev) => {
+                                              return {
+                                                ...prev,
+                                                [name]: {
+                                                  ...file,
+                                                  spiral: value,
+                                                  cover: false,
+                                                },
+                                              };
+                                            });
+                                          }}
+                                          id="spiralBinding"
+                                        />
+                                        Spiral Binding
+                                      </label>
+                                    </div>
+                                  </div>
+                                  <div className="col-lg-5">
+                                    <div className="form-check mx-3">
+                                      <input
+                                        onClick={() =>
+                                          setPlasticCover(!plasticCover)
+                                        }
+                                        className="form-check-input"
+                                        type="checkbox"
+                                        checked={file?.cover}
+                                        onChange={(e) => {
+                                          const value = e.target.checked;
+                                          setSelectedFiles((prev) => {
+                                            return {
+                                              ...prev,
+                                              [name]: {
+                                                ...file,
+                                                cover: value,
+                                                spiral: false,
+                                              },
+                                            };
+                                          });
+                                        }}
+                                        id="plasticCover"
+                                      />
+                                      <label className="form-check-label">
+                                        Plastic Cover
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              {/* ___ Setup____ */}
+                              <div className="d-flex my-3 setup row">
+                                <div className="col-lg-3">
+                                  <span className="fw-bold mx-4">Sides:</span>
+                                </div>
+                                <div className="col-lg-9 d-flex optionIcon">
+                                  <div className="col-lg-5 ">
+                                    <div className="form-check mx-3">
+                                      <input
+                                        className="form-check-input"
+                                        type="checkbox"
+                                        value=""
+                                        onClick={() =>
+                                          setSingleSide(!singleSide)
+                                        }
+                                        checked={file?.single}
+                                        onChange={(e) => {
+                                          const value = e.target.checked;
+                                          setSelectedFiles((prev) => {
+                                            return {
+                                              ...prev,
+                                              [name]: {
+                                                ...file,
+                                                single: value,
+                                                both: false,
+                                              },
+                                            };
+                                          });
+                                        }}
+                                        id="ss"
+                                      />
+                                      <label className="form-check-label">
+                                        Single Side
+                                      </label>
+                                    </div>
+                                  </div>
+                                  <div className="col-lg-5">
+                                    <div className="form-check mx-3">
+                                      <input
+                                        onClick={() => setBothSide(!bothside)}
+                                        checked={file?.both}
+                                        onChange={(e) => {
+                                          const value = e.target.checked;
+                                          setColor('bw')
+                                          setSelectedFiles((prev) => {
+                                            return {
+                                              ...prev,
+                                              [name]: {
+                                                ...file,
+                                                both: value,
+                                                single: false,
+                                                color: false,
+                                                blackandwhite: true,
+                                              },
+                                            };
+                                          });
+                                        }}
+                                        className="form-check-input"
+                                        type="checkbox"
+                                        value=""
+                                        id="bs"
+                                      />
+                                      <label className="form-check-label">
+                                        Both Side
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              {/* Colors */}
+                              <div className="d-flex my-3 setup row">
+                                <div className="col-lg-3">
+                                  <span className="fw-bold mx-4">Colors:</span>
+                                </div>
+                                <div className="col-lg-9 d-flex ">
+                                  <div
+                                    className={`bwBox tt mx-4 ${
+                                      color === "bw" ? "active" : ""
+                                    }`}
+                                    data-tooltip="Black and White"
+                                    onClick={(e) => {
+                                      setColor("bw");
+                                      // const value = e.target.value;
+
+                                      setSelectedFiles((prev) => {
+                                        return {
+                                          ...prev,
+                                          [name]: {
+                                            ...file,
+                                            blackandwhite: true,
+                                            color: false,
+                                          },
+                                        };
+                                      });
+                                    }}
+                                  ></div>
+                                  <div
+                                    className={`colorBox tt mx-4 ${
+                                      color === "color" ? "active" : ""
+                                    }`}
+                                    data-tooltip="Coloured"
+                                    onClick={(e) => {
+                                      setColor("color");
+
+                                      setSelectedFiles((prev) => {
+                                        return {
+                                          ...prev,
+                                          [name]: {
+                                            ...file,
+                                            color: true,
+                                            both: false,
+                                            single: true,
+                                            blackandwhite: false,
+                                          },
+                                        };
+                                      });
+                                    }}
+                                  ></div>
+                                </div>
+                              </div>
                             </div>
                             {/* ------Delete Icon -------*/}
-                            <div className="col-lg-2 py-4">
-                              <button className="shadow-out shadow-btn text-danger px-2 center ">
+                            <div className="col-lg-2 py-4 deleteIcon">
+                              <button className="shadow-out my-1 trash shadow-btn text-danger px-2 center ">
                                 <i
                                   className="fa fa-trash "
                                   aria-hidden="true"
@@ -366,7 +455,7 @@ const Delivery = ({ scrollToTop }) => {
                                 ></i>
                               </button>
                               {/* ------------- Single Pdf Price------- */}
-                              <div className="position-absolute bottom-0 pb-5 mb-2">
+                              <div className="position-absolute  bottom-0 filePrice pb-5 mb-2">
                                 <i className="fas stroke p-1 fa-inr"></i>
                                 <span className="dim">{file.pages * 1.5}</span>
                               </div>

@@ -59,7 +59,6 @@ const LoginSignUp = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log(email, password);
     if (!email || !password) {
       toast.error("Please fill all the fields");
       return;
@@ -120,7 +119,6 @@ const LoginSignUp = () => {
             <input
               style={{ width: "90%" }}
               type="text"
-              id="name"
               className="fancyinput my-2 "
               value={name}
               placeholder="Name"
@@ -130,7 +128,6 @@ const LoginSignUp = () => {
             <input
               style={{ width: "90%" }}
               type="text"
-              id="email"
               className="fancyinput my-2 "
               value={email}
               placeholder="Email"
@@ -139,7 +136,6 @@ const LoginSignUp = () => {
             <input
               style={{ width: "90%" }}
               type={showPass ? "text" : "password"}
-              id="password"
               className="fancyinput my-2 "
               value={password}
               placeholder="Password"

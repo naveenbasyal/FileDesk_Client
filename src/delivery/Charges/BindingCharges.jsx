@@ -20,7 +20,7 @@ const BindingCharges = ({cover , spiral}) => {
               Binding
             </th>
             <th scope="col" className="dim">
-              <i class="p-1 stroke fa-solid fa-hand-holding-dollar"></i>
+              <i className="p-1 stroke fa-solid fa-hand-holding-dollar"></i>
             </th>
           </tr>
         </thead>

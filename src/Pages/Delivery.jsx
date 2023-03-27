@@ -128,6 +128,7 @@ const Delivery = ({ scrollToTop }) => {
                 both: false,
                 color: false,
                 blackandwhite: true,
+                price: pages * shop?.bwSingle
               }; // add file name, number of pages, price, and image data URI to newFiles object
               setSelectedFiles((prev) => {
                 return { ...prev, ...newFiles }; // merge newFiles with previously selected files
@@ -149,6 +150,19 @@ const Delivery = ({ scrollToTop }) => {
     setSelectedFiles(newFiles);
     setTotalFiles(totalFiles - 1);
   };
+
+  const calculatePrice = (file)=>{
+    if(file.color){
+      return file.pages * (file.both ? (shop?.colorDouble / 2) : shop?.colorSingle) +
+      (file.spiral && shop?.spiralPrice) +
+      (file.cover && shop?.coverPrice)
+    }
+    else{
+      return file.pages * (file.both ? (shop?.bwDouble / 2) : shop?.bwSingle) +
+      (file.spiral && shop?.spiralPrice) +
+      (file.cover && shop?.coverPrice)
+    }
+  }
 
   return (
     <>
@@ -281,6 +295,8 @@ const Delivery = ({ scrollToTop }) => {
                                                   ...file,
                                                   spiral: value,
                                                   cover: false,
+                                                  price:calculatePrice(file)
+                                              
                                                 },
                                               };
                                             });
@@ -309,6 +325,9 @@ const Delivery = ({ scrollToTop }) => {
                                                 ...file,
                                                 cover: value,
                                                 spiral: false,
+                                                price:calculatePrice(file)
+
+                                              
                                               },
                                             };
                                           });
@@ -347,6 +366,9 @@ const Delivery = ({ scrollToTop }) => {
                                                 ...file,
                                                 single: value,
                                                 both: false,
+                                                color: false,
+                                                blackandwhite: true,
+                                                price: calculatePrice(file)
                                               },
                                             };
                                           });
@@ -375,6 +397,7 @@ const Delivery = ({ scrollToTop }) => {
                                                 single: false,
                                                 color: false,
                                                 blackandwhite: true,
+                                                price: calculatePrice(file)
                                               },
                                             };
                                           });
@@ -383,6 +406,9 @@ const Delivery = ({ scrollToTop }) => {
                                         type="checkbox"
                                         value=""
                                         id="bs"
+                                        disabled={
+                                          file.color
+                                        }
                                       />
                                       <label className="form-check-label">
                                         Both Side
@@ -405,14 +431,16 @@ const Delivery = ({ scrollToTop }) => {
                                     onClick={(e) => {
                                       setColor("bw");
                                       // const value = e.target.value;
-
                                       setSelectedFiles((prev) => {
                                         return {
                                           ...prev,
                                           [name]: {
                                             ...file,
-                                            blackandwhite: true,
                                             color: false,
+                                            blackandwhite: true,
+                                            price : calculatePrice(file)
+                                            
+
                                           },
                                         };
                                       });
@@ -435,6 +463,10 @@ const Delivery = ({ scrollToTop }) => {
                                             both: false,
                                             single: true,
                                             blackandwhite: false,
+                                            // price : 
+                                            // file.pages * shop?.colorPrice
+                                            price : calculatePrice(file)
+
                                           },
                                         };
                                       });
@@ -457,7 +489,7 @@ const Delivery = ({ scrollToTop }) => {
                               {/* ------------- Single Pdf Price------- */}
                               <div className="position-absolute  bottom-0 filePrice pb-5 mb-2">
                                 <i className="fas stroke p-1 fa-inr"></i>
-                                <span className="dim">{file.pages * 1.5}</span>
+                                <span className="dim">{file?.price}</span>
                               </div>
                             </div>
                           </motion.div>

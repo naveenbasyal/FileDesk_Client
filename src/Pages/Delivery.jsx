@@ -153,7 +153,7 @@ const Delivery = ({ scrollToTop }) => {
 
   const calculatePrice = (file)=>{
     if(file.color){
-      return file.pages * (file.both ? (shop?.colorDouble / 2) : shop?.colorSingle) +
+      return file.pages * shop?.colorPrice +
       (file.spiral && shop?.spiralPrice) +
       (file.cover && shop?.coverPrice)
     }
@@ -163,6 +163,9 @@ const Delivery = ({ scrollToTop }) => {
       (file.cover && shop?.coverPrice)
     }
   }
+
+  
+
 
   return (
     <>
@@ -296,7 +299,7 @@ const Delivery = ({ scrollToTop }) => {
                                                   spiral: value,
                                                   cover: false,
                                                   price:calculatePrice(file)
-                                              
+                                            
                                                 },
                                               };
                                             });
@@ -326,7 +329,6 @@ const Delivery = ({ scrollToTop }) => {
                                                 cover: value,
                                                 spiral: false,
                                                 price:calculatePrice(file)
-
                                               
                                               },
                                             };
@@ -551,7 +553,7 @@ const Delivery = ({ scrollToTop }) => {
                     />
                   </Suspense>
                 </div>
-                <TotalPrices />
+                <TotalPrices  />
               </>
             )}
           </div>

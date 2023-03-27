@@ -1,4 +1,4 @@
-import React, { useState, useEffect, lazy, Suspense } from "react";
+import React, { useState, useEffect } from "react";
 
 import TotalPrices from "../delivery/Charges/TotalPrices";
 import DeliveryHeader from "../delivery/components/DeliveryHeader";
@@ -8,42 +8,17 @@ import { motion } from "framer-motion"; // Framer Motion for cursor animation
 import getToken from "../utils/getToken";
 import { MoonLoader } from "react-spinners";
 import * as pdfjsLibs from "pdfjs-dist/webpack";
-const BindingCharges = lazy(() => import("../delivery/Charges/BindingCharges"));
-const PaperCharges = lazy(() => import("../delivery/Charges/PrintingCharges"));
-
-const Copies = () => {
-  const [copies, setCopies] = useState(1);
-  const handleMinusButton = () => {
-    if (copies > 1) {
-      setCopies(copies - 1);
-    }
-  };
-  const handlePlusButton = () => {
-    setCopies(copies + 1);
-  };
-
-  return (
-    <div className="copies d-flex">
-      <button onClick={handleMinusButton} className="center shadow-out ">
-        -
-      </button>
-      <input
-        type="text"
-        value={copies}
-        disabled
-        className="center shadow-in px-2 mx-2 form-control"
-      />
-      <button onClick={handlePlusButton} className=" shadow-out">
-        +
-      </button>
-    </div>
-  );
-};
+import BindingCharges from "../delivery/Charges/BindingCharges";
+import PaperCharges from "../delivery/Charges/PrintingCharges";
 
 const Delivery = ({ scrollToTop }) => {
   const [selectedFiles, setSelectedFiles] = useState({});
   const [totalFiles, setTotalFiles] = useState(0);
   const [error, setError] = useState("");
+  // ______ Per File Price ____
+  // const [perFilePrice, setperFilePrice] = useState(0);
+  // _____ Copies ____
+  // const [copies, setCopies] = useState(1);
   //  __ Binding ___
   const [spiralBinding, setSpiralBinding] = useState(false);
   const [plasticCover, setPlasticCover] = useState(false);
@@ -121,11 +96,12 @@ const Delivery = ({ scrollToTop }) => {
                 pages,
                 imageDataUri,
                 id: uId,
-                qty: 1,
-                spiral: false,
-                cover: false,
-                single: true,
-                both: false,
+                filename: file.name,
+                quantity: 1,
+                spiralBind: false,
+                plasticCover: false,
+                singleSide: true,
+                bothSide: false,
                 color: false,
                 blackandwhite: true,
               }; // add file name, number of pages, price, and image data URI to newFiles object
@@ -239,15 +215,56 @@ const Delivery = ({ scrollToTop }) => {
                             <div className="col-lg-3 center">
                               {/* ------Thumbnail---------- */}
                               <motion.img
-                                whileHover={{ scale: 1.2 }}
+                                whileHover={{ scale: 1.1 }}
                                 src={file.imageDataUri}
                                 className="img-fluid pdfImg shadow-out p-1"
                                 alt=""
                               />
                               {/* ---------Copies------ */}
-                              {[...Array(1)].map((e, i) => (
-                                <Copies key={i} />
-                              ))}
+                              <div className="copies d-flex">
+                                <button
+                                  onClick={() => {
+                                    if (file.quantity > 1) {
+                                      file.quantity--;
+                                    }
+                                    setSelectedFiles((prev) => {
+                                      return {
+                                        ...prev,
+                                        [name]: {
+                                          ...file,
+                                          quantity: file.quantity,
+                                        },
+                                      };
+                                    });
+                                  }}
+                                  className="center shadow-out "
+                                >
+                                  -
+                                </button>
+                                <input
+                                  type="text"
+                                  value={file.quantity}
+                                  disabled
+                                  className="center shadow-in px-2 mx-2 form-control"
+                                />
+                                <button
+                                  onClick={() => {
+                                    file.quantity++;
+                                    setSelectedFiles((prev) => {
+                                      return {
+                                        ...prev,
+                                        [name]: {
+                                          ...file,
+                                          quantity: file.quantity,
+                                        },
+                                      };
+                                    });
+                                  }}
+                                  className=" shadow-out"
+                                >
+                                  +
+                                </button>
+                              </div>
                             </div>
                             <div className="col-lg-7 py-3">
                               <h4 className="dim fs-5">
@@ -270,17 +287,16 @@ const Delivery = ({ scrollToTop }) => {
                                           }
                                           className="form-check-input"
                                           type="checkbox"
-                                          checked={file?.spiral}
+                                          checked={file?.spiralBind}
                                           onChange={(e) => {
                                             const value = e.target.checked;
-                                            console.log(value);
                                             setSelectedFiles((prev) => {
                                               return {
                                                 ...prev,
                                                 [name]: {
                                                   ...file,
-                                                  spiral: value,
-                                                  cover: false,
+                                                  spiralBind: value,
+                                                  plasticCover: false,
                                                 },
                                               };
                                             });
@@ -299,7 +315,7 @@ const Delivery = ({ scrollToTop }) => {
                                         }
                                         className="form-check-input"
                                         type="checkbox"
-                                        checked={file?.cover}
+                                        checked={file?.plasticCover}
                                         onChange={(e) => {
                                           const value = e.target.checked;
                                           setSelectedFiles((prev) => {
@@ -307,8 +323,8 @@ const Delivery = ({ scrollToTop }) => {
                                               ...prev,
                                               [name]: {
                                                 ...file,
-                                                cover: value,
-                                                spiral: false,
+                                                plasticCover: value,
+                                                spiralBind: false,
                                               },
                                             };
                                           });
@@ -337,7 +353,7 @@ const Delivery = ({ scrollToTop }) => {
                                         onClick={() =>
                                           setSingleSide(!singleSide)
                                         }
-                                        checked={file?.single}
+                                        checked={file?.singleSide}
                                         onChange={(e) => {
                                           const value = e.target.checked;
                                           setSelectedFiles((prev) => {
@@ -345,8 +361,8 @@ const Delivery = ({ scrollToTop }) => {
                                               ...prev,
                                               [name]: {
                                                 ...file,
-                                                single: value,
-                                                both: false,
+                                                singleSide: value,
+                                                bothSide: false,
                                               },
                                             };
                                           });
@@ -362,17 +378,17 @@ const Delivery = ({ scrollToTop }) => {
                                     <div className="form-check mx-3">
                                       <input
                                         onClick={() => setBothSide(!bothside)}
-                                        checked={file?.both}
+                                        checked={file?.bothSide}
                                         onChange={(e) => {
                                           const value = e.target.checked;
-                                          setColor('bw')
+                                          setColor("bw");
                                           setSelectedFiles((prev) => {
                                             return {
                                               ...prev,
                                               [name]: {
                                                 ...file,
-                                                both: value,
-                                                single: false,
+                                                bothSide: value,
+                                                singleSide: false,
                                                 color: false,
                                                 blackandwhite: true,
                                               },
@@ -432,8 +448,8 @@ const Delivery = ({ scrollToTop }) => {
                                           [name]: {
                                             ...file,
                                             color: true,
-                                            both: false,
-                                            single: true,
+                                            bothSide: false,
+                                            singleSide: true,
                                             blackandwhite: false,
                                           },
                                         };
@@ -454,7 +470,7 @@ const Delivery = ({ scrollToTop }) => {
                                   }
                                 ></i>
                               </button>
-                              {/* ------------- Single Pdf Price------- */}
+                              {/* ------------- SingleSide Pdf Price------- */}
                               <div className="position-absolute  bottom-0 filePrice pb-5 mb-2">
                                 <i className="fas stroke p-1 fa-inr"></i>
                                 <span className="dim">{file.pages * 1.5}</span>
@@ -507,17 +523,17 @@ const Delivery = ({ scrollToTop }) => {
                   <h2 className="text-center  ls-2 fw-bold stroke pop">
                     Prices Chart
                   </h2>
-                  <Suspense fallback={<h1>Loading...</h1>}>
-                    <BindingCharges
-                      spiral={shop?.spiralPrice}
-                      cover={shop?.coverPrice}
-                    />
-                    <PaperCharges
-                      bwSingle={shop?.bwSingle}
-                      bwDouble={shop?.bwDouble}
-                      color={shop?.colorPrice}
-                    />
-                  </Suspense>
+                  {shop?.spiralPrice}
+
+                  <BindingCharges
+                    spiral={shop?.spiralPrice}
+                    cover={shop?.coverPrice}
+                  />
+                  <PaperCharges
+                    bwSingle={shop?.bwSingle}
+                    bwDouble={shop?.bwDouble}
+                    color={shop?.colorPrice}
+                  />
                 </div>
                 <TotalPrices />
               </>

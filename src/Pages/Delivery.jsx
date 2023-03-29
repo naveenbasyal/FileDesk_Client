@@ -51,7 +51,6 @@ const Delivery = ({ scrollToTop }) => {
     setLoading(false);
   };
 
-  const calculateTotalPrice = () => {};
 
   const handleFileChange = (e) => {
     const files = e.target.files;
@@ -108,11 +107,7 @@ const Delivery = ({ scrollToTop }) => {
                   //callback function to update price or value immediately
                   const updatedFiles = { ...selectedFiles, ...newFiles };
                   updatedFiles.price = calculatePrice(updatedFiles);
-                  let totalPrice = 0;
-                  Object.entries(selectedFiles).forEach(([name, file]) => {
-                    totalPrice += file.price * file.quantity;
-                  });
-                  setTotalPrice(totalPrice);
+                 
                   setSelectedFiles((prev) => {
                     return { ...prev, ...updatedFiles };
                   }); // merge newFiles with previously selected files))
@@ -156,7 +151,6 @@ const Delivery = ({ scrollToTop }) => {
     setLoading(true);
     document.title = "FileDesk | Delivery";
     getShop();
-    console.log(totalPrice);
   }, []);
 
   return (
@@ -620,7 +614,7 @@ const Delivery = ({ scrollToTop }) => {
                     color={shop?.colorPrice}
                   />
                 </div>
-                <TotalPrices totalPrice={totalPrice} />
+                <TotalPrices />
               </>
             )}
           </div>

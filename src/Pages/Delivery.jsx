@@ -15,10 +15,8 @@ const Delivery = ({ scrollToTop }) => {
   const [selectedFiles, setSelectedFiles] = useState({});
   const [totalFiles, setTotalFiles] = useState(0);
   const [error, setError] = useState("");
-  // ______ Per File Price ____
-  // const [perFilePrice, setperFilePrice] = useState(0);
-  // _____ Copies ____
-  // const [copies, setCopies] = useState(1);
+  // ______ Total Price ____
+  const [totalPrice, setTotalPrice] = useState(0);
   //  __ Binding ___
   const [spiralBinding, setSpiralBinding] = useState(false);
   const [plasticCover, setPlasticCover] = useState(false);
@@ -53,11 +51,10 @@ const Delivery = ({ scrollToTop }) => {
     setLoading(false);
   };
 
-  useEffect(() => {
-    setLoading(true);
-    document.title = "FileDesk | Delivery";
-    getShop();
-  }, []);
+  const calculateTotalPrice = () => {
+   
+  };
+  
 
   const handleFileChange = (e) => {
     const files = e.target.files;
@@ -110,9 +107,14 @@ const Delivery = ({ scrollToTop }) => {
                 (prev) => {
                   return { ...prev, ...newFiles }; // merge newFiles with previously selected files
                 },
-                () => {
+                () => {//callback function to update price or value immediately
                   const updatedFiles = { ...selectedFiles, ...newFiles };
                   updatedFiles.price = calculatePrice(updatedFiles);
+                  let totalPrice = 0;
+                  Object.entries(selectedFiles).forEach(([name, file]) => {
+                    totalPrice += file.price * file.quantity;
+                  });
+                  setTotalPrice(totalPrice);
                   setSelectedFiles((prev) => {
                     return { ...prev, ...updatedFiles };
                   }); // merge newFiles with previously selected files))
@@ -146,12 +148,18 @@ const Delivery = ({ scrollToTop }) => {
       return (
         file.quantity *
           file.pages *
-          (file.both ? shop?.bwDouble / 2: shop?.bwSingle) +
+          (file.both ? shop?.bwDouble / 2 : shop?.bwSingle) +
         (file.spiralBind && shop?.spiralPrice) +
         (file.plasticCover && shop?.coverPrice)
       );
     }
   };
+  useEffect(() => {
+    setLoading(true);
+    document.title = "FileDesk | Delivery";
+    getShop();
+    console.log(totalPrice);
+  }, [selectedFiles]);
 
   return (
     <>
@@ -606,7 +614,7 @@ const Delivery = ({ scrollToTop }) => {
                     color={shop?.colorPrice}
                   />
                 </div>
-                <TotalPrices />
+                <TotalPrices totalPrice={totalPrice} />
               </>
             )}
           </div>

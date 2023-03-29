@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const TotalPrices = () => {
+const TotalPrices = ({totalPrice}) => {
   return (
     <div className="totalPrice my-5">
       <hr className="hr hr-blurry" />
@@ -10,7 +10,7 @@ const TotalPrices = () => {
         <h2 className=" ls-2 pop stroke fw-bold center">Total Price</h2>
         <div className="fs-3 fw-bold my-3 d-flex justify-content-center">
           <i className="fas stroke p-2 fa-inr"></i>
-          <span className="dim"> 20</span>
+          <span className="dim"> {totalPrice}</span>
         </div>
 
         <div className="my-4">

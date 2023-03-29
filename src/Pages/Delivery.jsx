@@ -159,7 +159,7 @@ const Delivery = ({ scrollToTop }) => {
     document.title = "FileDesk | Delivery";
     getShop();
     console.log(totalPrice);
-  }, [selectedFiles]);
+  }, []);
 
   return (
     <>
@@ -436,7 +436,10 @@ const Delivery = ({ scrollToTop }) => {
                                   <div className="col-lg-5">
                                     <div className="form-check mx-3">
                                       <input
-                                        onClick={() => setBothSide(!bothside)}
+                                        onClick={() => {setBothSide(!bothside)
+                                        setColor("bw")
+                                        }
+                                        }
                                         checked={file?.bothSide}
                                         onChange={(e) => {
                                           const value = e.target.checked;
@@ -514,18 +517,19 @@ const Delivery = ({ scrollToTop }) => {
                                     data-tooltip="Coloured"
                                     onClick={(e) => {
                                       setColor("color");
+                                      setBothSide(false);
                                       setSelectedFiles((prev) => {
                                         const updatedFile = {
                                           ...prev[name],
+                                          bothSide: false,
                                           color: true,
                                           blackandwhite: false,
-                                          bothside: false,
                                           singleSide: true,
                                           price: calculatePrice({
                                             ...prev[name],
-                                            color: true,
+                                            bothSide: false,
                                             blackandwhite: false,
-                                            bothside: false,
+                                            color: true,
                                             singleSide: true,
                                           }),
                                         };

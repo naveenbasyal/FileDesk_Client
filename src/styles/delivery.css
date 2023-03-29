@@ -78,14 +78,14 @@ label {
   height: 2rem;
   border: none;
 }
-.eye {
+.fileprice {
   background: var(--greyLight-1);
-  width: 2rem;
+  width: 4rem;
   border-radius: 6px;
   height: 2rem;
   border: none;
 }
-.eye:active {
+.fileprice:active {
   box-shadow: var(--shadow-in);
 }
 .copies button:active {
@@ -217,6 +217,7 @@ a.u-f-b:hover {
   }
   .pdfImg {
     width: 13rem;
+    transition: .5s ease-in-out;
     margin: 0rem 0 .9rem 0;
     /* display: none; */
   }
@@ -244,15 +245,16 @@ a.u-f-b:hover {
   .arrowUp {
     right: 1.8rem;
     bottom: 2.5rem;
+    z-index: 1111;
+    backdrop-filter: blur(10px);
   }
   .deleteIcon {
     display: flex !important;
     padding: 0rem 1rem !important;
     width: 100%!important;
-    display: flex;
     justify-content: space-around;
   }
-  .eye {
+  .fileprice {
     /* right: 2rem !important; */
     position: relative !important;
     padding: 0 !important;

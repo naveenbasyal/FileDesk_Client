@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 const DeliveryHeader = () => {
   return (
@@ -56,7 +56,6 @@ const DeliveryHeader = () => {
               duration: 0.7,
               type: "spring",
               bounce: 0.5,
-              // damping: 5,
             }}
             animate={{ x: 0 }}
             src="/images/delivery_header.jpg"

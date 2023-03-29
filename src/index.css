@@ -1,7 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Poppins:wght@500&display=swap");
-* {
-  /* user-select: none; */
-}
+
 :root {
   --primary-lighter: #bdc2ff;
   --primary-light: #8a94ff;
@@ -103,9 +101,7 @@ body {
 .rubber:hover {
   animation: rubberband 800ms alternate ease-out;
 }
-.forgotpass:hover .ring {
-  display: none;
-}
+
 button:disabled{
   cursor: not-allowed;
   background: var(--greyLight-1);
@@ -247,11 +243,12 @@ input::-webkit-inner-spin-button {
   border-top-color: transparent;
   border-left-color: transparent;
   border-right-color: transparent;
-  background: var(--greyLight-1);
+  background: var(--greyLight-1)!important;
   padding: 0.4rem 0.5rem;
   transition: 0.4s ease;
 }
 .fancyinput:focus {
+  background: var(--greyLight-1)!important;
   caret-color: var(--primary);
   border-bottom-color: var(--primary-dark);
 }

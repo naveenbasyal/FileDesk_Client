@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../styles/Navbar.css";
 import getToken from "../utils/getToken";
@@ -8,7 +8,7 @@ const Navbar = ({ scrollToTop }) => {
   const [activeLink, setActiveLink] = useState("home");
   const [showSidebar, setShowSidebar] = useState(false);
   const token = getToken();
-  const sidebarRef = useRef(null);
+  // console.log(token);
 
   const handleLinkClick = (link) => {
     setActiveLink(link);
@@ -16,25 +16,10 @@ const Navbar = ({ scrollToTop }) => {
     setShowSidebar(false);
   };
 
-  
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-  
-  const handleClickOutside = (e) => {
-    if (sidebarRef.current && !sidebarRef.current.contains(e.target)) {
-      setShowSidebar(false);
-    }
-  };
-
   // sidebar Function
   const handleToggleSidebar = () => {
     setShowSidebar(!showSidebar);
   };
-
   return (
     <>
       <div className="navbar d-flex shadow-out">
@@ -55,7 +40,7 @@ const Navbar = ({ scrollToTop }) => {
             <span className="rubber stroke ">K</span>
           </Link>
         </div>
-        <div className={`nav-items ${showSidebar ? "show" : ""}` } ref={sidebarRef}>
+        <div className={`nav-items ${showSidebar ? "show" : ""}`}>
           <Link
             to="/"
             className={`links ${sw > 500 ? "tt" : ""} ${
@@ -105,8 +90,8 @@ const Navbar = ({ scrollToTop }) => {
                 localStorage.removeItem("filedesk");
               }}
             >
-             <i className="fas fa-sign-in-alt  p-2"></i>
-              <span className="link-name px-3">Logout</span>
+              <i className="fas fa-sign-in-alt  p-2"></i>
+              <span className="px-3">Logout</span>
             </Link>
           ) : (
             <Link

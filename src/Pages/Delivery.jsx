@@ -51,10 +51,7 @@ const Delivery = ({ scrollToTop }) => {
     setLoading(false);
   };
 
-  const calculateTotalPrice = () => {
-   
-  };
-  
+  const calculateTotalPrice = () => {};
 
   const handleFileChange = (e) => {
     const files = e.target.files;
@@ -107,7 +104,8 @@ const Delivery = ({ scrollToTop }) => {
                 (prev) => {
                   return { ...prev, ...newFiles }; // merge newFiles with previously selected files
                 },
-                () => {//callback function to update price or value immediately
+                () => {
+                  //callback function to update price or value immediately
                   const updatedFiles = { ...selectedFiles, ...newFiles };
                   updatedFiles.price = calculatePrice(updatedFiles);
                   let totalPrice = 0;
@@ -148,7 +146,7 @@ const Delivery = ({ scrollToTop }) => {
       return (
         file.quantity *
           file.pages *
-          (file.bothSide ? (shop?.bwDouble / 2): shop?.bwSingle) +
+          (file.bothSide ? shop?.bwDouble / 2 : shop?.bwSingle) +
         (file.spiralBind && shop?.spiralPrice) +
         (file.plasticCover && shop?.coverPrice)
       );
@@ -399,9 +397,11 @@ const Delivery = ({ scrollToTop }) => {
                                         className="form-check-input"
                                         type="checkbox"
                                         value=""
-                                        onClick={() =>
-                                          setSingleSide(!singleSide)
-                                        }
+                                        onClick={() => {
+                                          setSingleSide(!singleSide);
+                                          setBothSide(!singleSide);
+                                        }}
+
                                         checked={file?.singleSide}
                                         onChange={(e) => {
                                           const value = e.target.checked;
@@ -409,13 +409,13 @@ const Delivery = ({ scrollToTop }) => {
                                             const updatedFile = {
                                               ...prev[name],
                                               singleSide: value,
-                                              bothSide: false,
+                                              bothSide: !value, 
                                               color: false,
                                               blackandwhite: true,
                                               price: calculatePrice({
                                                 ...prev[name],
                                                 singleSide: value,
-                                                bothSide: false,
+                                                bothSide: !value,
                                                 color: false,
                                                 blackandwhite: true,
                                               }),
@@ -436,10 +436,11 @@ const Delivery = ({ scrollToTop }) => {
                                   <div className="col-lg-5">
                                     <div className="form-check mx-3">
                                       <input
-                                        onClick={() => {setBothSide(!bothside)
-                                        setColor("bw")
-                                        }
-                                        }
+                                        onClick={() => {
+                                          setBothSide(!bothside);
+                                          setSingleSide(!bothside);
+                                          setColor("bw");
+                                        }}
                                         checked={file?.bothSide}
                                         onChange={(e) => {
                                           const value = e.target.checked;
@@ -448,13 +449,13 @@ const Delivery = ({ scrollToTop }) => {
                                             const updatedFile = {
                                               ...prev[name],
                                               bothSide: value,
-                                              singleSide: false,
+                                              singleSide: !value,
                                               color: false,
                                               blackandwhite: true,
                                               price: calculatePrice({
                                                 ...prev[name],
                                                 bothSide: value,
-                                                singleSide: false,
+                                                singleSide: !value,
                                                 color: false,
                                                 blackandwhite: true,
                                               }),
@@ -469,6 +470,7 @@ const Delivery = ({ scrollToTop }) => {
                                         type="checkbox"
                                         value=""
                                         id="bs"
+                                        
                                         disabled={file.color}
                                       />
                                       <label className="form-check-label">

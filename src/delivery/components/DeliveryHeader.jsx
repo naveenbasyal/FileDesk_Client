@@ -13,7 +13,7 @@ const DeliveryHeader = () => {
               bounce: 0.5,
             }}
             animate={{ x: 0 }}
-            className="mx-1 p-1"
+            className="mx-2 pd p-1"
           >
             <motion.span className="rubber stroke">P</motion.span>
             <motion.span className="rubber stroke">r</motion.span>
@@ -30,9 +30,8 @@ const DeliveryHeader = () => {
             <motion.span className="rubber stroke">a</motion.span>
             <motion.span className="rubber stroke">n</motion.span>
             <motion.span className="rubber stroke">d</motion.span>
-            <motion.span className="rubber stroke p-1">:</motion.span>
+            {/* <motion.span className="rubber stroke p-1">:</motion.span> */}
           </motion.div>
-          <br />
           <motion.span
             initial={{ x: "100vw" }}
             transition={{
@@ -41,7 +40,7 @@ const DeliveryHeader = () => {
               bounce: 0.5,
             }}
             animate={{ x: 0 }}
-            className="fs-1 px-3 primary   fw-bold center"
+            className={`fs-1 ${window.screen.width > 500 ? "my-5" : "mt-3"} px-3 primary fw-bold center`}
           >
             Convenient online document printing services
           </motion.span>
@@ -61,7 +60,7 @@ const DeliveryHeader = () => {
             }}
             animate={{ x: 0 }}
             src="/images/delivery_header.jpg"
-            className="img-fluid rounded headerImage p-2 shadow-out"
+            className="img-fluid  rounded headerImage p-2 shadow-out"
             alt="img"
           />
         </div>

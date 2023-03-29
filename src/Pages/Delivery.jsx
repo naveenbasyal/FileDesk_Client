@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import { toast } from "react-hot-toast";
 import TotalPrices from "../delivery/Charges/TotalPrices";
 import DeliveryHeader from "../delivery/components/DeliveryHeader";
 import "../styles/delivery.css";
@@ -104,10 +104,20 @@ const Delivery = ({ scrollToTop }) => {
                 bothSide: false,
                 color: false,
                 blackandwhite: true,
+                price: pages * shop?.bwSingle,
               }; // add file name, number of pages, price, and image data URI to newFiles object
-              setSelectedFiles((prev) => {
-                return { ...prev, ...newFiles }; // merge newFiles with previously selected files
-              });
+              setSelectedFiles(
+                (prev) => {
+                  return { ...prev, ...newFiles }; // merge newFiles with previously selected files
+                },
+                () => {
+                  const updatedFiles = { ...selectedFiles, ...newFiles };
+                  updatedFiles.price = calculatePrice(updatedFiles);
+                  setSelectedFiles((prev) => {
+                    return { ...prev, ...updatedFiles };
+                  }); // merge newFiles with previously selected files))
+                }
+              );
               setTotalFiles(
                 Object.keys(selectedFiles).length + Object.keys(newFiles).length
               ); // set total files count
@@ -117,13 +127,30 @@ const Delivery = ({ scrollToTop }) => {
       };
     });
   };
-
   //  ----------- Delete the selected File-------------
   const handleDeleteFile = (name) => {
     const newFiles = { ...selectedFiles };
     delete newFiles[name];
     setSelectedFiles(newFiles);
     setTotalFiles(totalFiles - 1);
+    toast.success(`${name} deleted successfully`);
+  };
+  const calculatePrice = (file) => {
+    if (file.color) {
+      return (
+        file.quantity * file.pages * shop?.colorPrice +
+        (file.spiralBind && shop?.spiralPrice) +
+        (file.plasticCover && shop?.coverPrice)
+      );
+    } else {
+      return (
+        file.quantity *
+          file.pages *
+          (file.both ? shop?.bwDouble / 2: shop?.bwSingle) +
+        (file.spiralBind && shop?.spiralPrice) +
+        (file.plasticCover && shop?.coverPrice)
+      );
+    }
   };
 
   return (
@@ -226,6 +253,7 @@ const Delivery = ({ scrollToTop }) => {
                                   onClick={() => {
                                     if (file.quantity > 1) {
                                       file.quantity--;
+                                      file.price = calculatePrice(file);
                                     }
                                     setSelectedFiles((prev) => {
                                       return {
@@ -245,7 +273,7 @@ const Delivery = ({ scrollToTop }) => {
                                   type="text"
                                   value={file.quantity}
                                   disabled
-                                  className="center shadow-in px-2 mx-2 form-control"
+                                  className="text-center shadow-in px-2 mx-2 form-control"
                                 />
                                 <button
                                   onClick={() => {
@@ -256,6 +284,7 @@ const Delivery = ({ scrollToTop }) => {
                                         [name]: {
                                           ...file,
                                           quantity: file.quantity,
+                                          price: calculatePrice(file),
                                         },
                                       };
                                     });
@@ -268,7 +297,7 @@ const Delivery = ({ scrollToTop }) => {
                             </div>
                             <div className="col-lg-7 py-3">
                               <h4 className="dim fs-5">
-                                {name} (Pages: {file.pages})
+                                {name} - (Pages: {file.pages})
                               </h4>
                               {/* ___Bind____ */}
                               <div className="d-flex my-3 row bind">
@@ -291,13 +320,19 @@ const Delivery = ({ scrollToTop }) => {
                                           onChange={(e) => {
                                             const value = e.target.checked;
                                             setSelectedFiles((prev) => {
-                                              return {
-                                                ...prev,
-                                                [name]: {
-                                                  ...file,
+                                              const updatedFile = {
+                                                ...prev[name],
+                                                spiralBind: value,
+                                                plasticCover: false,
+                                                price: calculatePrice({
+                                                  ...prev[name],
                                                   spiralBind: value,
                                                   plasticCover: false,
-                                                },
+                                                }),
+                                              };
+                                              return {
+                                                ...prev,
+                                                [name]: updatedFile,
                                               };
                                             });
                                           }}
@@ -319,13 +354,19 @@ const Delivery = ({ scrollToTop }) => {
                                         onChange={(e) => {
                                           const value = e.target.checked;
                                           setSelectedFiles((prev) => {
-                                            return {
-                                              ...prev,
-                                              [name]: {
-                                                ...file,
+                                            const updatedFile = {
+                                              ...prev[name],
+                                              plasticCover: value,
+                                              spiralBind: false,
+                                              price: calculatePrice({
+                                                ...prev[name],
                                                 plasticCover: value,
                                                 spiralBind: false,
-                                              },
+                                              }),
+                                            };
+                                            return {
+                                              ...prev,
+                                              [name]: updatedFile,
                                             };
                                           });
                                         }}
@@ -357,13 +398,23 @@ const Delivery = ({ scrollToTop }) => {
                                         onChange={(e) => {
                                           const value = e.target.checked;
                                           setSelectedFiles((prev) => {
-                                            return {
-                                              ...prev,
-                                              [name]: {
-                                                ...file,
+                                            const updatedFile = {
+                                              ...prev[name],
+                                              singleSide: value,
+                                              bothSide: false,
+                                              color: false,
+                                              blackandwhite: true,
+                                              price: calculatePrice({
+                                                ...prev[name],
                                                 singleSide: value,
                                                 bothSide: false,
-                                              },
+                                                color: false,
+                                                blackandwhite: true,
+                                              }),
+                                            };
+                                            return {
+                                              ...prev,
+                                              [name]: updatedFile,
                                             };
                                           });
                                         }}
@@ -383,15 +434,23 @@ const Delivery = ({ scrollToTop }) => {
                                           const value = e.target.checked;
                                           setColor("bw");
                                           setSelectedFiles((prev) => {
-                                            return {
-                                              ...prev,
-                                              [name]: {
-                                                ...file,
+                                            const updatedFile = {
+                                              ...prev[name],
+                                              bothSide: value,
+                                              singleSide: false,
+                                              color: false,
+                                              blackandwhite: true,
+                                              price: calculatePrice({
+                                                ...prev[name],
                                                 bothSide: value,
                                                 singleSide: false,
                                                 color: false,
                                                 blackandwhite: true,
-                                              },
+                                              }),
+                                            };
+                                            return {
+                                              ...prev,
+                                              [name]: updatedFile,
                                             };
                                           });
                                         }}
@@ -399,6 +458,7 @@ const Delivery = ({ scrollToTop }) => {
                                         type="checkbox"
                                         value=""
                                         id="bs"
+                                        disabled={file.color}
                                       />
                                       <label className="form-check-label">
                                         Both Side
@@ -420,16 +480,20 @@ const Delivery = ({ scrollToTop }) => {
                                     data-tooltip="Black and White"
                                     onClick={(e) => {
                                       setColor("bw");
-                                      // const value = e.target.value;
-
                                       setSelectedFiles((prev) => {
+                                        const updatedFile = {
+                                          ...prev[name],
+                                          color: false,
+                                          blackandwhite: true,
+                                          price: calculatePrice({
+                                            ...prev[name],
+                                            color: false,
+                                            blackandwhite: true,
+                                          }),
+                                        };
                                         return {
                                           ...prev,
-                                          [name]: {
-                                            ...file,
-                                            blackandwhite: true,
-                                            color: false,
-                                          },
+                                          [name]: updatedFile,
                                         };
                                       });
                                     }}
@@ -438,20 +502,28 @@ const Delivery = ({ scrollToTop }) => {
                                     className={`colorBox tt mx-4 ${
                                       color === "color" ? "active" : ""
                                     }`}
+                                    disabled={file.bothSide}
                                     data-tooltip="Coloured"
                                     onClick={(e) => {
                                       setColor("color");
-
                                       setSelectedFiles((prev) => {
+                                        const updatedFile = {
+                                          ...prev[name],
+                                          color: true,
+                                          blackandwhite: false,
+                                          bothside: false,
+                                          singleSide: true,
+                                          price: calculatePrice({
+                                            ...prev[name],
+                                            color: true,
+                                            blackandwhite: false,
+                                            bothside: false,
+                                            singleSide: true,
+                                          }),
+                                        };
                                         return {
                                           ...prev,
-                                          [name]: {
-                                            ...file,
-                                            color: true,
-                                            bothSide: false,
-                                            singleSide: true,
-                                            blackandwhite: false,
-                                          },
+                                          [name]: updatedFile,
                                         };
                                       });
                                     }}
@@ -470,10 +542,10 @@ const Delivery = ({ scrollToTop }) => {
                                   }
                                 ></i>
                               </button>
-                              {/* ------------- SingleSide Pdf Price------- */}
+                              {/* ------------- Single Pdf Price------- */}
                               <div className="position-absolute  bottom-0 filePrice pb-5 mb-2">
                                 <i className="fas stroke p-1 fa-inr"></i>
-                                <span className="dim">{file.pages * 1.5}</span>
+                                <span className="dim">{file?.price}</span>
                               </div>
                             </div>
                           </motion.div>
@@ -523,7 +595,6 @@ const Delivery = ({ scrollToTop }) => {
                   <h2 className="text-center  ls-2 fw-bold stroke pop">
                     Prices Chart
                   </h2>
-                  {shop?.spiralPrice}
 
                   <BindingCharges
                     spiral={shop?.spiralPrice}

@@ -117,8 +117,7 @@ label {
   display: none;
 }
 
-
-a.u-f-b:hover{
+a.u-f-b:hover {
   color: white;
 }
 .colorBox {
@@ -186,11 +185,11 @@ a.u-f-b:hover{
     padding: 1rem 1rem;
   }
 
-  .delivery_header .rubber{
-    padding: .25rem;
+  .delivery_header .rubber {
+    padding: 0.25rem;
   }
-  .tools_header .rubber{
-    padding: .04rem;
+  .tools_header .rubber {
+    padding: 0.04rem;
   }
   .main_delivery_section {
     margin: 1rem 1rem !important;
@@ -208,23 +207,22 @@ a.u-f-b:hover{
     width: 6.5rem;
     margin: 1rem 0;
   }
-  .deliveryCard h4{
+  .deliveryCard h4 {
     display: grid;
     place-items: center;
-  font-size: 1.03rem!important;
-
+    font-size: 1.03rem !important;
   }
-  .deleteIcon{
-    display: flex!important;
+  .deleteIcon {
+    display: flex !important;
     padding: 1rem 1rem;
   }
-  .filePrice{
-    padding-bottom: 0!important;
-    margin-bottom: 0!important;
+  .filePrice {
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
     right: 0;
     padding: 0 1rem;
   }
-  .arrowUp{
+  .arrowUp {
     right: 1.8rem;
     bottom: 2.5rem;
   }

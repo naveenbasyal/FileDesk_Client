@@ -148,7 +148,7 @@ const Delivery = ({ scrollToTop }) => {
       return (
         file.quantity *
           file.pages *
-          (file.both ? shop?.bwDouble / 2 : shop?.bwSingle) +
+          (file.bothSide ? (shop?.bwDouble / 2): shop?.bwSingle) +
         (file.spiralBind && shop?.spiralPrice) +
         (file.plasticCover && shop?.coverPrice)
       );

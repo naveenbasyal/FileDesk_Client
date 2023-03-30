@@ -15,7 +15,7 @@ const ToolsHeader = () => {
           }}
           animate={{ x: 0 }}
           src="images/tools_header.jpg"
-          className="img-fluid pointer container rounded center headerImage col-lg-4 col-12 p-2 shadow-out"
+          className="img-fluid  pointer container rounded center headerImage col-lg-4 col-12 p-2 shadow-out"
           alt="img"
         />
         <motion.div

@@ -90,7 +90,8 @@ const Navbar = ({ scrollToTop }) => {
                 localStorage.removeItem("filedesk");
               }}
             >
-              Logout
+              <i className="fas fa-sign-in-alt  p-2"></i>
+              <span className="px-3">Logout</span>
             </Link>
           ) : (
             <Link
@@ -108,13 +109,7 @@ const Navbar = ({ scrollToTop }) => {
             </Link>
           )}
         </div>
-        {/* ------------------Sidebar------------------ */}
-        {/* <button
-          onClick={() => !sidebarActive}
-          className="shadow-btn shadow-out p-2 bar"
-        >
-          hh
-        </button> */}
+        
 
         {/* MenuBar */}
         <div className="menubar" onClick={handleToggleSidebar}>

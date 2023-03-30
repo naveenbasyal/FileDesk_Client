@@ -15,10 +15,16 @@ const Delivery = ({ scrollToTop }) => {
   const [selectedFiles, setSelectedFiles] = useState({});
   const [totalFiles, setTotalFiles] = useState(0);
   const [error, setError] = useState("");
-  // ______ Per File Price ____
-  // const [perFilePrice, setperFilePrice] = useState(0);
-  // _____ Copies ____
-  // const [copies, setCopies] = useState(1);
+  const [showThumbail, setshowThumbail] = useState(false);
+
+  const handleThumbnail = () => {
+    setshowThumbail(!showThumbail);
+    console.log("-----------");
+    console.log(showThumbail);
+  };
+
+  // ______ Total Price ____
+  const [totalPrice, setTotalPrice] = useState(0);
   //  __ Binding ___
   const [spiralBinding, setSpiralBinding] = useState(false);
   const [plasticCover, setPlasticCover] = useState(false);
@@ -41,7 +47,6 @@ const Delivery = ({ scrollToTop }) => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          // "x-auth-token": localStorage.getItem("filedesk"),
         },
       }
     );
@@ -52,13 +57,7 @@ const Delivery = ({ scrollToTop }) => {
     setShop(data.msg);
     setLoading(false);
   };
-
-  useEffect(() => {
-    setLoading(true);
-    document.title = "FileDesk | Delivery";
-    getShop();
-  }, []);
-
+  // __________ On File change __________
   const handleFileChange = (e) => {
     const files = e.target.files;
     const fileArray = Array.from(files);
@@ -111,8 +110,10 @@ const Delivery = ({ scrollToTop }) => {
                   return { ...prev, ...newFiles }; // merge newFiles with previously selected files
                 },
                 () => {
+                  //callback function to update price or value immediately
                   const updatedFiles = { ...selectedFiles, ...newFiles };
                   updatedFiles.price = calculatePrice(updatedFiles);
+
                   setSelectedFiles((prev) => {
                     return { ...prev, ...updatedFiles };
                   }); // merge newFiles with previously selected files))
@@ -127,7 +128,7 @@ const Delivery = ({ scrollToTop }) => {
       };
     });
   };
-  //  ----------- Delete the selected File-------------
+  //  __________ Delete the selected File __________
   const handleDeleteFile = (name) => {
     const newFiles = { ...selectedFiles };
     delete newFiles[name];
@@ -135,12 +136,19 @@ const Delivery = ({ scrollToTop }) => {
     setTotalFiles(totalFiles - 1);
     toast.success(`${name} deleted successfully`);
   };
+  //  __________ Delete All Files  __________
+  const DeleteAllFiles = () => {
+    setSelectedFiles({});
+    setTotalFiles(0);
+    toast.success(`All files deleted successfully`);
+  };
+  //  __________ Price Calculation __________
   const calculatePrice = (file) => {
     if (file.color) {
       return (
         file.quantity * file.pages * shop?.colorPrice +
-        (file.spiralBind && shop?.spiralPrice) +
-        (file.plasticCover && shop?.coverPrice)
+        (file.spiralBind && shop?.spiralPrice * file.quantity) +
+        (file.plasticCover && shop?.coverPrice * file.quantity)
       );
     } else {
       return (
@@ -152,6 +160,16 @@ const Delivery = ({ scrollToTop }) => {
       );
     }
   };
+  useEffect(() => {
+    document.title = "FileDesk | Delivery";
+    setLoading(true);
+    getShop();
+    let totalPrice = 0;
+    for (const file of Object.values(selectedFiles)) {
+      totalPrice += calculatePrice(file);
+    }
+    setTotalPrice(totalPrice);
+  }, [selectedFiles]);
 
   return (
     <>
@@ -185,7 +203,7 @@ const Delivery = ({ scrollToTop }) => {
 
             {token ? (
               <div className="col-lg-8 col-sm-12 px-5 Options">
-                <div className="mx-4">
+                <div className="mx-4 margin-0">
                   {totalFiles === 0 ? (
                     <motion.label
                       whileHover={{ scale: 1.2 }}
@@ -216,10 +234,21 @@ const Delivery = ({ scrollToTop }) => {
                   )}
 
                   {/* Total Files Selected */}
-                  <div className="my-4">
+                  <div className="my-4 d-flex justify-content-between">
                     <span className="dim fs-5 ">
-                      Total Files Selected: {totalFiles}
+                      {window.screen.width < 500
+                        ? "Total Files"
+                        : "Total Files Selected"}
+                      : {totalFiles}
                     </span>
+                    {totalFiles > 0 && (
+                      <span
+                        onClick={DeleteAllFiles}
+                        className="pointer text-danger btn mx-4 p-2 deleteAll"
+                      >
+                        Delete All
+                      </span>
+                    )}
                   </div>
                   {/* ------------------------Main Content------------------- */}
 
@@ -240,13 +269,30 @@ const Delivery = ({ scrollToTop }) => {
                             className="my-5 row shadow-out py-3 deliveryCard"
                           >
                             <div className="col-lg-3 center">
+                              {window.screen.width < 500 ? (
+                                <i
+                                  className={`fa-solid fa-eye my-2 pointer fs-3 ${
+                                    showThumbail ? "dim" : ""
+                                  }`}
+                                  onClick={handleThumbnail}
+                                ></i>
+                              ) : (
+                                <motion.img
+                                  whileHover={{ scale: 1.03 }}
+                                  src={file.imageDataUri}
+                                  className={`img-fluid pdfImg shadow-out p-1`}
+                                  alt=""
+                                />
+                              )}
                               {/* ------Thumbnail---------- */}
-                              <motion.img
-                                whileHover={{ scale: 1.1 }}
-                                src={file.imageDataUri}
-                                className="img-fluid pdfImg shadow-out p-1"
-                                alt=""
-                              />
+                              {showThumbail && (
+                                <motion.img
+                                  whileHover={{ scale: 1.03 }}
+                                  src={file.imageDataUri}
+                                  className={`img-fluid pdfImg shadow-out p-1`}
+                                  alt=""
+                                />
+                              )}
                               {/* ---------Copies------ */}
                               <div className="copies d-flex">
                                 <button
@@ -265,7 +311,7 @@ const Delivery = ({ scrollToTop }) => {
                                       };
                                     });
                                   }}
-                                  className="center shadow-out "
+                                  className="center fw-bolder shadow-out "
                                 >
                                   -
                                 </button>
@@ -273,7 +319,7 @@ const Delivery = ({ scrollToTop }) => {
                                   type="text"
                                   value={file.quantity}
                                   disabled
-                                  className="text-center shadow-in px-2 mx-2 form-control"
+                                  className="text-center shadow-in bg-color px-2 mx-2 form-control"
                                 />
                                 <button
                                   onClick={() => {
@@ -289,26 +335,26 @@ const Delivery = ({ scrollToTop }) => {
                                       };
                                     });
                                   }}
-                                  className=" shadow-out"
+                                  className=" shadow-out center fw-bolder"
                                 >
                                   +
                                 </button>
                               </div>
                             </div>
                             <div className="col-lg-7 py-3">
-                              <h4 className="dim fs-5">
-                                {name} - (Pages: {file.pages})
+                              <h4 className="dim fs-5 ">
+                                {name} (Pages: {file.pages})
                               </h4>
                               {/* ___Bind____ */}
                               <div className="d-flex my-3 row bind">
                                 <div className="col-lg-3">
-                                  <span className="fw-bold mx-4">
+                                  <span className="fw-bold dim mx-4">
                                     Bindings:
                                   </span>
                                 </div>
-                                <div className="col-lg-9 d-flex">
+                                <div className="col-lg-9 d-flex justify-content-around">
                                   <div className="col-lg-5">
-                                    <div className="form-check mx-3">
+                                    <div className="form-check margin-0 mx-3">
                                       <label className="form-check-label">
                                         <input
                                           onClick={() =>
@@ -338,12 +384,12 @@ const Delivery = ({ scrollToTop }) => {
                                           }}
                                           id="spiralBinding"
                                         />
-                                        Spiral Binding
+                                        Spiral Bind
                                       </label>
                                     </div>
                                   </div>
                                   <div className="col-lg-5">
-                                    <div className="form-check mx-3">
+                                    <div className="form-check margin-0 mx-3">
                                       <input
                                         onClick={() =>
                                           setPlasticCover(!plasticCover)
@@ -382,18 +428,21 @@ const Delivery = ({ scrollToTop }) => {
                               {/* ___ Setup____ */}
                               <div className="d-flex my-3 setup row">
                                 <div className="col-lg-3">
-                                  <span className="fw-bold mx-4">Sides:</span>
+                                  <span className="fw-bold dim mx-4">
+                                    Sides:
+                                  </span>
                                 </div>
-                                <div className="col-lg-9 d-flex optionIcon">
+                                <div className="col-lg-9 d-flex optionIcon justify-content-around">
                                   <div className="col-lg-5 ">
-                                    <div className="form-check mx-3">
+                                    <div className="form-check margin-0 mx-3">
                                       <input
                                         className="form-check-input"
                                         type="checkbox"
                                         value=""
-                                        onClick={() =>
-                                          setSingleSide(!singleSide)
-                                        }
+                                        onClick={() => {
+                                          setSingleSide(!singleSide);
+                                          setBothSide(!singleSide);
+                                        }}
                                         checked={file?.singleSide}
                                         onChange={(e) => {
                                           const value = e.target.checked;
@@ -401,13 +450,13 @@ const Delivery = ({ scrollToTop }) => {
                                             const updatedFile = {
                                               ...prev[name],
                                               singleSide: value,
-                                              bothSide: false,
+                                              bothSide: !value,
                                               color: false,
                                               blackandwhite: true,
                                               price: calculatePrice({
                                                 ...prev[name],
                                                 singleSide: value,
-                                                bothSide: false,
+                                                bothSide: !value,
                                                 color: false,
                                                 blackandwhite: true,
                                               }),
@@ -426,9 +475,13 @@ const Delivery = ({ scrollToTop }) => {
                                     </div>
                                   </div>
                                   <div className="col-lg-5">
-                                    <div className="form-check mx-3">
+                                    <div className="form-check mx-3 margin-0">
                                       <input
-                                        onClick={() => setBothSide(!bothside)}
+                                        onClick={() => {
+                                          setBothSide(!bothside);
+                                          setSingleSide(!bothside);
+                                          setColor("bw");
+                                        }}
                                         checked={file?.bothSide}
                                         onChange={(e) => {
                                           const value = e.target.checked;
@@ -437,13 +490,13 @@ const Delivery = ({ scrollToTop }) => {
                                             const updatedFile = {
                                               ...prev[name],
                                               bothSide: value,
-                                              singleSide: false,
+                                              singleSide: !value,
                                               color: false,
                                               blackandwhite: true,
                                               price: calculatePrice({
                                                 ...prev[name],
                                                 bothSide: value,
-                                                singleSide: false,
+                                                singleSide: !value,
                                                 color: false,
                                                 blackandwhite: true,
                                               }),
@@ -468,11 +521,13 @@ const Delivery = ({ scrollToTop }) => {
                                 </div>
                               </div>
                               {/* Colors */}
-                              <div className="d-flex my-3 setup row">
+                              <div className="d-flex my-3 color  row">
                                 <div className="col-lg-3">
-                                  <span className="fw-bold mx-4">Colors:</span>
+                                  <span className="fw-bold dim mx-4">
+                                    Colors:
+                                  </span>
                                 </div>
-                                <div className="col-lg-9 d-flex ">
+                                <div className="col-lg-9 my-3 d-flex ">
                                   <div
                                     className={`bwBox tt mx-4 ${file.blackandwhite ? "active" : ""
                                       }`}
@@ -504,18 +559,19 @@ const Delivery = ({ scrollToTop }) => {
                                     data-tooltip="Coloured"
                                     onClick={(e) => {
                                       setColor("color");
+                                      setBothSide(false);
                                       setSelectedFiles((prev) => {
                                         const updatedFile = {
                                           ...prev[name],
+                                          bothSide: false,
                                           color: true,
                                           blackandwhite: false,
-                                          bothside: false,
                                           singleSide: true,
                                           price: calculatePrice({
                                             ...prev[name],
-                                            color: true,
+                                            bothSide: false,
                                             blackandwhite: false,
-                                            bothside: false,
+                                            color: true,
                                             singleSide: true,
                                           }),
                                         };
@@ -530,7 +586,7 @@ const Delivery = ({ scrollToTop }) => {
                               </div>
                             </div>
                             {/* ------Delete Icon -------*/}
-                            <div className="col-lg-2 py-4 deleteIcon">
+                            <div className="col-lg-2 py-4  deleteIcon">
                               <button className="shadow-out my-1 trash shadow-btn text-danger px-2 center ">
                                 <i
                                   className="fa fa-trash "
@@ -541,7 +597,7 @@ const Delivery = ({ scrollToTop }) => {
                                 ></i>
                               </button>
                               {/* ------------- Single Pdf Price------- */}
-                              <div className="position-absolute  bottom-0 filePrice pb-5 mb-2">
+                              <div className="position-absolute fileprice  bottom-0 filePrice pb-5 mb-2">
                                 <i className="fas stroke p-1 fa-inr"></i>
                                 <span className="dim">{file?.price}</span>
                               </div>
@@ -604,7 +660,7 @@ const Delivery = ({ scrollToTop }) => {
                     color={shop?.colorPrice}
                   />
                 </div>
-                <TotalPrices />
+                <TotalPrices totalPrice={totalPrice} />
               </>
             )}
           </div>

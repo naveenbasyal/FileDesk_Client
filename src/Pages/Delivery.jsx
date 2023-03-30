@@ -747,14 +747,16 @@ const Delivery = ({ scrollToTop }) => {
                         <div className="dim me-5">₹ {totalPrice}</div>
                       </div>
 
-                      <div className="center ">
+                      <div className="center my-2 ">
                         {totalPrice > 0 && totalPrice < 50 ? (
                           <p className="center text-danger d-flex px-2 ">
                             You have to shop for more than ₹50 to place this
                             order
                           </p>
                         ) : null}
-                        <button className="shadow-btn shadow-out dim fw-bold">
+                        <button
+                        disabled={totalPrice <50}
+                        className="shadow-btn shadow-out dim fw-bold">
                           Pay Now
                         </button>
                       </div>

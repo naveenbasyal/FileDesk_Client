@@ -16,15 +16,15 @@ const Delivery = ({ scrollToTop }) => {
   const [totalFiles, setTotalFiles] = useState(0);
   const [error, setError] = useState("");
   const [showThumbail, setshowThumbail] = useState(false);
-
-  const handleThumbnail = () => {
-    setshowThumbail(!showThumbail);
-    console.log("-----------");
-    console.log(showThumbail);
-  };
-
+  // _______ Delivery Options _______
+  const [deliveryOptions, setDeliveryOptions] = useState({
+    standard: true,
+    fast: false,
+  });
+  const [totalPages, setTotalPages] = useState(0);
   // ______ Total Price ____
   const [totalPrice, setTotalPrice] = useState(0);
+  const [subTotalPrice, setSubTotalPrice] = useState(0);
   //  __ Binding ___
   const [spiralBinding, setSpiralBinding] = useState(false);
   const [plasticCover, setPlasticCover] = useState(false);
@@ -165,11 +165,22 @@ const Delivery = ({ scrollToTop }) => {
     setLoading(true);
     getShop();
     let totalPrice = 0;
+    let totalPages = 0;
     for (const file of Object.values(selectedFiles)) {
       totalPrice += calculatePrice(file);
+      totalPages += file.pages;
+    }
+    setTotalPages(totalPages);
+    setSubTotalPrice(totalPrice);
+    if (deliveryOptions.standard) {
+      totalPrice === 0 ? (totalPrice = 0) : (totalPrice += shop?.deliveryPrice);
+      // totalPrice += shop?.deliveryPrice;
+    }
+    if (deliveryOptions.fast) {
+      totalPrice += shop?.fastDeliveryPrice;
     }
     setTotalPrice(totalPrice);
-  }, [selectedFiles]);
+  }, [selectedFiles, deliveryOptions]);
 
   return (
     <>
@@ -274,7 +285,7 @@ const Delivery = ({ scrollToTop }) => {
                                   className={`fa-solid fa-eye my-2 pointer fs-3 ${
                                     showThumbail ? "dim" : ""
                                   }`}
-                                  onClick={handleThumbnail}
+                                  onClick={() => setshowThumbail(!showThumbail)}
                                 ></i>
                               ) : (
                                 <motion.img
@@ -521,15 +532,15 @@ const Delivery = ({ scrollToTop }) => {
                                 </div>
                               </div>
                               {/* Colors */}
-                              <div className="d-flex my-3 color  row">
+                              <div className="d-flex my-3 color  row align-items-center">
                                 <div className="col-lg-3">
                                   <span className="fw-bold dim mx-4">
                                     Colors:
                                   </span>
                                 </div>
-                                <div className="col-lg-9 my-3 d-flex ">
+                                <div className="col-lg-9 my-3 d-flex justify-content-around ">
                                   <div
-                                    className={`bwBox tt mx-4 ${
+                                    className={`bwBox tt mx-0 ${
                                       color === "bw" ? "active" : ""
                                     }`}
                                     data-tooltip="Black and White"
@@ -624,6 +635,7 @@ const Delivery = ({ scrollToTop }) => {
                           className="form-control form-control-lg choosefile shadow-in hidden"
                           id="formFileLg"
                           type="file"
+                          accept=".pdf"
                           onChange={handleFileChange}
                         />
                       </motion.label>
@@ -662,7 +674,120 @@ const Delivery = ({ scrollToTop }) => {
                     color={shop?.colorPrice}
                   />
                 </div>
-                <TotalPrices totalPrice={totalPrice} />
+                {/* ____________ Price Details _________ */}
+                <div className="container my-4">
+                  <div className="row justify-content-evenly ">
+                    <div className="col-lg-5 col-sm-12 shadow-out radius-1 px-3 py-3">
+                      <table className="table">
+                        <thead>
+                          <tr>
+                            <th scope="col" className="dim ">
+                              Price Details
+                            </th>
+                            <th scope="col" className="dim"></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>
+                              Subtotal ({totalFiles} Files) ({totalPages} Pages)
+                            </td>
+                            <td className="dim fs-5 jsf">₹ {subTotalPrice}</td>
+                          </tr>
+                          <tr>
+                            <td>Standard Delivery</td>
+                            <td>₹ {shop?.deliveryPrice}</td>
+                          </tr>
+                          <tr>
+                            <td> Fast Delivery </td>
+                            <td> ₹ {shop?.fastDeliveryPrice}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <div className="d-flex justify-content-around mt-3">
+                        <div className="d-flex">
+                          <input
+                            type="checkbox"
+                            name="standard"
+                            checked={deliveryOptions.standard}
+                            className="form-check-input mx-2"
+                            onChange={(e) => {
+                              const value = e.target.checked;
+                              setDeliveryOptions((prev) => {
+                                return {
+                                  ...prev,
+                                  fast: !value,
+                                  standard: value,
+                                };
+                              });
+                            }}
+                          />
+                          Standard Delivery
+                        </div>
+                        <div className="dim d-flex">
+                          <input
+                            type="checkbox"
+                            name="fast"
+                            checked={deliveryOptions.fast}
+                            className="form-check-input mx-2"
+                            onChange={(e) => {
+                              const value = e.target.checked;
+                              setDeliveryOptions((prev) => {
+                                return {
+                                  ...prev,
+                                  fast: value,
+                                  standard: !value,
+                                };
+                              });
+                            }}
+                          />
+                          Fast Delivery
+                        </div>
+                      </div>
+                      <div className="d-flex  fs-5 justify-content-between my-3">
+                        <div className="dim mx-3">Total Amount</div>
+                        <div className="dim me-5">₹ {totalPrice}</div>
+                      </div>
+
+                      <div className="center ">
+                        {totalPrice > 0 && totalPrice < 50 ? (
+                          <p className="center text-danger d-flex px-2 ">
+                            You have to shop for more than ₹50 to place this
+                            order
+                          </p>
+                        ) : null}
+                        <button className="shadow-btn shadow-out dim fw-bold">
+                          Pay Now
+                        </button>
+                      </div>
+                    </div>
+                    {/* <div className="col-lg-1  "></div> */}
+                    <div className="col-lg-6 shadow-out radius-1 col-sm-12 p-3">
+                      <form>
+                        <span className="dim fs-5">Enter your Address</span>
+                        <hr className="dim fs-4" style={{ height: "1.2px" }} />
+                        <div className="d-flex justify-content-evenly">
+                          <div className="d-flex align-items-center">
+                            <label htmlFor="name">Name</label>
+                            <input
+                              type="text"
+                              id="name"
+                              className="fancyinput mx-3"
+                            />
+                          </div>
+                          <div>
+                            <label htmlFor="mobile">Mobile no</label>
+                            <input
+                              id="mobile"
+                              type="text"
+                              className="fancyinput mx-3"
+                            />
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
               </>
             )}
           </div>

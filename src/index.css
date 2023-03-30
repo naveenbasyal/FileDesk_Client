@@ -19,7 +19,21 @@
 a {
   text-decoration: none;
 }
+.u-f-b {
+  padding: 10px 20px;
+  background: var(--primary);
+  color: var(--greyLight-1);
+  cursor: pointer;
+  border-radius: 5px;
+}
 
+.u-f-b input {
+  display: none;
+}
+
+a.u-f-b:hover {
+  color: white;
+}
 /* width */
 ::-webkit-scrollbar {
   width: 10px;
@@ -184,6 +198,9 @@ input::-webkit-inner-spin-button {
 .roundedBorder {
   border-radius: 45% !important;
 }
+.radius-1{
+  border-radius: 0.5rem;
+}
 
 .dim {
   color: var(--primary);
@@ -238,14 +255,14 @@ input::-webkit-inner-spin-button {
 }
 /* ------fancy input-------- */
 .fancyinput {
-  border-bottom-color: var(--primary-lighter);
+  border-bottom-color: var(--primary-light);
   outline: none;
   border-top-color: transparent;
   border-left-color: transparent;
   border-right-color: transparent;
   background: var(--greyLight-1)!important;
   padding: 0.4rem 0.5rem;
-  transition: 0.4s ease;
+  transition: 0.2s ease;
 }
 .fancyinput:focus {
   background: var(--greyLight-1)!important;

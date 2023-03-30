@@ -153,10 +153,10 @@ const Delivery = ({ scrollToTop }) => {
     } else {
       return (
         file.quantity *
-          file.pages *
-          (file.bothSide ? shop?.bwDouble / 2 : shop?.bwSingle) +
-        (file.spiralBind && shop?.spiralPrice * file.quantity) +
-        (file.plasticCover && shop?.coverPrice * file.quantity)
+        file.pages *
+        (file.bothSide ? (shop?.bwDouble / 2) : shop?.bwSingle) +
+        (file.spiralBind && shop?.spiralPrice) +
+        (file.plasticCover && shop?.coverPrice)
       );
     }
   };
@@ -540,9 +540,8 @@ const Delivery = ({ scrollToTop }) => {
                                 </div>
                                 <div className="col-lg-9 my-3 d-flex justify-content-around ">
                                   <div
-                                    className={`bwBox tt mx-0 ${
-                                      color === "bw" ? "active" : ""
-                                    }`}
+                                    className={`bwBox tt mx-4 ${file.blackandwhite ? "active" : ""
+                                      }`}
                                     data-tooltip="Black and White"
                                     onClick={(e) => {
                                       setColor("bw");
@@ -565,9 +564,8 @@ const Delivery = ({ scrollToTop }) => {
                                     }}
                                   ></div>
                                   <div
-                                    className={`colorBox tt mx-4 ${
-                                      color === "color" ? "active" : ""
-                                    }`}
+                                    className={`colorBox tt mx-4 ${file.color ? "active" : ""
+                                      }`}
                                     disabled={file.bothSide}
                                     data-tooltip="Coloured"
                                     onClick={(e) => {

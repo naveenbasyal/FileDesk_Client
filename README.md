@@ -1,5 +1,4 @@
 # Problem to solve :- 
 
-
-### same for the eye button in mobile view
+### when selecting eye button in mobile view all eyes of the file are opening 
         

@@ -2,6 +2,7 @@
   margin: 4rem 5rem;
   padding: 1rem 3rem;
   color: rgba(0, 0, 0, 0.76);
+ 
 }
 
 input {
@@ -33,6 +34,7 @@ input {
   right: 5rem;
   position: fixed;
   bottom: 5rem;
+  z-index: 1000000;
   backdrop-filter: blur(8px);
 }
 .arrowUp:active {
@@ -188,11 +190,11 @@ a.u-f-b:hover {
 }
 @media screen and (max-width: 450px) {
   .delivery_header {
-    margin: .5rem .4rem;
+    margin: 0.5rem 0.4rem;
     padding: 1rem 1rem;
   }
-  .pd{
-    margin: 0 1rem!important;
+  .pd {
+    margin: 0 1rem !important;
   }
   .margin-0 {
     margin: 0 !important;
@@ -217,8 +219,8 @@ a.u-f-b:hover {
   }
   .pdfImg {
     width: 13rem;
-    transition: .5s ease-in-out;
-    margin: 0rem 0 .9rem 0;
+    transition: 0.5s ease-in-out;
+    margin: 0rem 0 0.9rem 0;
     /* display: none; */
   }
   .deliveryCard h4 {
@@ -245,13 +247,13 @@ a.u-f-b:hover {
   .arrowUp {
     right: 1.8rem;
     bottom: 2.5rem;
-    z-index: 1111;
+    z-index: 111111;
     backdrop-filter: blur(10px);
   }
   .deleteIcon {
     display: flex !important;
     padding: 0rem 1rem !important;
-    width: 100%!important;
+    width: 100% !important;
     justify-content: space-around;
   }
   .fileprice {
@@ -261,7 +263,7 @@ a.u-f-b:hover {
     display: flex;
     align-items: center;
   }
-  .deliveryCard .col-lg-2{
-    width: 100%!important;
+  .deliveryCard .col-lg-2 {
+    width: 100% !important;
   }
 }

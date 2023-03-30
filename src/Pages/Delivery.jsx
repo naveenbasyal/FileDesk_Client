@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
-import TotalPrices from "../delivery/Charges/TotalPrices";
+import TotalPrices from "../components/Footer";
 import DeliveryHeader from "../delivery/components/DeliveryHeader";
 import "../styles/delivery.css";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion"; // Framer Motion for cursor animation
 import getToken from "../utils/getToken";
-import { MoonLoader } from "react-spinners";
+import { HashLoader } from "react-spinners";
 import * as pdfjsLibs from "pdfjs-dist/webpack";
 import BindingCharges from "../delivery/Charges/BindingCharges";
 import PaperCharges from "../delivery/Charges/PrintingCharges";
@@ -153,8 +153,8 @@ const Delivery = ({ scrollToTop }) => {
     } else {
       return (
         file.quantity *
-        file.pages *
-        (file.bothSide ? (shop?.bwDouble / 2) : shop?.bwSingle) +
+          file.pages *
+          (file.bothSide ? shop?.bwDouble / 2 : shop?.bwSingle) +
         (file.spiralBind && shop?.spiralPrice) +
         (file.plasticCover && shop?.coverPrice)
       );
@@ -164,6 +164,8 @@ const Delivery = ({ scrollToTop }) => {
     document.title = "FileDesk | Delivery";
     setLoading(true);
     getShop();
+  }, []);
+  useEffect(() => {
     let totalPrice = 0;
     let totalPages = 0;
     for (const file of Object.values(selectedFiles)) {
@@ -174,10 +176,11 @@ const Delivery = ({ scrollToTop }) => {
     setSubTotalPrice(totalPrice);
     if (deliveryOptions.standard) {
       totalPrice === 0 ? (totalPrice = 0) : (totalPrice += shop?.deliveryPrice);
-      // totalPrice += shop?.deliveryPrice;
     }
     if (deliveryOptions.fast) {
-      totalPrice += shop?.fastDeliveryPrice;
+      totalPrice === 0
+        ? (totalPrice = 0)
+        : (totalPrice += shop?.fastDeliveryPrice);
     }
     setTotalPrice(totalPrice);
   }, [selectedFiles, deliveryOptions]);
@@ -197,10 +200,10 @@ const Delivery = ({ scrollToTop }) => {
 
         {/* ------------Main Delivery section---------- */}
         {loading && (
-          <div className="center my-5 my-5">
-            <MoonLoader color="#5b4af1" size={60} />
-          </div>
-        )}
+            <div className="center">
+              <HashLoader color="#5b4af1" size={60} />
+            </div>
+          )}
         {shop?.orderAccepting ? (
           <div className="row mx-5 pop main_delivery_section">
             <motion.div
@@ -353,8 +356,18 @@ const Delivery = ({ scrollToTop }) => {
                               </div>
                             </div>
                             <div className="col-lg-7 py-3">
-                              <h4 className="dim fs-5 ">
-                                {name} (Pages: {file.pages})
+                              <h4
+                                className={`dim fs-5 d-flex ${
+                                  window.screen.width < 500
+                                    ? " justify-content-center "
+                                    : ""
+                                } `}
+                              >
+                                {name}{" "}
+                                <span className="text-danger mx-2">
+                                  {" "}
+                                  (<span className="dim">Pages: {file.pages}</span>)
+                                </span>
                               </h4>
                               {/* ___Bind____ */}
                               <div className="d-flex my-3 row bind">
@@ -540,8 +553,9 @@ const Delivery = ({ scrollToTop }) => {
                                 </div>
                                 <div className="col-lg-9 my-3 d-flex justify-content-around ">
                                   <div
-                                    className={`bwBox tt mx-4 ${file.blackandwhite ? "active" : ""
-                                      }`}
+                                    className={`bwBox tt mx-4 ${
+                                      file.blackandwhite ? "active" : ""
+                                    }`}
                                     data-tooltip="Black and White"
                                     onClick={(e) => {
                                       setColor("bw");
@@ -564,8 +578,9 @@ const Delivery = ({ scrollToTop }) => {
                                     }}
                                   ></div>
                                   <div
-                                    className={`colorBox tt mx-4 ${file.color ? "active" : ""
-                                      }`}
+                                    className={`colorBox tt mx-4 ${
+                                      file.color ? "active" : ""
+                                    }`}
                                     disabled={file.bothSide}
                                     data-tooltip="Coloured"
                                     onClick={(e) => {
@@ -672,14 +687,99 @@ const Delivery = ({ scrollToTop }) => {
                     color={shop?.colorPrice}
                   />
                 </div>
-                {/* ____________ Price Details _________ */}
-                <div className="container my-4">
-                  <div className="row justify-content-evenly ">
-                    <div className="col-lg-5 col-sm-12 shadow-out radius-1 px-3 py-3">
+
+                {/* _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _  */}
+
+                <div className="container  my-4">
+                  <div className="row  justify-content-evenly ">
+                    {/* _________ Address Details ________ */}
+                    <div className="col-lg-6 shadow-out radius-1 col-sm-12 p-3 addressDetails">
+                      <form>
+                        <span className="dim fs-5 mx-3">
+                          Enter your Address{" "}
+                          <i className="fa-solid fa-location-dot"></i>
+                        </span>
+                        <hr className="dim fs-4" style={{ height: "1.2px" }} />
+                        <div className="d-flex row mx-2 my-4 ">
+                          <div className="col-lg-6 my-2 col-sm-12">
+                            <label
+                              className=" my-2 position-relative d-flex justify-content-around"
+                              htmlFor="name"
+                            >
+                              <input
+                                type="text"
+                                id="name"
+                                placeholder=" "
+                                className="addressInput mx-1 shadow-out"
+                              />
+                              <span className="placeholder">Name</span>
+                            </label>
+                          </div>
+                          <div className="col-lg-6 my-2 col-sm-12">
+                            <label
+                              className="my-2 position-relative d-flex justify-content-around"
+                              htmlFor="phone"
+                            >
+                              <input
+                                id="phone"
+                                type="text"
+                                placeholder=" "
+                                className="addressInput mx-1 shadow-out"
+                              />
+                              <span className="placeholder">Phone no</span>
+                            </label>
+                          </div>
+                        </div>
+                        <div className="d-flex row mx-2 my-3 ">
+                          <div className="col-lg-6 col-sm-12 my-2">
+                            <label
+                              className="my-2 position-relative d-flex justify-content-around"
+                              htmlFor="pincode"
+                            >
+                              <input
+                                type="text"
+                                id="pincode"
+                                placeholder=" "
+                                className="shadow-out addressInput"
+                              />
+                              <span className="placeholder">Pincode</span>
+                            </label>
+                          </div>
+                          <div className="col-lg-6 col-sm-12 my-2">
+                            <label
+                              className="my-2 position-relative  d-flex justify-content-around"
+                              htmlFor="locality"
+                            >
+                              <input
+                                id="locality"
+                                type="text"
+                                placeholder=" "
+                                className=" shadow-out addressInput"
+                              />
+                              <span className="placeholder">Locality</span>
+                            </label>
+                          </div>
+                        </div>
+                        <div className="col-lg-12 col-sm-12 center position-relative my-4">
+                          <textarea
+                            name="address"
+                            id="address"
+                            className="addressTextarea mx-2 shadow-out"
+                            placeholder=" "
+                            style={{ width: "93%" }}
+                            rows="5"
+                          ></textarea>
+                          <span className="placeholder">Address</span>
+                        </div>
+                      </form>
+                    </div>
+                    {/* ____________ Price Details _________ */}
+
+                    <div className="col-lg-5  col-sm-12 shadow-out radius-1 px-3 py-3">
                       <table className="table">
                         <thead>
                           <tr>
-                            <th scope="col" className="dim ">
+                            <th scope="col" className="dim fs-5">
                               Price Details
                             </th>
                             <th scope="col" className="dim"></th>
@@ -687,9 +787,7 @@ const Delivery = ({ scrollToTop }) => {
                         </thead>
                         <tbody>
                           <tr>
-                            <td>
-                              Subtotal ({totalFiles} Files) ({totalPages} Pages)
-                            </td>
+                            <td>Subtotal ({totalFiles} Files)</td>
                             <td className="dim fs-5 jsf">₹ {subTotalPrice}</td>
                           </tr>
                           <tr>
@@ -742,12 +840,13 @@ const Delivery = ({ scrollToTop }) => {
                           Fast Delivery
                         </div>
                       </div>
-                      <div className="d-flex  fs-5 justify-content-between my-3">
+                      <hr className="dim" />
+                      <div className="d-flex fs-5 justify-content-between my-3">
                         <div className="dim mx-3">Total Amount</div>
                         <div className="dim me-5">₹ {totalPrice}</div>
                       </div>
-
-                      <div className="center my-2 ">
+                      <hr className="dim" />
+                      <div className="center mt-4 ">
                         {totalPrice > 0 && totalPrice < 50 ? (
                           <p className="center text-danger d-flex px-2 ">
                             You have to shop for more than ₹50 to place this
@@ -755,36 +854,15 @@ const Delivery = ({ scrollToTop }) => {
                           </p>
                         ) : null}
                         <button
-                        disabled={totalPrice <50}
-                        className="shadow-btn shadow-out dim fw-bold">
+                          disabled={totalPrice < 50}
+                          onClick={() => {
+                            toast.success("Order Placed Successfully");
+                          }}
+                          className="shadow-btn shadow-out dim fw-bold"
+                        >
                           Pay Now
                         </button>
                       </div>
-                    </div>
-                    {/* <div className="col-lg-1  "></div> */}
-                    <div className="col-lg-6 shadow-out radius-1 col-sm-12 p-3">
-                      <form>
-                        <span className="dim fs-5">Enter your Address</span>
-                        <hr className="dim fs-4" style={{ height: "1.2px" }} />
-                        <div className="d-flex justify-content-evenly">
-                          <div className="d-flex align-items-center">
-                            <label htmlFor="name">Name</label>
-                            <input
-                              type="text"
-                              id="name"
-                              className="fancyinput mx-3"
-                            />
-                          </div>
-                          <div>
-                            <label htmlFor="mobile">Mobile no</label>
-                            <input
-                              id="mobile"
-                              type="text"
-                              className="fancyinput mx-3"
-                            />
-                          </div>
-                        </div>
-                      </form>
                     </div>
                   </div>
                 </div>

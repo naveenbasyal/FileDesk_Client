@@ -75,9 +75,8 @@ body {
 .ls-1 {
   letter-spacing: 0.1rem;
 }
-.lazyLoader{
+.lazyLoader {
   height: 100vh;
-  
 }
 .primary {
   color: var(--primary);
@@ -89,7 +88,7 @@ body {
   letter-spacing: 0.3rem;
 }
 .bg-color {
-  background-color: var(--greyLight-1)!important;
+  background-color: var(--greyLight-1) !important;
 }
 .card_tools a {
   text-decoration: none;
@@ -116,7 +115,7 @@ body {
   animation: rubberband 800ms alternate ease-out;
 }
 
-button:disabled{
+button:disabled {
   cursor: not-allowed;
   background: var(--greyLight-1);
   color: var(--greyDark);
@@ -187,18 +186,19 @@ input::-webkit-inner-spin-button {
   outline: none;
   border: none;
 }
-.outline-none{
+.outline-none {
   outline: none;
 }
 
-.outline-none:focus,.outline-none:active{
+.outline-none:focus,
+.outline-none:active {
   outline: none;
   box-shadow: var(--shadow-out);
 }
 .roundedBorder {
   border-radius: 45% !important;
 }
-.radius-1{
+.radius-1 {
   border-radius: 0.5rem;
 }
 
@@ -260,25 +260,96 @@ input::-webkit-inner-spin-button {
   border-top-color: transparent;
   border-left-color: transparent;
   border-right-color: transparent;
-  background: var(--greyLight-1)!important;
+  background: var(--greyLight-1) !important;
   padding: 0.4rem 0.5rem;
   transition: 0.2s ease;
 }
 .fancyinput:focus {
-  background: var(--greyLight-1)!important;
+  background: var(--greyLight-1) !important;
   caret-color: var(--primary);
   border-bottom-color: var(--primary-dark);
 }
-.skeleton{
-  opacity: .7;
-  animation: loading 1s linear infinite alternate; 
+.skeleton {
+  opacity: 0.7;
+  animation: loading 1s linear infinite alternate;
 }
-
+.bg{
+  background: url("https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEigB8iI5tb8WSVBuVUGc9UjjB8O0708X7Fdic_4O1LT4CmLHoiwhanLXiRhe82yw0R7LgACQ2IhZaTY0hhmGi0gYp_Ynb49CVzfmXtYHUVKgXXpWvJ_oYT8cB4vzsnJLe3iCwuzj-w6PeYq_JaHmy_CoGoa6nw0FBo-2xLdOPvsLTh_fmYH2xhkaZ-OGQ/s16000/footer_bg.png") no-repeat scroll center 0;
+}
+.addressDetails form {
+  position: relative;
+}
+.addressDetails .addressInput {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  outline: none;
+  padding: 9px 10px;
+  background: var(--greyLight-1);
+  text-transform: capitalize;
+  border-radius: 2px;
+  /* border-top: none; */
+  /* border-left: none; */
+  /* border-right: none; */
+  box-shadow: none!important;
+  border: 2px solid var(--primary-light);
+  caret-color: var(--primary-dark);
+}
+.addressDetails .addressTextarea {
+  width: 90%;
+  height: 100%;
+  background: transparent;
+  outline: none;
+  padding: 9px 10px;
+  text-transform: capitalize;
+  border-radius: 2px;
+  /* border-top: none; */
+  /* border-left: none; */
+  /* border-right: none; */
+  box-shadow: none!important;
+  border: 2px solid var(--primary-light);
+  border: 2px solid var(--primary-light);
+  caret-color: var(--primary-dark);
+}
+.addressDetails form input:focus {
+  border: 2px solid var(--primary);
+  box-shadow: var(--shadow-in) !important;
+}
+.addressDetails .addressTextarea:focus {
+  border: 2px solid var(--primary);
+  box-shadow: var(--shadow-in) !important;
+}
+.addressDetails .placeholder {
+  position: absolute;
+  top: 8px;
+  left: 30px;
+  color: var(--primary);
+  text-transform: capitalize;
+  transition: top 0.3s;
+}
+.addressTextarea ~ .placeholder {
+  position: absolute;
+  top: 20px;
+  left: 50px;
+  color: var(--primary);
+  text-transform: capitalize;
+  transition: top 0.3s;
+}
+.addressInput:focus ~ .placeholder,
+.addressInput:not(:placeholder-shown).addressInput:not(:focus) ~ .placeholder {
+  top: -15px;
+  background-color: var(--greyLight-1);
+}
+.addressTextarea:focus ~ .placeholder,
+.addressTextarea:not(:placeholder-shown).addressTextarea:not(:focus) ~ .placeholder {
+  top: -15px;
+  background-color: var(--greyLight-1);
+}
 @keyframes loading {
-  0%{
+  0% {
     background-color: hsl(200, 20%, 70%);
   }
-  100%{
+  100% {
     background-color: hsl(200, 20%, 95%);
   }
 }
@@ -290,5 +361,9 @@ input::-webkit-inner-spin-button {
   .ring,
   .dot {
     display: none;
+  }
+  .addressDetails{
+    padding:1rem 0!important;
+    margin: 2rem 0!important;
   }
 }

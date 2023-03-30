@@ -9,7 +9,7 @@ const Dashboard = () => {
 
   return (
     <>
-      <div className="container pop my-5 dashboard">
+      <div className="container pop my-5 dashboard ">
         <div className="container center ">
           <div className="d-flex">
             <Link
@@ -30,6 +30,7 @@ const Dashboard = () => {
         </div>
         
       </div>
+      
     </>
   );
 };

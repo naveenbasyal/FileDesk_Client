@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import Dashboard from "./Dashboard";
 import { motion } from "framer-motion";
-import { MoonLoader } from "react-spinners";
+import { HashLoader } from "react-spinners";
 import { toast } from "react-hot-toast";
 const Shop = () => {
   const [shop, setShop] = useState({});
@@ -242,7 +242,7 @@ const Shop = () => {
         </>
       ) : (
         <div className="center py-5 mt-5">
-          <MoonLoader color="#5b4af1" size={60} />
+          <HashLoader color="#5b4af1" size={60} />
         </div>
       )}
     </div>

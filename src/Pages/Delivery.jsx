@@ -10,6 +10,7 @@ import { HashLoader } from "react-spinners";
 import * as pdfjsLibs from "pdfjs-dist/webpack";
 import BindingCharges from "../delivery/Charges/BindingCharges";
 import PaperCharges from "../delivery/Charges/PrintingCharges";
+import Footer from "../components/Footer";
 
 const Delivery = ({ scrollToTop }) => {
   const [selectedFiles, setSelectedFiles] = useState({});
@@ -880,6 +881,8 @@ const Delivery = ({ scrollToTop }) => {
             </>
           )
         )}
+        <Footer/>
+
       </section>
     </>
   );

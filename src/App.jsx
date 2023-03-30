@@ -3,7 +3,7 @@ import { motion, useScroll } from "framer-motion";
 import { Toaster } from "react-hot-toast";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
+import "./styles/Footer.css";
 
 const Delivery = lazy(() => import("./Pages/Delivery"));
 const Tools = lazy(() => import("./Pages/Tools"));
@@ -78,7 +78,6 @@ const App = () => {
             </Routes>
           </Suspense>
         </div>
-        <Footer/>
       </Router>
     </>
   );

@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { toast } from "react-hot-toast";
 import "../styles/Auth.css";
 import getToken from "../utils/getToken";
+import Footer from "../components/Footer";
 const LoginSignUp = () => {
   const [signUp, setSignUp] = useState(false);
   const [signIn, setSignIn] = useState(false);
@@ -237,6 +238,7 @@ const LoginSignUp = () => {
           </div>
         </div>
       </motion.div>
+      <Footer/>
     </div>
   );
 };
@@ -244,26 +246,3 @@ const LoginSignUp = () => {
 export default LoginSignUp;
 
 
-// onChange={(e) => {
-//   const value = e.target.checked;
-//   setSelectedFiles((prev) => {
-//     const updatedFile = {
-//       ...prev[name],
-//       singleSide: value,
-//       bothSide: false,
-//       color: false,
-//       blackandwhite: true,
-//       price: calculatePrice({
-//         ...prev[name],
-//         singleSide: value,
-//         bothSide: false,
-//         color: false,
-//         blackandwhite: true,
-//       }),
-//     };
-//     return {
-//       ...prev,
-//       [name]: updatedFile,
-//     };
-//   });
-// }}

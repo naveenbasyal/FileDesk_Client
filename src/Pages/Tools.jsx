@@ -2,6 +2,7 @@ import React,{useEffect} from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import ToolsHeader from "../components/ToolsHeader";
+import Footer from "../components/Footer";
 
 const Tools = ({ scrollToTop }) => {
   useEffect(() => {
@@ -109,6 +110,8 @@ const Tools = ({ scrollToTop }) => {
           </div>
         </div>
       </div>
+      <Footer/>
+
     </div>
   );
 };

@@ -10,7 +10,7 @@ const Footer = () => {
           <div class="footer_bg_two"></div>
         </div>
       </div>
-      <div className=" d-flex justify-content-evenly my-5">
+      <div className="d-flex fc justify-content-evenly my-5">
         <span>
           <i class="fa-regular fa-copyright"></i>FileDesk 2023 , All rights
           reserved.

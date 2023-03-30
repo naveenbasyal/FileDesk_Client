@@ -47,7 +47,6 @@ const Delivery = ({ scrollToTop }) => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          // "x-auth-token": localStorage.getItem("filedesk"),
         },
       }
     );
@@ -58,7 +57,7 @@ const Delivery = ({ scrollToTop }) => {
     setShop(data.msg);
     setLoading(false);
   };
-
+  // __________ On File change __________
   const handleFileChange = (e) => {
     const files = e.target.files;
     const fileArray = Array.from(files);
@@ -129,7 +128,7 @@ const Delivery = ({ scrollToTop }) => {
       };
     });
   };
-  //  ----------- Delete the selected File-------------
+  //  __________ Delete the selected File __________
   const handleDeleteFile = (name) => {
     const newFiles = { ...selectedFiles };
     delete newFiles[name];
@@ -137,11 +136,13 @@ const Delivery = ({ scrollToTop }) => {
     setTotalFiles(totalFiles - 1);
     toast.success(`${name} deleted successfully`);
   };
+  //  __________ Delete All Files  __________
   const DeleteAllFiles = () => {
     setSelectedFiles({});
     setTotalFiles(0);
     toast.success(`All files deleted successfully`);
   };
+  //  __________ Price Calculation __________
   const calculatePrice = (file) => {
     if (file.color) {
       return (
@@ -160,10 +161,15 @@ const Delivery = ({ scrollToTop }) => {
     }
   };
   useEffect(() => {
-    setLoading(true);
     document.title = "FileDesk | Delivery";
+    setLoading(true);
     getShop();
-  }, []);
+    let totalPrice = 0;
+    for (const file of Object.values(selectedFiles)) {
+      totalPrice += calculatePrice(file);
+    }
+    setTotalPrice(totalPrice);
+  }, [selectedFiles]);
 
   return (
     <>
@@ -656,7 +662,7 @@ const Delivery = ({ scrollToTop }) => {
                     color={shop?.colorPrice}
                   />
                 </div>
-                <TotalPrices />
+                <TotalPrices totalPrice={totalPrice} />
               </>
             )}
           </div>

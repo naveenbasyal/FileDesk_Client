@@ -8,7 +8,6 @@ const Navbar = ({ scrollToTop }) => {
   const [activeLink, setActiveLink] = useState("home");
   const [showSidebar, setShowSidebar] = useState(false);
   const token = getToken();
-  // console.log(token);
 
   const handleLinkClick = (link) => {
     setActiveLink(link);

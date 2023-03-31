@@ -91,7 +91,7 @@ const Shop = () => {
         <>
           <div className="row justify-content-around">
             <div className="col-lg-3 col-sm-12 p-3 ">
-              <motion.div
+              <div
                 whileHover={{ scale: 1.03 }}
                 initial={{ x: "-100vw" }}
                 animate={{ x: 0 }}
@@ -129,10 +129,10 @@ const Shop = () => {
                     onChange={handleChange}
                   />
                 </div>
-              </motion.div>
+              </div>
             </div>
             <div className="col-lg-3  col-sm-12 p-3 ">
-              <motion.div
+              <div
                 whileHover={{ scale: 1.03 }}
                 initial={{ x: "100vw" }}
                 animate={{ x: 0 }}
@@ -184,10 +184,10 @@ const Shop = () => {
                     onChange={handleChange}
                   />
                 </div>
-              </motion.div>
+              </div>
             </div>
             <div className="col-lg-3 col-sm-12 p-3 ">
-              <motion.div
+              <div
                 whileHover={{ scale: 1.03 }}
                 initial={{ x: "100vw" }}
                 animate={{ x: 0 }}
@@ -225,10 +225,10 @@ const Shop = () => {
                     onChange={handleChange}
                   />
                 </div>
-              </motion.div>
+              </div>
             </div>
           </div>
-          <motion.button
+          <button
             whileHover={{ scale: 1.03 }}
             initial={{ x: "-100vw" }}
             animate={{ x: 0 }}
@@ -238,7 +238,7 @@ const Shop = () => {
             disabled={disabled}
           >
             Update
-          </motion.button>
+          </button>
         </>
       ) : (
         <div className="center py-5 mt-5">

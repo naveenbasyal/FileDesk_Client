@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 const BindingCharges = ({cover , spiral}) => {
   return (
     <>
-      <motion.table
+      <table
         initial={{ x: "100vw" }}
         animate={{ x: 0 }}
         transition={{
@@ -35,7 +35,7 @@ const BindingCharges = ({cover , spiral}) => {
           </tr>
          
         </tbody>
-      </motion.table>
+      </table>
     </>
   );
 };

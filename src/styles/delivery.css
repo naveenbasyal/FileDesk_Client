@@ -4,7 +4,6 @@
   color: rgba(0, 0, 0, 0.76);
  
 }
-
 input {
   cursor: pointer;
 }
@@ -18,9 +17,7 @@ input {
 .totalPrice .container {
   width: 40%;
 }
-.choosefile {
-  background: var(--greyLight-1);
-}
+
 .choosefile:active,
 .choosefile:focus {
   background: var(--primary-light);
@@ -108,7 +105,8 @@ label {
   background-color: var(--primary);
 }
 .u-f-b {
-  padding: 10px 20px;
+  padding: 10px 10px;
+  width: 10rem;
   background: var(--primary);
   color: var(--greyLight-1);
   cursor: pointer;

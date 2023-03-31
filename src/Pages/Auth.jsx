@@ -5,18 +5,21 @@ import { toast } from "react-hot-toast";
 import "../styles/Auth.css";
 import getToken from "../utils/getToken";
 import Footer from "../components/Footer";
-const LoginSignUp = () => {
+import { PulseLoader } from "react-spinners";
+const LoginSignUp = ({scrollToTop}) => {
   const [signUp, setSignUp] = useState(false);
   const [signIn, setSignIn] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [showPass, setshowPass] = useState(false);
+  const [loading, setloading] = useState(false);
 
   const navigate = useNavigate();
   const token = getToken();
 
   useEffect(() => {
+    scrollToTop();
     if (token) {
       navigate("/");
     }
@@ -34,6 +37,7 @@ const LoginSignUp = () => {
       toast.error("Please fill all the fields");
       return;
     }
+    setloading(true);
     const res = await fetch(
       `${process.env.REACT_APP_SERVER_URL}/api/user/register`,
       {
@@ -48,6 +52,7 @@ const LoginSignUp = () => {
         }),
       }
     );
+    setloading(false);
     const data = await res.json();
     if (data.error) {
       toast.error(data.error);
@@ -64,6 +69,7 @@ const LoginSignUp = () => {
       toast.error("Please fill all the fields");
       return;
     }
+    setloading(true);
     const res = await fetch(
       `${process.env.REACT_APP_SERVER_URL}/api/user/login`,
       {
@@ -77,6 +83,7 @@ const LoginSignUp = () => {
         }),
       }
     );
+    setloading(false);
     const data = await res.json();
     if (data.error) {
       toast.error(data.error);
@@ -143,7 +150,12 @@ const LoginSignUp = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
             <div className="d-flex">
-              <Link onClick={handleSignIn} className="me-2 text-decoration-underline">Already have account? Login</Link>
+              <Link
+                onClick={handleSignIn}
+                className="me-2 text-decoration-underline"
+              >
+                Already have account? Login
+              </Link>
               <i
                 onClick={() => setshowPass(!showPass)}
                 className={`fa-solid fa-eye center ${
@@ -151,8 +163,16 @@ const LoginSignUp = () => {
                 } shadow-btn pointer center`}
               ></i>
             </div>
-            <button className="shadow-out shadow-btn my-2 dim fw-bold">
-              Sign Up
+            <button
+              className={`${
+                loading ? "shadow-in " : "shadow-out"
+              } shadow-btn my-2 dim fw-bold`}
+            >
+              {loading ? (
+                <PulseLoader color="#9baacf" size={9} className="p-2" />
+              ) : (
+                "Sign Up"
+              )}
             </button>
           </form>
         </div>
@@ -191,7 +211,10 @@ const LoginSignUp = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
             <div className="d-flex ">
-              <Link className="forgotpass me-4 text-danger p-1" to="/forgotpassword">
+              <Link
+                className="forgotpass me-4 text-danger p-1"
+                to="/forgotpassword"
+              >
                 Forgot your password?
               </Link>
               <i
@@ -201,10 +224,21 @@ const LoginSignUp = () => {
                 } shadow-btn pointer center`}
               ></i>
             </div>
-            <button className="shadow-out shadow-btn my-2 dim fw-bold">
-              Sign In
+            <button
+              className={`${
+                loading ? "shadow-in " : "shadow-out"
+              } shadow-btn d-flex align-items-center justify-content-center my-2 dim fw-bold`}
+            >
+              {loading ? (
+                <PulseLoader color="#9baacf" size={9} className="p-2" />
+              ) : (
+                "Sign In"
+              )}
             </button>
-            <Link onClick={handleSignUp} className="text-decoration-underline border-none bg-color">
+            <Link
+              onClick={handleSignUp}
+              className="text-decoration-underline border-none bg-color"
+            >
               Create new account? Register here!
             </Link>
           </form>
@@ -238,11 +272,9 @@ const LoginSignUp = () => {
           </div>
         </div>
       </motion.div>
-      <Footer/>
+      <Footer />
     </div>
   );
 };
 
 export default LoginSignUp;
-
-

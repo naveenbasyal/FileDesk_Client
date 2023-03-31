@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 const PaperCharges = ({bwSingle, bwDouble, color}) => {
   return (
     <>
-      <motion.table
+      <table
         initial={{ x: "100vw" }}
         animate={{ x: 0 }}
         transition={{
@@ -47,7 +47,7 @@ const PaperCharges = ({bwSingle, bwDouble, color}) => {
             <td>₹10.00 </td>
           </tr> */}
         </tbody>
-      </motion.table>
+      </table>
     </>
   );
 };

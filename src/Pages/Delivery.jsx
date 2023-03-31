@@ -14,6 +14,8 @@ import Footer from "../components/Footer";
 
 const Delivery = ({ scrollToTop }) => {
   const [selectedFiles, setSelectedFiles] = useState({});
+  //  _ _ _ _ _ For the array of files _ _ _  _ _ _ _  _
+  const [selectedFilesArray, setSelectedFilesArray] = useState([]);
   const [totalFiles, setTotalFiles] = useState(0);
   const [error, setError] = useState("");
   const [showThumbail, setshowThumbail] = useState(false);
@@ -64,6 +66,9 @@ const Delivery = ({ scrollToTop }) => {
     const fileArray = Array.from(files);
     const newFiles = {};
 
+    // ______ it is only the array of files _____
+    setSelectedFilesArray([...selectedFilesArray, ...fileArray]);
+
     fileArray.forEach((file) => {
       if (!file.name.endsWith(".pdf")) {
         // check if file is not a PDF
@@ -106,6 +111,7 @@ const Delivery = ({ scrollToTop }) => {
                 blackandwhite: true,
                 price: pages * shop?.bwSingle,
               }; // add file name, number of pages, price, and image data URI to newFiles object
+
               setSelectedFiles(
                 (prev) => {
                   return { ...prev, ...newFiles }; // merge newFiles with previously selected files
@@ -120,6 +126,7 @@ const Delivery = ({ scrollToTop }) => {
                   }); // merge newFiles with previously selected files))
                 }
               );
+
               setTotalFiles(
                 Object.keys(selectedFiles).length + Object.keys(newFiles).length
               ); // set total files count
@@ -134,12 +141,18 @@ const Delivery = ({ scrollToTop }) => {
     const newFiles = { ...selectedFiles };
     delete newFiles[name];
     setSelectedFiles(newFiles);
+    // for only the array of files
+    const newFilesArray = [...selectedFilesArray];
+    newFilesArray.splice(newFilesArray.indexOf(name), 1);
+    setSelectedFilesArray(newFilesArray);
+    //total files
     setTotalFiles(totalFiles - 1);
     toast.success(`${name} deleted successfully`);
   };
   //  __________ Delete All Files  __________
   const DeleteAllFiles = () => {
     setSelectedFiles({});
+    setSelectedFilesArray([]);
     setTotalFiles(0);
     toast.success(`All files deleted successfully`);
   };
@@ -166,6 +179,7 @@ const Delivery = ({ scrollToTop }) => {
     setLoading(true);
     getShop();
   }, []);
+
   useEffect(() => {
     let totalPrice = 0;
     let totalPages = 0;
@@ -184,6 +198,8 @@ const Delivery = ({ scrollToTop }) => {
         : (totalPrice += shop?.fastDeliveryPrice);
     }
     setTotalPrice(totalPrice);
+    console.log("___ All Files Array___");
+    console.log(selectedFilesArray);
   }, [selectedFiles, deliveryOptions]);
 
   return (
@@ -192,19 +208,25 @@ const Delivery = ({ scrollToTop }) => {
         {/* --------header---------- */}
         <DeliveryHeader />
         <motion.span
-          whileHover={{ scale: 1.2 }}
-          className="shadow-out arrowUp stroke pointer "
+          whileHover={{ scale: 1.1 }}
+          className="shadow-out arrowUp  p-2 d-flex align-items-center pointer "
           onClick={scrollToTop}
         >
-          <i className="fa fa-arrow-up " aria-hidden="true"></i>
+          <lord-icon
+            src="https://cdn.lordicon.com/xsdtfyne.json"
+            trigger="loop"
+            colors="primary:#5b4af1"
+            state="hover-2"
+            style={{ width: "33px" }}
+          ></lord-icon>
         </motion.span>
 
         {/* ------------Main Delivery section---------- */}
         {loading && (
-            <div className="center">
-              <HashLoader color="#5b4af1" size={60} />
-            </div>
-          )}
+          <div className="center">
+            <HashLoader color="#5b4af1" size={60} />
+          </div>
+        )}
         {shop?.orderAccepting ? (
           <div className="row mx-5 pop main_delivery_section">
             <motion.div
@@ -223,8 +245,14 @@ const Delivery = ({ scrollToTop }) => {
                     <motion.label
                       whileHover={{ scale: 1.2 }}
                       htmlFor="formFileLg"
-                      className="u-f-b choosefile"
+                      className="u-f-b choosefile d-flex align-items-center justify-content-around"
                     >
+                      <lord-icon
+                        src="https://cdn.lordicon.com/wfadduyp.json"
+                        trigger="loop"
+                        colors="primary:white"
+                        style={{ width: "33px" }}
+                      ></lord-icon>
                       Upload Files
                       <input
                         multiple
@@ -273,14 +301,8 @@ const Delivery = ({ scrollToTop }) => {
                         <motion.div key={index} whileHover={{ scale: 1.05 }}>
                           {console.log(file)}
                           <motion.div
-                            initial={{ x: "-100vw" }}
-                            animate={{ x: 0 }}
-                            transition={{
-                              duration: 0.6,
-                              type: "spring",
-                              bounce: 0.5,
-                              // damping: 5,
-                            }}
+                            data-aos="zoom-in"
+                            whileHover={{ scale: 1.05 }}
                             className="my-5 row shadow-out py-3 deliveryCard"
                           >
                             <div className="col-lg-3 center">
@@ -367,7 +389,11 @@ const Delivery = ({ scrollToTop }) => {
                                 {name}{" "}
                                 <span className="text-danger mx-2">
                                   {" "}
-                                  (<span className="dim">Pages: {file.pages}</span>)
+                                  (
+                                  <span className="dim">
+                                    Pages: {file.pages}
+                                  </span>
+                                  )
                                 </span>
                               </h4>
                               {/* ___Bind____ */}
@@ -613,7 +639,7 @@ const Delivery = ({ scrollToTop }) => {
                               </div>
                             </div>
                             {/* ------Delete Icon -------*/}
-                            <div className="col-lg-2 py-4  deleteIcon">
+                            <div className="col-lg-2 py-4 position-relative  deleteIcon">
                               <button className="shadow-out my-1 trash shadow-btn text-danger px-2 center ">
                                 <i
                                   className="fa fa-trash "
@@ -641,16 +667,23 @@ const Delivery = ({ scrollToTop }) => {
                       <motion.label
                         whileHover={{ scale: 1.2 }}
                         htmlFor="formFileLg"
-                        className="u-f-b choosefile"
+                        className="u-f-b  d-flex align-items-center justify-content-around"
+                        style={{ width: "11rem" }}
                       >
+                        <lord-icon
+                          src="https://cdn.lordicon.com/wfadduyp.json"
+                          trigger="loop"
+                          colors="primary:white"
+                          style={{ width: "33px" }}
+                        ></lord-icon>
                         Upload More?
                         <input
                           multiple
-                          className="form-control form-control-lg choosefile shadow-in hidden"
+                          className="form-control form-control-lg  shadow-in hidden"
                           id="formFileLg"
                           type="file"
-                          accept=".pdf"
                           onChange={handleFileChange}
+                          accept=".pdf"
                         />
                       </motion.label>
                     </div>
@@ -658,13 +691,14 @@ const Delivery = ({ scrollToTop }) => {
                 </div>
               </div>
             ) : (
-              <div className="mx-4">
+              <div className="ms-4 ps-5 ">
                 <Link
                   to={"/auth"}
                   whileHover={{ scale: 1.2 }}
                   htmlFor="formFileLg"
-                  className="u-f-b choosefile"
+                  className="u-f-b choosefile "
                 >
+                  <i className="fas fa-sign-in-alt  p-2"></i>
                   Login to Upload
                 </Link>
               </div>
@@ -696,9 +730,14 @@ const Delivery = ({ scrollToTop }) => {
                     {/* _________ Address Details ________ */}
                     <div className="col-lg-6 shadow-out radius-1 col-sm-12 p-3 addressDetails">
                       <form>
-                        <span className="dim fs-5 mx-3">
+                        <span className="dim fs-5 mx-3 d-flex align-items-center">
                           Enter your Address{" "}
-                          <i className="fa-solid fa-location-dot"></i>
+                          <lord-icon
+                            src="https://cdn.lordicon.com/oaflahpk.json"
+                            trigger="loop"
+                            colors="primary:#5b4af1"
+                            style={{ width: "33px" }}
+                          ></lord-icon>
                         </span>
                         <hr className="dim fs-4" style={{ height: "1.2px" }} />
                         <div className="d-flex row mx-2 my-4 ">
@@ -731,7 +770,7 @@ const Delivery = ({ scrollToTop }) => {
                             </label>
                           </div>
                         </div>
-                        <div className="d-flex row mx-2 my-3 ">
+                        {/* <div className="d-flex row mx-2 my-3 ">
                           <div className="col-lg-6 col-sm-12 my-2">
                             <label
                               className="my-2 position-relative d-flex justify-content-around"
@@ -760,7 +799,22 @@ const Delivery = ({ scrollToTop }) => {
                               <span className="placeholder">Locality</span>
                             </label>
                           </div>
-                        </div>
+                        </div> */}
+                          <div className="col-lg-12  col-sm-12 my-2 center">
+                            <select className="bg-color blocks shadow-out p-2" name="" id="" style={{width:"50%"}}>
+                              <option value="none">Select Block</option>
+                              <option value="Block 1">Block 1</option>
+                              <option value="Block 2">Block 2</option>
+                              <option value="Block 3">Block 3</option>
+                              <option value="Block 4">Block 4</option>
+                              <option value="Block 5">Block 5</option>
+                              <option value="Block 6">Block 6</option>
+                              <option value="Block 7">Block 7</option>
+                              <option value="Block 8">Block 8</option>
+                              <option value="Block 9">Block 9</option>
+                              <option value="Block 10">Block 10</option>
+                            </select>
+                          </div>
                         <div className="col-lg-12 col-sm-12 center position-relative my-4">
                           <textarea
                             name="address"
@@ -780,8 +834,17 @@ const Delivery = ({ scrollToTop }) => {
                       <table className="table">
                         <thead>
                           <tr>
-                            <th scope="col" className="dim fs-5">
+                            <th
+                              scope="col"
+                              className="dim fs-5 d-flex align-items-center"
+                            >
                               Price Details
+                              <lord-icon
+                                src="https://cdn.lordicon.com/pmegrqxm.json"
+                                trigger="loop"
+                                colors="primary:#5b4af1"
+                                style={{ width: "27px", marginLeft: ".5rem" }}
+                              ></lord-icon>
                             </th>
                             <th scope="col" className="dim"></th>
                           </tr>
@@ -881,8 +944,7 @@ const Delivery = ({ scrollToTop }) => {
             </>
           )
         )}
-        <Footer/>
-
+        <Footer />
       </section>
     </>
   );

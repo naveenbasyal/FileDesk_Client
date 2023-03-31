@@ -351,6 +351,20 @@ input::-webkit-inner-spin-button {
   top: -15px;
   background-color: var(--greyLight-1);
 }
+.blocks{
+  outline: none;
+  display: grid;
+  place-items: center;
+  color: var(--primary);
+  border: 2px solid var(--primary-light);
+  border-radius: 6px;
+}
+.blocks:active,.blocks:focus{
+  outline: none;
+  border: 2px solid var(--primary);
+  box-shadow: var(--shadow-in);
+}
+
 @keyframes loading {
   0% {
     background-color: hsl(200, 20%, 70%);

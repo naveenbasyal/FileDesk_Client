@@ -2,9 +2,10 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { PDFDocument } from "pdf-lib";
 
-export default function Home() {
+export default function RemovePages() {
   const [pdfFileData, setPdfFileData] = useState();
   const [pdfPagesCount, setPdfPagesCount] = useState(0);
+  const [show, setshow] = useState(false);
 
   function readFileAsync(file) {
     return new Promise((resolve, reject) => {
@@ -56,6 +57,7 @@ export default function Home() {
       // Replace original PDF with extracted pages
       setPdfFileData(newPdfUrl);
       setPdfPagesCount(pages.length);
+      setshow(true);
     } else {
       alert("Invalid page range");
     }
@@ -90,58 +92,71 @@ export default function Home() {
           </label>
         </div>
       </div>
-      {pdfFileData && (
-        <>
-          <div className="col-lg-8  col-md-10 col-sm-12">
-            <div className="my-5 d-flex  justify-content-around">
-              <div className="d-flex center">
-                <label htmlFor="fromPage" className="dim fs-5 mx-3">
-                  Start page:
-                </label>
-                <input
-                  style={{ width: "5rem" }}
-                  className="center bg-color shadow-in px-2 mx-2 form-control"
-                  type="number"
-                  id="fromPage"
-                  min="1"
-                  max={pdfPagesCount}
-                />
-              </div>
-              <div className="d-flex center">
-                <label htmlFor="toPage" className="dim fs-5 mx-3">
-                  End page:
-                </label>
-                <input
-                  style={{ width: "5rem" }}
-                  className="center bg-color shadow-in px-2 mx-2 form-control"
-                  type="number"
-                  id="toPage"
-                  min="1"
-                  max={pdfPagesCount}
-                />
-              </div>
-            </div>
-            <div className="col-lg-3">
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                className="shadow-out shadow-btn dim my-5 p-2"
-                onClick={removePdfPages}
-              >
-                Remove Pages
-              </motion.button>
-            </div>
-          </div>
-        </>
+      {pdfPagesCount <= 1 && (
+        <div className="text-danger fw-bold pop center">
+          Please upload a PDF with more than 1 page
+        </div>
       )}
-     
-      <iframe
-        height={700}
-        src={pdfFileData}
-        title="pdf-viewer"
-        style={{ width: "60vw" }}
-        id="pdf-preview"
-      ></iframe>
-     
+      {pdfFileData &&
+        !pdfPagesCount <=
+          1 &&(
+            <>
+              <div className="col-lg-8  col-md-10 col-sm-12">
+                <div className="my-5 d-flex  justify-content-around">
+                  <div className="row">
+                    <div className="d-flex col-lg-6 col-sm-12 my-2  center">
+                      <label htmlFor="fromPage" className="dim fs-5 mx-3">
+                        Start page:
+                      </label>
+                      <input
+                        style={{ width: "5rem" }}
+                        className="center bg-color shadow-in px-2 mx-2 form-control"
+                        type="number"
+                        id="fromPage"
+                        min="1"
+                        max={pdfPagesCount}
+                      />
+                    </div>
+                    <div className="d-flex  col-lg-6 col-sm-12 my-2 center">
+                      <label htmlFor="toPage" className="dim fs-5 mx-3">
+                        End page:
+                      </label>
+                      <input
+                        style={{ width: "5rem" }}
+                        className="center bg-color shadow-in px-2 mx-2 form-control"
+                        type="number"
+                        id="toPage"
+                        min="1"
+                        max={pdfPagesCount}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="center">
+                  {show ? (
+                    <button
+                      className="shadow-out shadow-btn dim my-5 p-2"
+                      onClick={() => {
+                        const link = document.createElement("a");
+                        link.href = pdfFileData;
+                        link.download = "download.pdf";
+                        link.click();
+                      }}
+                    >
+                      Download PDF
+                    </button>
+                  ) : (
+                    <button
+                      className="shadow-out shadow-btn dim my-5 p-2"
+                      onClick={removePdfPages}
+                    >
+                      Remove Pages
+                    </button>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
     </div>
   );
 }

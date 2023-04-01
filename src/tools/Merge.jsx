@@ -1,18 +1,24 @@
 import PDFMerger from "pdf-merger-js/browser";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
+
 const Merger = () => {
-  const [mergedPdfUrl, setMergedPdfUrl] = useState();
+  const [mergedPdfBlob, setMergedPdfBlob] = useState();
   const [files, setFiles] = useState([]);
+  const [filesArray, setFilesArray] = useState([]);
   const [error, seterror] = useState("");
 
   const handleFileInputChange = (event) => {
-    setFiles(event.target.files);
-    if (files.length < 2) {
-      seterror("Please select more than 1 files !!");
+    const selectedFiles = event.target.files;
+    const filesArray = Array.from(selectedFiles).map((file) => file.name);
+    setFiles(selectedFiles);
+    if (selectedFiles.length < 2) {
+      seterror("Please select more than 1 files to merge !!");
+      setFilesArray([]);
       return;
     }
+    setFilesArray(filesArray);
   };
 
   const handleMergeButtonClick = async () => {
@@ -23,11 +29,37 @@ const Merger = () => {
     }
 
     const mergedPdf = await merger.saveAsBlob();
-    const url = URL.createObjectURL(mergedPdf);
-
-    setMergedPdfUrl(url);
+    setMergedPdfBlob(mergedPdf);
   };
 
+  const date = new Date();
+  const options = {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+    hour12: true,
+  };
+  const timestamp = date
+    .toLocaleString("en-in", options)
+    .replace(",", "__")
+    .replace(" ", "");
+
+  // Download the merged pdf
+  const handleDownloadClick = () => {
+    const url = URL.createObjectURL(mergedPdfBlob);
+    const fileName = `merged_${timestamp}.pdf`; // Generate a unique name
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+  useEffect(() => {
+    setMergedPdfBlob(null);
+  }, [files]);
   return (
     <div className="container pop my-5 row center">
       <div className="col-lg-7 col-md-10 col-sm-12 my-4">
@@ -50,34 +82,41 @@ const Merger = () => {
               id="mergePdf"
               onChange={handleFileInputChange}
               multiple
+              accept=".pdf"
             />
           </motion.label>
         </div>
         <div className="text-danger fs-5">{files.length < 2 ? error : ""}</div>
+        {filesArray && filesArray.length > 0 && (
+          <div className="dim fs-5">
+            Selected Files:
+            <ul>{filesArray.map((item,id)=>{
+              return <li className="text-dark" key={id}>{item}</li>
+            })}</ul>
+          </div>
+        )}
 
         <div className="container m-5">
-          {files.length > 1 ? (
+          {mergedPdfBlob && (
+            <button
+              className="shadow-btn dim fs-5  shadow-out"
+              onClick={handleDownloadClick}
+            >
+              Download
+            </button>
+          )}
+          {files.length > 1 && !mergedPdfBlob && (
             <button
               className="shadow-btn dim fs-5  shadow-out"
               onClick={handleMergeButtonClick}
             >
               Merge
             </button>
-          ) : null}
-        </div>
-      </div>
-      <div className="center row">
-        <div className="col-lg-8 col-md-10 col-sm-12 container">
-          <iframe
-            height={1000}
-            src={`${mergedPdfUrl ? mergedPdfUrl : ""}`}
-            title="pdf-viewer"
-            width="100%"
-            id="pdf-preview"
-          ></iframe>
+          )}
         </div>
       </div>
     </div>
   );
 };
+
 export default Merger;

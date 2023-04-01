@@ -49,17 +49,36 @@ async function getImageSize(dataUrl) {
 
 function App() {
   const [images, setImages] = useState([]);
+  const [filesArray, setFilesArray] = useState([]);
 
   async function handleFileInputChange(event) {
     //jitne bhi img hai usko array mei dal dega
-    const files = Array.from(event.target.files);
+    const selectedFiles = event.target.files;
+    const files = Array.from(selectedFiles);
+    const filesArray = Array.from(selectedFiles).map((file) => file.name);
+
     setImages(files);
+    setFilesArray(filesArray);
   }
+  const date = new Date();
+  const options = {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+    hour12: true,
+  };
+  const timestamp = date
+    .toLocaleString("en-in", options)
+    .replace(",", "__")
+    .replace(" ", "");
 
   async function handleSavePdf() {
     //save ke liye
     const pdf = await generatePdf(images);
-    pdf.save("Img2Pdf.pdf");
+    const fileName=`Img2Pdf_${timestamp}`;
+    pdf.save(fileName);
   }
 
   return (
@@ -89,6 +108,20 @@ function App() {
             />
           </motion.label>
         </div>
+        {filesArray && filesArray.length > 0 && (
+          <div className="dim fs-5">
+            Selected Files:
+            <ul>
+              {filesArray.map((item, id) => {
+                return (
+                  <li className="text-dark" key={id}>
+                    {item}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        )}
       </div>
       <div className="row  center">
         <div className="col-lg-6 col-md-10 col-sm-12">

@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { PDFDocument } from "pdf-lib";
-import {motion} from 'framer-motion'
+import { motion } from "framer-motion";
 
 export default function ExtractPages() {
   const [pdfFileData, setPdfFileData] = useState();
   const [pdfPagesCount, setPdfPagesCount] = useState();
   const [totalFiles, setTotalFiles] = useState(0);
   const [error, seterror] = useState("");
+  const [pagesExtracted, setPagesExtracted] = useState(false);
+  const [filesArray, setFilesArray] = useState([]);
+
 
   function readFileAsync(file) {
     return new Promise((resolve, reject) => {
@@ -55,6 +58,7 @@ export default function ExtractPages() {
       // Replace original PDF with extracted pages
       setPdfFileData(newPdfUrl);
       setPdfPagesCount(pages.length);
+      setPagesExtracted(true);
     } else {
       seterror("Enter a Page Range !!");
     }
@@ -62,10 +66,37 @@ export default function ExtractPages() {
   // Execute when user select a file
   const onFileSelected = async (e) => {
     const fileList = e.target.files;
+    const filesArray = Array.from(fileList).map((file) => file.name);
+
     setTotalFiles(fileList.length);
     if (fileList?.length > 0) {
       const pdfArrayBuffer = await readFileAsync(fileList[0]);
       await renderPdf(pdfArrayBuffer);
+    }
+    setFilesArray(filesArray);
+
+  };
+  const date = new Date();
+  const options = {
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+    hour12: true,
+  };
+  const timestamp = date
+    .toLocaleString("en-in", options)
+    .replace(",", "__")
+    .replace(" ", "");
+  const downloadPdf = () => {
+    if (pdfFileData) {
+      const link = document.createElement("a");
+      link.href = pdfFileData;
+      link.download = `extracted-pages_${timestamp}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
   };
 
@@ -75,7 +106,11 @@ export default function ExtractPages() {
         <h1 className="stroke my-4 center p-1 ls-2">Extract Pages from PDF</h1>
         <div className="d-flex justify-content-around center">
           <span className="dim fs-5 fw-bold">Total Files : {totalFiles}</span>
-          <motion.label whileHover={{scale:1.1}} htmlFor="extract-pdf" className="u-f-b">
+          <motion.label
+            whileHover={{ scale: 1.1 }}
+            htmlFor="extract-pdf"
+            className="u-f-b"
+          >
             {pdfFileData ? "Upload More?" : "Upload Files"}
             <input
               type="file"
@@ -87,56 +122,73 @@ export default function ExtractPages() {
           </motion.label>
         </div>
       </div>
+      <div className="center mt-5">
+        {filesArray && filesArray.length > 0 && (
+            <div className="dim fs-5">
+              Selected Files:
+              <ul>
+                {filesArray.map((item, id) => {
+                  return (
+                    <li className="text-dark" key={id}>
+                      {item}
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
+      </div>
       {pdfFileData && (
         <>
           <div className="col-lg-6  col-md-10 col-sm-12">
             <div className="my-5 d-flex  justify-content-around">
-              <div className="d-flex center">
-                <label htmlFor="fromPage" className="dim fs-5 mx-3">
-                  Start page:
-                </label>
-                <input
-                  style={{ width: "5rem" }}
-                  className="center bg-color shadow-in px-2 mx-2 form-control"
-                  type="number"
-                  id="fromPage"
-                  min="1"
-                  max={pdfPagesCount}
-                />
+              <div className="row">
+                <div className="d-flex col-lg-5 col-sm-12 my-2 center">
+                  <label htmlFor="fromPage" className="dim fs-5 mx-3">
+                    Start page:
+                  </label>
+                  <input
+                    style={{ width: "5rem" }}
+                    className="center bg-color shadow-in px-2 mx-2 form-control"
+                    type="number"
+                    id="fromPage"
+                    min="1"
+                    max={pdfPagesCount}
+                  />
+                </div>
+                <div className="d-flex col-lg-5 col-sm-12 my-2 center">
+                  <label htmlFor="toPage" className="dim fs-5 mx-3">
+                    End page:
+                  </label>
+                  <input
+                    style={{ width: "5rem" }}
+                    className="center bg-color shadow-in px-2 mx-2 form-control"
+                    type="number"
+                    id="toPage"
+                    min="1"
+                    max={pdfPagesCount}
+                  />
+                </div>
               </div>
-              <div className="d-flex center">
-                <label htmlFor="toPage" className="dim fs-5 mx-3">
-                  End page:
-                </label>
-                <input
-                  style={{ width: "5rem" }}
-                  className="center bg-color shadow-in px-2 mx-2 form-control"
-                  type="number"
-                  id="toPage"
-                  min="1"
-                  max={pdfPagesCount}
-                />
-              </div>
-            </div>
-            <div className="col-lg-3">
-              <motion.button
-              whileHover={{scale:1.1}}
-                className="shadow-out shadow-btn dim  p-2"
-                onClick={extractPdfPages}
-              >
-                Extract Pages
-              </motion.button>
             </div>
           </div>
-          <div className="center my-5 row">
-            <div className="col-lg-12  col-md-10 col-sm-12 container">
-              <iframe
-                height={1000}
-                src={pdfFileData}
-                title="pdf-viewer"
-                width="100%"
-                id="pdf-preview"
-              ></iframe>
+          <div className="my-5 row d-flex justify-content-center">
+            <div className="col-lg-12  col-md-10 col-sm-12 d-flex justify-content-center">
+              {pagesExtracted ? (
+                <button
+                  className="shadow-out shadow-btn dim p-2"
+                  onClick={downloadPdf}
+                >
+                  Download
+                </button>
+              ) : (
+                <button
+                  className="shadow-out shadow-btn dim  p-2"
+                  onClick={extractPdfPages}
+                >
+                  Extract Pages
+                </button>
+              )}
             </div>
           </div>
         </>

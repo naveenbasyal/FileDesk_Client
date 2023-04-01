@@ -34,6 +34,15 @@ input {
   z-index: 1000000;
   backdrop-filter: blur(8px);
 }
+.pricearrowUp {
+  border-radius: 6px;
+  padding: .7rem .6rem!important;
+  right: 5rem;
+  position: fixed;
+  bottom: 10rem;
+  z-index: 1000000;
+  backdrop-filter: blur(8px);
+}
 .arrowUp:active {
   box-shadow: var(--shadow-in);
 }
@@ -248,11 +257,20 @@ a.u-f-b:hover {
     z-index: 111111;
     backdrop-filter: blur(10px);
   }
+  
+
+  .pricearrowUp {
+    right: 1.8rem;
+    bottom: 6.5rem;
+    z-index: 111111;
+    /* backdrop-filter: blur(10px); */
+  }
   .deleteIcon {
     display: flex !important;
     padding: 0rem 1rem !important;
     width: 100% !important;
     justify-content: space-around;
+    align-items: center;
   }
   .fileprice {
     /* right: 2rem !important; */

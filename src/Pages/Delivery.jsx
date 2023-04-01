@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
-import TotalPrices from "../components/Footer";
 import DeliveryHeader from "../delivery/components/DeliveryHeader";
 import "../styles/delivery.css";
 import { Link } from "react-router-dom";
@@ -44,6 +43,7 @@ const Delivery = ({ scrollToTop }) => {
   const [shop, setShop] = useState({});
   const token = getToken();
   const getShop = async () => {
+    setLoading(true);
     const res = await fetch(
       `${process.env.REACT_APP_SERVER_URL}/api/shop/details`,
       {
@@ -53,12 +53,12 @@ const Delivery = ({ scrollToTop }) => {
         },
       }
     );
+    setLoading(false);
     const data = await res.json();
     if (data.error) {
       console.log(data.error);
     }
     setShop(data.msg);
-    setLoading(false);
   };
   // __________ On File change __________
   const handleFileChange = (e) => {
@@ -175,8 +175,8 @@ const Delivery = ({ scrollToTop }) => {
     }
   };
   useEffect(() => {
+    // scrollToTop();
     document.title = "FileDesk | Delivery";
-    setLoading(true);
     getShop();
   }, []);
 
@@ -209,16 +209,17 @@ const Delivery = ({ scrollToTop }) => {
         <DeliveryHeader />
         <motion.span
           whileHover={{ scale: 1.1 }}
+          className=" text-danger pricearrowUp  p-2 d-flex align-items-center pointer "
+        >
+          <i className="fas p-1 fa-inr"></i>
+          <span className="fw-bold ">{subTotalPrice}</span>
+        </motion.span>
+        <motion.span
+          whileHover={{ scale: 1.1 }}
           className="shadow-out arrowUp  p-2 d-flex align-items-center pointer "
           onClick={scrollToTop}
         >
-          <lord-icon
-            src="https://cdn.lordicon.com/xsdtfyne.json"
-            trigger="loop"
-            colors="primary:#5b4af1"
-            state="hover-2"
-            style={{ width: "33px" }}
-          ></lord-icon>
+          <i class="fa-solid fa-arrow-up fs-5 px-2 py-1 stroke"></i>
         </motion.span>
 
         {/* ------------Main Delivery section---------- */}
@@ -298,7 +299,7 @@ const Delivery = ({ scrollToTop }) => {
                   <div>
                     {Object.entries(selectedFiles).map(
                       ([name, file], index) => (
-                        <motion.div key={index} whileHover={{ scale: 1.05 }}>
+                        <motion.div key={index}>
                           {console.log(file)}
                           <motion.div
                             data-aos="zoom-in"
@@ -639,15 +640,15 @@ const Delivery = ({ scrollToTop }) => {
                               </div>
                             </div>
                             {/* ------Delete Icon -------*/}
-                            <div className="col-lg-2 py-4 position-relative  deleteIcon">
-                              <button className="shadow-out my-1 trash shadow-btn text-danger px-2 center ">
-                                <i
-                                  className="fa fa-trash "
-                                  aria-hidden="true"
-                                  onClick={() =>
-                                    handleDeleteFile(name, file.price)
-                                  }
-                                ></i>
+                            <div className="col-lg-2 py-4 position-relative   deleteIcon">
+                              <button
+                                className="shadow-out my-1 trash shadow-btn text-danger px-2 center
+                               "
+                                onClick={() =>
+                                  handleDeleteFile(name, file.price)
+                                }
+                              >
+                                <i className="fa-solid fa-trash  fa-shake fs-5"></i>
                               </button>
                               {/* ------------- Single Pdf Price------- */}
                               <div className="position-absolute fileprice  bottom-0 filePrice pb-5 mb-2">
@@ -736,7 +737,7 @@ const Delivery = ({ scrollToTop }) => {
                             src="https://cdn.lordicon.com/oaflahpk.json"
                             trigger="loop"
                             colors="primary:#5b4af1"
-                            style={{ width: "33px" }}
+                            style={{ width: "40px" }}
                           ></lord-icon>
                         </span>
                         <hr className="dim fs-4" style={{ height: "1.2px" }} />
@@ -770,51 +771,27 @@ const Delivery = ({ scrollToTop }) => {
                             </label>
                           </div>
                         </div>
-                        {/* <div className="d-flex row mx-2 my-3 ">
-                          <div className="col-lg-6 col-sm-12 my-2">
-                            <label
-                              className="my-2 position-relative d-flex justify-content-around"
-                              htmlFor="pincode"
-                            >
-                              <input
-                                type="text"
-                                id="pincode"
-                                placeholder=" "
-                                className="shadow-out addressInput"
-                              />
-                              <span className="placeholder">Pincode</span>
-                            </label>
-                          </div>
-                          <div className="col-lg-6 col-sm-12 my-2">
-                            <label
-                              className="my-2 position-relative  d-flex justify-content-around"
-                              htmlFor="locality"
-                            >
-                              <input
-                                id="locality"
-                                type="text"
-                                placeholder=" "
-                                className=" shadow-out addressInput"
-                              />
-                              <span className="placeholder">Locality</span>
-                            </label>
-                          </div>
-                        </div> */}
-                          <div className="col-lg-12  col-sm-12 my-2 center">
-                            <select className="bg-color blocks shadow-out p-2" name="" id="" style={{width:"50%"}}>
-                              <option value="none">Select Block</option>
-                              <option value="Block 1">Block 1</option>
-                              <option value="Block 2">Block 2</option>
-                              <option value="Block 3">Block 3</option>
-                              <option value="Block 4">Block 4</option>
-                              <option value="Block 5">Block 5</option>
-                              <option value="Block 6">Block 6</option>
-                              <option value="Block 7">Block 7</option>
-                              <option value="Block 8">Block 8</option>
-                              <option value="Block 9">Block 9</option>
-                              <option value="Block 10">Block 10</option>
-                            </select>
-                          </div>
+                        <div className="col-lg-12  col-sm-12 my-2 center">
+                          <select
+                            className="bg-color blocks pointer shadow-out p-2"
+                            name=""
+                            id=""
+                            required
+                            style={{ width: "50%" }}
+                          >
+                            <option value="none">Select Block</option>
+                            <option value="Block 1">Block 1</option>
+                            <option value="Block 2">Block 2</option>
+                            <option value="Block 3">Block 3</option>
+                            <option value="Block 4">Block 4</option>
+                            <option value="Block 5">Block 5</option>
+                            <option value="Block 6">Block 6</option>
+                            <option value="Block 7">Block 7</option>
+                            <option value="Block 8">Block 8</option>
+                            <option value="Block 9">Block 9</option>
+                            <option value="Block 10">Block 10</option>
+                          </select>
+                        </div>
                         <div className="col-lg-12 col-sm-12 center position-relative my-4">
                           <textarea
                             name="address"
@@ -859,7 +836,7 @@ const Delivery = ({ scrollToTop }) => {
                             <td>₹ {shop?.deliveryPrice}</td>
                           </tr>
                           <tr>
-                            <td> Fast Delivery </td>
+                            <td> Fast Delivery</td>
                             <td> ₹ {shop?.fastDeliveryPrice}</td>
                           </tr>
                         </tbody>
@@ -901,7 +878,10 @@ const Delivery = ({ scrollToTop }) => {
                               });
                             }}
                           />
-                          Fast Delivery
+                          <div className="d-flex align-items-center">
+                            Fast Delivery
+                            <i class="fa-solid dim p-2 fa-rocket fs-4 fa-beat"></i>
+                          </div>
                         </div>
                       </div>
                       <hr className="dim" />

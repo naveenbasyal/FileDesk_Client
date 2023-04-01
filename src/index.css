@@ -4,8 +4,10 @@
   padding: 0;
   box-sizing: border-box;
   font-family: var(--font);
+  user-select: none;
   
 }
+
 :root {
   --primary-lighter: #bdc2ff;
   --primary-light: #8a94ff;

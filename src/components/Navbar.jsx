@@ -15,6 +15,7 @@ const Navbar = ({ scrollToTop }) => {
     setShowSidebar(false);
   };
 
+
   // sidebar Function
   const handleToggleSidebar = () => {
     setShowSidebar(!showSidebar);
@@ -50,7 +51,11 @@ const Navbar = ({ scrollToTop }) => {
             data-tooltip="Home"
             onClick={() => handleLinkClick("home")}
           >
-            <i className="fa-solid fa-house-chimney"></i>
+            <i
+              className={`fa-solid fa-house-chimney ${
+                activeLink === "home" ? "fa-beat stroke p-1" : ""
+              }`}
+            ></i>
             <span className="link-name px-3">Home</span>
           </Link>
           <Link
@@ -63,7 +68,11 @@ const Navbar = ({ scrollToTop }) => {
             data-tooltip="Tools"
             onClick={() => handleLinkClick("tools")}
           >
-            <i className="fa-solid fa-screwdriver-wrench p-2"></i>
+            <i
+              className={`fa-solid fa-screwdriver-wrench ${
+                activeLink === "tools" ? "fa-beat stroke p-1" : ""
+              } p-2`}
+            ></i>
             <span className="link-name px-3">Tools</span>
           </Link>
           <Link
@@ -76,7 +85,11 @@ const Navbar = ({ scrollToTop }) => {
             data-tooltip="Dashboard"
             onClick={() => handleLinkClick("dashboard")}
           >
-            <i className="fa-solid p-2 fa-gauge"></i>
+            <i
+              className={`fa-solid p-2 fa-gauge ${
+                activeLink === "dashboard" ? "stroke fa-beat p-1" : ""
+              }`}
+            ></i>
             <span className="link-name px-3">Dashboard</span>
           </Link>
           {token ? (
@@ -108,7 +121,6 @@ const Navbar = ({ scrollToTop }) => {
             </Link>
           )}
         </div>
-        
 
         {/* MenuBar */}
         <div className="menubar" onClick={handleToggleSidebar}>

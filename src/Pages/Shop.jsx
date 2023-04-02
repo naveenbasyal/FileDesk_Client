@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useContext } from "react";
 import Dashboard from "./Dashboard";
-import { motion } from "framer-motion";
 import { HashLoader } from "react-spinners";
 import { toast } from "react-hot-toast";
+import { ShopContext } from "../Context/ShopProvider";
 const Shop = () => {
-  const [shop, setShop] = useState({});
+  const { getShop, shop, inputDetails, setInputDetails, setShop } =
+    useContext(ShopContext);
+
   const [disabled, setdisabled] = useState(true);
-  const [inputDetails, setInputDetails] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,25 +35,6 @@ const Shop = () => {
     }
   }, [inputDetails]);
 
-  const getShop = async () => {
-    const res = await fetch(
-      `${process.env.REACT_APP_SERVER_URL}/api/shop/details`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          // "x-auth-token": localStorage.getItem("filedesk"),
-        },
-      }
-    );
-    const data = await res.json();
-    if (data.error) {
-      console.log(data.error);
-    }
-    console.log(data.msg);
-    setShop(data.msg);
-    setInputDetails(data.msg);
-  };
 
   const handleUpdateCharges = async () => {
     const res = await fetch(
@@ -91,12 +73,7 @@ const Shop = () => {
         <>
           <div className="row justify-content-around">
             <div className="col-lg-3 col-sm-12 p-3 ">
-              <div
-                whileHover={{ scale: 1.03 }}
-                initial={{ x: "-100vw" }}
-                animate={{ x: 0 }}
-                transition={{ type: "spring", duration: 0.7, bounce: 0.5 }}
-              >
+              <div>
                 <div className="d-flex justify-content-between">
                   <h4 className="dim fs-5">Binding Charges</h4>
                   <i className="fa-solid center dim p-2 fw-bold fa-inr"></i>
@@ -132,12 +109,7 @@ const Shop = () => {
               </div>
             </div>
             <div className="col-lg-3  col-sm-12 p-3 ">
-              <div
-                whileHover={{ scale: 1.03 }}
-                initial={{ x: "100vw" }}
-                animate={{ x: 0 }}
-                transition={{ type: "spring", duration: 0.7, bounce: 0.5 }}
-              >
+              <div>
                 <div className="d-flex justify-content-between">
                   <h4 className="dim fs-5">Printing Charges</h4>
                   <i className="fa-solid center dim p-2 fw-bold fa-inr"></i>
@@ -187,12 +159,7 @@ const Shop = () => {
               </div>
             </div>
             <div className="col-lg-3 col-sm-12 p-3 ">
-              <div
-                whileHover={{ scale: 1.03 }}
-                initial={{ x: "100vw" }}
-                animate={{ x: 0 }}
-                transition={{ type: "spring", duration: 0.7, bounce: 0.5 }}
-              >
+              <div>
                 <div className="d-flex justify-content-between">
                   <h4 className="dim fs-5">Delivery Charges</h4>
                   <i className="fa-solid center dim p-2 fw-bold fa-inr"></i>
@@ -229,10 +196,6 @@ const Shop = () => {
             </div>
           </div>
           <button
-            whileHover={{ scale: 1.03 }}
-            initial={{ x: "-100vw" }}
-            animate={{ x: 0 }}
-            transition={{ type: "spring", duration: 0.7, bounce: 0.5 }}
             className="u-f-b  mt-5 center m-auto"
             onClick={handleUpdateCharges}
             disabled={disabled}

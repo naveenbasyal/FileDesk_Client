@@ -4,9 +4,10 @@ import { Toaster } from "react-hot-toast";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import "./styles/Footer.css";
-import lottie from 'lottie-web';
-import { defineElement } from 'lord-icon-element';
-
+import lottie from "lottie-web";
+import { defineElement } from "lord-icon-element";
+import { ShopProvider } from "./Context/ShopProvider";
+import ErrorPage from "./Pages/ErrorPage"
 // define "lord-icon" custom element with default properties
 defineElement(lottie.loadAnimation);
 
@@ -27,7 +28,7 @@ const RemovePages = lazy(() => import("./tools/RemovePages"));
 const PdfMaker = lazy(() => import("./tools/PdfMaker"));
 const DocToPdf = lazy(() => import("./tools/DocToPdf"));
 const ConvertToZip = lazy(() => import("./tools/ConvertToZip"));
-const MoonLoader = lazy(() => import("react-spinners/MoonLoader"));
+
 
 const scrollToTop = () => {
   window.scrollTo({
@@ -60,7 +61,11 @@ const App = () => {
             <Routes>
               <Route
                 path="/"
-                element={<Delivery scrollToTop={scrollToTop} />}
+                element={
+                  <ShopProvider>
+                    <Delivery scrollToTop={scrollToTop} />
+                  </ShopProvider>
+                }
               />
               <Route
                 path="/tools"
@@ -74,12 +79,23 @@ const App = () => {
               <Route path="/tools/doc-to-pdf" element={<DocToPdf />} />
               <Route path="/tools/convert-zip" element={<ConvertToZip />} />
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/dashboard/shop" element={<Shop />} />
+              <Route
+                path="/dashboard/shop"
+                element={
+                  <ShopProvider>
+                    <Shop />
+                  </ShopProvider>
+                }
+              />
               <Route path="/dashboard/orders" element={<Orders />} />
-              <Route path="/auth" element={<Auth scrollToTop={scrollToTop} />} />
+              <Route
+                path="/auth"
+                element={<Auth scrollToTop={scrollToTop} />}
+              />
               <Route path="/resetpassword/:token" element={<Reset />} />
               <Route path="/forgotpassword" element={<ForgotPassword />} />
               <Route path="/verifyemail/:token" element={<VerifyEmail />} />
+              <Route path="/*" element={<ErrorPage/>} />
             </Routes>
           </Suspense>
         </div>

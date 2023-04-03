@@ -1,4 +1,4 @@
-import { useState, createContext } from "react";
+import { useState, createContext,useContext } from "react";
 
 const ShopContext = createContext();
 
@@ -9,6 +9,7 @@ const ShopProvider = ({ children }) => {
 
 
   const getShop = async () => {
+    console.log("first")
     setLoading(true);
     const res = await fetch(
       `${process.env.REACT_APP_SERVER_URL}/api/shop/details`,
@@ -24,7 +25,7 @@ const ShopProvider = ({ children }) => {
     if (data.error) {
       console.log(data.error);
     }
-    // console.log("Charges -->",data.msg);
+    console.log("Shop Charges -->",data.msg);
     setShop(data.msg);
     setInputDetails(data.msg);
   };
@@ -37,5 +38,8 @@ const ShopProvider = ({ children }) => {
     </ShopContext.Provider>
   );
 };
+const useGlobalShop =()=>{
+  return useContext(ShopContext);
+}
 
-export { ShopContext,ShopProvider  };
+export { ShopContext,ShopProvider,useGlobalShop  };

@@ -1,15 +1,14 @@
-import React,{useEffect} from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import ToolsHeader from "../components/ToolsHeader";
 import Footer from "../components/Footer";
 
-
 const Tools = ({ scrollToTop }) => {
   useEffect(() => {
     document.title = "FileDesk | Tools";
-  }, [])
-  
+  }, []);
+
   const tools = [
     {
       id: 1,
@@ -41,10 +40,10 @@ const Tools = ({ scrollToTop }) => {
     },
     {
       id: 5,
-      name: "Rotate Pages",
-      description: "Rotate pages in PDF",
-      icon: "fa-rotate",
-      link: "/tools/rotate-pages",
+      name: "Create Pdf",
+      description: "Create PDF from Text",
+      icon: "fa-file-pdf",
+      link: "/tools/create-pdf",
     },
     {
       id: 6,
@@ -55,10 +54,10 @@ const Tools = ({ scrollToTop }) => {
     },
     {
       id: 7,
-      name: "Create Pdf",
-      description: "Create PDF from Text",
-      icon: "fa-file-pdf",
-      link: "/tools/create-pdf",
+      name: "Rotate Pages",
+      description: "Rotate pages in PDF",
+      icon: "fa-rotate",
+      link: "/tools/rotate-pages",
     },
     {
       id: 8,
@@ -81,15 +80,17 @@ const Tools = ({ scrollToTop }) => {
           <div className="row">
             {tools.map((tool) => (
               // __________Tools_Card____________
-              <div className="col-lg-4 my-1 col-md-6 card_tools col-sm-12" key={tool.id}>
+              <div
+                className="col-lg-4 my-1 col-md-6 card_tools col-sm-12"
+                key={tool.id}
+              >
                 <Link to={tool.link} className=" shadow-out">
                   <motion.div
                     onClick={scrollToTop}
                     initial={{ x: "100vw", opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
-                    transition={{ duration: 0.2 ,bounce:.2,type:"tween"}}
+                    transition={{ duration: 0.2, bounce: 0.2, type: "tween" }}
                     style={{ height: "10rem" }}
-                    
                     whileHover={{ scale: 1.1 }}
                     className="card  m-2 bg-color border-none pointer shadow-out"
                   >
@@ -111,8 +112,7 @@ const Tools = ({ scrollToTop }) => {
           </div>
         </div>
       </div>
-      <Footer/>
-
+      <Footer />
     </div>
   );
 };

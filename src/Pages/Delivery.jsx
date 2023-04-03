@@ -10,12 +10,12 @@ import * as pdfjsLibs from "pdfjs-dist/webpack";
 import BindingCharges from "../delivery/Charges/BindingCharges";
 import PaperCharges from "../delivery/Charges/PrintingCharges";
 import Footer from "../components/Footer";
-import { ShopContext } from "../Context/ShopProvider";
+import { useGlobalShop } from "../Context/ShopProvider";
 
 const Delivery = ({ scrollToTop }) => {
   // _______________ Context API____________________
   const token = getToken();
-  const { setshop, getShop, shop, loading } = useContext(ShopContext);
+  const {getShop, shop, loading } = useGlobalShop();
 
   const [selectedFiles, setSelectedFiles] = useState({});
   const [totalFiles, setTotalFiles] = useState(0);
@@ -99,15 +99,15 @@ const Delivery = ({ scrollToTop }) => {
                 (prev) => {
                   return { ...prev, ...newFiles }; // merge newFiles with previously selected files
                 },
-                () => {
-                  //callback function to update price or value immediately
-                  const updatedFiles = { ...selectedFiles, ...newFiles };
-                  updatedFiles.price = calculatePrice(updatedFiles);
+                // () => {
+                //   //callback function to update price or value immediately
+                //   const updatedFiles = { ...selectedFiles, ...newFiles };
+                //   updatedFiles.price = calculatePrice(updatedFiles);
 
-                  setSelectedFiles((prev) => {
-                    return { ...prev, ...updatedFiles };
-                  }); // merge newFiles with previously selected files))
-                }
+                //   setSelectedFiles((prev) => {
+                //     return { ...prev, ...updatedFiles };
+                //   }); // merge newFiles with previously selected files))
+                // }
               );
 
               setTotalFiles(

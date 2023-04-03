@@ -2,10 +2,10 @@ import React, { useEffect, useState, useContext } from "react";
 import Dashboard from "./Dashboard";
 import { HashLoader } from "react-spinners";
 import { toast } from "react-hot-toast";
-import { ShopContext } from "../Context/ShopProvider";
+import { ShopContext, useGlobalShop } from "../Context/ShopProvider";
 const Shop = () => {
   const { getShop, shop, inputDetails, setInputDetails, setShop } =
-    useContext(ShopContext);
+    useGlobalShop();
 
   const [disabled, setdisabled] = useState(true);
 

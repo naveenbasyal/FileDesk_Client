@@ -5,7 +5,7 @@ const ConvertToZip = () => {
     const [file, setFile] = useState({})
     const [zip, setZip] = useState('')
 
-    const convert = async () => {
+    const convert = async () => { 
         const formData = new FormData()
         formData.append('file', file)
         const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/file/zip`, {

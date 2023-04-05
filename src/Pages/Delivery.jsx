@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import DeliveryHeader from "../delivery/components/DeliveryHeader";
 import "../styles/delivery.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion"; // Framer Motion for cursor animation
 import getToken from "../utils/getToken";
 import { HashLoader } from "react-spinners";
@@ -10,14 +10,33 @@ import * as pdfjsLibs from "pdfjs-dist/webpack";
 import BindingCharges from "../delivery/Charges/BindingCharges";
 import PaperCharges from "../delivery/Charges/PrintingCharges";
 import Footer from "../components/Footer";
+import { uploadPdf } from "../utils/uploadPdf";
 
 const Delivery = ({ scrollToTop }) => {
+  const navigate = useNavigate()
   const [selectedFiles, setSelectedFiles] = useState({});
   //  _ _ _ _ _ For the array of files _ _ _  _ _ _ _  _
   const [selectedFilesArray, setSelectedFilesArray] = useState([]);
   const [totalFiles, setTotalFiles] = useState(0);
   const [error, setError] = useState("");
   const [showThumbail, setshowThumbail] = useState(false);
+
+  const [address, setAddress] = useState({
+    name: '',
+    phone: '',
+    address: '',
+    block: '',
+  })
+
+  const handleAddress = (e) => {
+    const { name, value } = e.target;
+    setAddress((prev) => {
+      return {
+        ...prev,
+        [name]: value,
+      }
+    })
+  }
   // _______ Delivery Options _______
   const [deliveryOptions, setDeliveryOptions] = useState({
     standard: true,
@@ -35,10 +54,12 @@ const Delivery = ({ scrollToTop }) => {
   const [singleSide, setSingleSide] = useState(true);
   const [bothside, setBothSide] = useState(false);
 
+
   // _____Colors____-
   const [color, setColor] = useState("bw");
 
   const [loading, setLoading] = useState(false);
+  const [paymentLoading, setPaymentLoading] = useState(false)
 
   const [shop, setShop] = useState({});
   const token = getToken();
@@ -167,8 +188,8 @@ const Delivery = ({ scrollToTop }) => {
     } else {
       return (
         file.quantity *
-          file.pages *
-          (file.bothSide ? shop?.bwDouble / 2 : shop?.bwSingle) +
+        file.pages *
+        (file.bothSide ? shop?.bwDouble / 2 : shop?.bwSingle) +
         (file.spiralBind && shop?.spiralPrice) +
         (file.plasticCover && shop?.coverPrice)
       );
@@ -198,9 +219,138 @@ const Delivery = ({ scrollToTop }) => {
         : (totalPrice += shop?.fastDeliveryPrice);
     }
     setTotalPrice(totalPrice);
-    console.log("___ All Files Array___");
-    console.log(selectedFilesArray);
+    // console.log("___ All Files Array___");
+    // console.log(selectedFilesArray);
   }, [selectedFiles, deliveryOptions]);
+
+
+  //  __________ Handle Order __________
+
+  const initPayment = (data, user) => {
+    const options = {
+      key: `${process.env.REACT_APP_RAZOR_PAY_KEY}`,
+      currency: data.currency,
+      amount: data.amount,
+      order_id: data.id,
+      name: "FileDesk",
+      description: "Payment for your order",
+      image: "./images/header.png",
+      handler: async function (response) {
+        try {
+          const verifyResponse = await fetch(
+            `${process.env.REACT_APP_SERVER_URL}/api/payment/verify`
+            ,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify(response)
+            }
+          )
+          const verifyData = await verifyResponse.json();
+          if (verifyData?.data === "Payment Successful") {
+            console.log(verifyData)
+            setPaymentLoading(false)
+            toast.success("Payment Successful");
+            navigate('/dashboard/orders')
+            DeleteAllFiles()
+          }
+          else {
+            toast.error("Payment Failed");
+          }
+        } catch (error) {
+          console.log(error)
+        }
+      },
+      prefill: {
+        name: user.name,
+        email: user.email,
+        contact: user.phone
+      },
+      notes: {
+        address: user.address
+      },
+      theme: {
+        color: "#3399cc"
+
+      }
+    };
+    const paymentObject = new window.Razorpay(options);
+    paymentObject.open();
+  }
+
+
+  const handleOrder = async () => {
+    setPaymentLoading(true)
+    const files = selectedFilesArray;
+    const delivery = deliveryOptions;
+    const data = await Promise.all(
+      Object.entries(selectedFiles).map(async ([key, value], i) => {
+        const file = await uploadPdf(files[i]);
+        return {
+          pages: value.pages,
+          price: value.price,
+          quantity: value.quantity,
+          spiralBind: value.spiralBind,
+          plasticCover: value.plasticCover,
+          singleSide: value.singleSide,
+          bothSide: value.bothSide,
+          color: value.color,
+          blackandwhite: value.blackandwhite,
+          filename: value.filename,
+          file: file,
+        };
+      })
+    );
+
+    console.log(data)
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_SERVER_URL}/api/payment/orders`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            data,
+            delivery,
+            totalPrice,
+            totalPages,
+            address,
+            totalFiles
+          }),
+        }
+
+      )
+      const res = await response.json()
+      console.log("___ Response ___");
+      console.log(res);
+      if (res?.error) {
+        setPaymentLoading(false)
+        toast.error(res?.error)
+        return
+      }
+      if (res?.data) {
+        await initPayment(res?.data, res?.user)
+        setPaymentLoading(false)
+      }
+
+      if (response.error) {
+
+        console.log(response.error);
+      } else {
+        console.log(response.msg);
+        toast.success(`Order Placed Successfully`);
+        // DeleteAllFiles();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <>
@@ -300,7 +450,7 @@ const Delivery = ({ scrollToTop }) => {
                     {Object.entries(selectedFiles).map(
                       ([name, file], index) => (
                         <motion.div key={index}>
-                          {console.log(file)}
+                          {/* {console.log(file)} */}
                           <motion.div
                             data-aos="zoom-in"
                             whileHover={{ scale: 1.05 }}
@@ -309,9 +459,8 @@ const Delivery = ({ scrollToTop }) => {
                             <div className="col-lg-3 center">
                               {window.screen.width < 500 ? (
                                 <i
-                                  className={`fa-solid fa-eye my-2 pointer fs-3 ${
-                                    showThumbail ? "dim" : ""
-                                  }`}
+                                  className={`fa-solid fa-eye my-2 pointer fs-3 ${showThumbail ? "dim" : ""
+                                    }`}
                                   onClick={() => setshowThumbail(!showThumbail)}
                                 ></i>
                               ) : (
@@ -381,11 +530,10 @@ const Delivery = ({ scrollToTop }) => {
                             </div>
                             <div className="col-lg-7 py-3">
                               <h4
-                                className={`dim fs-5 d-flex ${
-                                  window.screen.width < 500
-                                    ? " justify-content-center "
-                                    : ""
-                                } `}
+                                className={`dim fs-5 d-flex ${window.screen.width < 500
+                                  ? " justify-content-center "
+                                  : ""
+                                  } `}
                               >
                                 {name}{" "}
                                 <span className="text-danger mx-2">
@@ -581,9 +729,8 @@ const Delivery = ({ scrollToTop }) => {
                                 </div>
                                 <div className="col-lg-9 my-3 d-flex justify-content-around ">
                                   <div
-                                    className={`bwBox tt mx-4 ${
-                                      file.blackandwhite ? "active" : ""
-                                    }`}
+                                    className={`bwBox tt mx-4 ${file.blackandwhite ? "active" : ""
+                                      }`}
                                     data-tooltip="Black and White"
                                     onClick={(e) => {
                                       setColor("bw");
@@ -606,9 +753,8 @@ const Delivery = ({ scrollToTop }) => {
                                     }}
                                   ></div>
                                   <div
-                                    className={`colorBox tt mx-4 ${
-                                      file.color ? "active" : ""
-                                    }`}
+                                    className={`colorBox tt mx-4 ${file.color ? "active" : ""
+                                      }`}
                                     disabled={file.bothSide}
                                     data-tooltip="Coloured"
                                     onClick={(e) => {
@@ -752,6 +898,10 @@ const Delivery = ({ scrollToTop }) => {
                                 id="name"
                                 placeholder=" "
                                 className="addressInput mx-1 shadow-out"
+                                value={address.name}
+                                onChange={handleAddress}
+                                name="name"
+                                required
                               />
                               <span className="placeholder">Name</span>
                             </label>
@@ -763,9 +913,13 @@ const Delivery = ({ scrollToTop }) => {
                             >
                               <input
                                 id="phone"
-                                type="text"
+                                type="number"
                                 placeholder=" "
                                 className="addressInput mx-1 shadow-out"
+                                value={address.phone}
+                                onChange={handleAddress}
+                                required
+                                name="phone"
                               />
                               <span className="placeholder">Phone no</span>
                             </label>
@@ -774,12 +928,16 @@ const Delivery = ({ scrollToTop }) => {
                         <div className="col-lg-12  col-sm-12 my-2 center">
                           <select
                             className="bg-color blocks pointer shadow-out p-2"
-                            name=""
+
                             id=""
                             required
                             style={{ width: "50%" }}
+                            value={address.block}
+                            onChange={handleAddress}
+                            name="block"
+
                           >
-                            <option value="none">Select Block</option>
+                            <option value="" disabled>Select Block</option>
                             <option value="Block 1">Block 1</option>
                             <option value="Block 2">Block 2</option>
                             <option value="Block 3">Block 3</option>
@@ -799,6 +957,9 @@ const Delivery = ({ scrollToTop }) => {
                             className="addressTextarea mx-2 shadow-out"
                             placeholder=" "
                             style={{ width: "93%" }}
+                            value={address.address}
+                            onChange={handleAddress}
+                            required
                             rows="5"
                           ></textarea>
                           <span className="placeholder">Address</span>
@@ -898,13 +1059,27 @@ const Delivery = ({ scrollToTop }) => {
                           </p>
                         ) : null}
                         <button
-                          disabled={totalPrice < 50}
-                          onClick={() => {
-                            toast.success("Order Placed Successfully");
-                          }}
+                          disabled={totalPrice < 50 ||
+                            !address.name ||
+                            !address.phone ||
+                            !address.address ||
+                            !address.block ||
+                            paymentLoading
+
+                          }
+                          onClick={handleOrder}
                           className="shadow-btn shadow-out dim fw-bold"
                         >
-                          Pay Now
+                          {
+                            paymentLoading ? (
+                              <div className="spinner-border text-light" role="status">
+                                <span className="visually-hidden">Loading...</span>
+                              </div>
+                            ) : (
+                              "Place Order"
+                            )
+
+                          }
                         </button>
                       </div>
                     </div>

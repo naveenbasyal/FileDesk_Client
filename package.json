@@ -15,6 +15,7 @@
     "pdf-merger-js": "^4.3.0",
     "pdfjs-dist": "^3.4.120",
     "pdfmake": "^0.2.7",
+    "razorpay": "^2.8.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.0",

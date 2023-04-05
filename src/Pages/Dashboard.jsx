@@ -17,14 +17,14 @@ const Dashboard = () => {
               to="/dashboard/orders"
               className="shadow-btn dim fw-bold shadow-out mx-4 tt"
             >
-              <i class="fa-brands fa-shopify fs-2 fa-shake"></i>
+              <i className="fa-brands fa-shopify fs-2 fa-shake"></i>
             </Link>
             <Link
               data-tooltip="Charges"
               to="/dashboard/shop"
               className="tt shadow-out dim fw-bold shadow-btn mx-4"
             >
-              <i class="fa-solid fa-sack-dollar fs-2 fa-fade"></i>
+              <i className="fa-solid fa-sack-dollar fs-2 fa-fade"></i>
             </Link>
           </div>
         </div>

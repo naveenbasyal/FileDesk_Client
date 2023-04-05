@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { toast } from "react-hot-toast";
 import DeliveryHeader from "../delivery/components/DeliveryHeader";
 import "../styles/delivery.css";
@@ -10,14 +10,24 @@ import * as pdfjsLibs from "pdfjs-dist/webpack";
 import BindingCharges from "../delivery/Charges/BindingCharges";
 import PaperCharges from "../delivery/Charges/PrintingCharges";
 import Footer from "../components/Footer";
+<<<<<<< HEAD
 import { uploadPdf } from "../utils/uploadPdf";
 
 const Delivery = ({ scrollToTop }) => {
   const navigate = useNavigate()
+=======
+import { ShopContext } from "../Context/ShopProvider";
+
+const Delivery = ({ scrollToTop }) => {
+  // _______________ Context API____________________
+  const token = getToken();
+  const { setshop, getShop, shop, loading } = useContext(ShopContext);
+
+>>>>>>> 1431b50c03c86c43107a4fcda682e62d8415aef7
   const [selectedFiles, setSelectedFiles] = useState({});
+  const [totalFiles, setTotalFiles] = useState(0);
   //  _ _ _ _ _ For the array of files _ _ _  _ _ _ _  _
   const [selectedFilesArray, setSelectedFilesArray] = useState([]);
-  const [totalFiles, setTotalFiles] = useState(0);
   const [error, setError] = useState("");
   const [showThumbail, setshowThumbail] = useState(false);
 
@@ -58,6 +68,7 @@ const Delivery = ({ scrollToTop }) => {
   // _____Colors____-
   const [color, setColor] = useState("bw");
 
+<<<<<<< HEAD
   const [loading, setLoading] = useState(false);
   const [paymentLoading, setPaymentLoading] = useState(false)
 
@@ -81,13 +92,15 @@ const Delivery = ({ scrollToTop }) => {
     }
     setShop(data.msg);
   };
+=======
+>>>>>>> 1431b50c03c86c43107a4fcda682e62d8415aef7
   // __________ On File change __________
   const handleFileChange = (e) => {
     const files = e.target.files;
     const fileArray = Array.from(files);
     const newFiles = {};
 
-    // ______ it is only the array of files _____
+    // ______ array of files _____
     setSelectedFilesArray([...selectedFilesArray, ...fileArray]);
 
     fileArray.forEach((file) => {
@@ -196,7 +209,6 @@ const Delivery = ({ scrollToTop }) => {
     }
   };
   useEffect(() => {
-    // scrollToTop();
     document.title = "FileDesk | Delivery";
     getShop();
   }, []);
@@ -219,8 +231,14 @@ const Delivery = ({ scrollToTop }) => {
         : (totalPrice += shop?.fastDeliveryPrice);
     }
     setTotalPrice(totalPrice);
+<<<<<<< HEAD
     // console.log("___ All Files Array___");
     // console.log(selectedFilesArray);
+=======
+    console.log("___ All Files Array___");
+    console.log(selectedFilesArray);
+    console.log(selectedFiles);
+>>>>>>> 1431b50c03c86c43107a4fcda682e62d8415aef7
   }, [selectedFiles, deliveryOptions]);
 
 
@@ -369,7 +387,7 @@ const Delivery = ({ scrollToTop }) => {
           className="shadow-out arrowUp  p-2 d-flex align-items-center pointer "
           onClick={scrollToTop}
         >
-          <i class="fa-solid fa-arrow-up fs-5 px-2 py-1 stroke"></i>
+          <i className="fa-solid fa-arrow-up fs-5 px-2 py-1 stroke"></i>
         </motion.span>
 
         {/* ------------Main Delivery section---------- */}
@@ -450,7 +468,10 @@ const Delivery = ({ scrollToTop }) => {
                     {Object.entries(selectedFiles).map(
                       ([name, file], index) => (
                         <motion.div key={index}>
+<<<<<<< HEAD
                           {/* {console.log(file)} */}
+=======
+>>>>>>> 1431b50c03c86c43107a4fcda682e62d8415aef7
                           <motion.div
                             data-aos="zoom-in"
                             whileHover={{ scale: 1.05 }}
@@ -1041,7 +1062,7 @@ const Delivery = ({ scrollToTop }) => {
                           />
                           <div className="d-flex align-items-center">
                             Fast Delivery
-                            <i class="fa-solid dim p-2 fa-rocket fs-4 fa-beat"></i>
+                            <i className="fa-solid dim p-2 fa-rocket fs-4 fa-beat"></i>
                           </div>
                         </div>
                       </div>

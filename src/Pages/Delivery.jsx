@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import DeliveryHeader from "../delivery/components/DeliveryHeader";
 import "../styles/delivery.css";
@@ -15,7 +15,7 @@ import { useGlobalShop } from "../Context/ShopProvider";
 const Delivery = ({ scrollToTop }) => {
   // _______________ Context API____________________
   const token = getToken();
-  const {getShop, shop, loading } = useGlobalShop();
+  const { getShop, shop, loading } = useGlobalShop();
 
   const [selectedFiles, setSelectedFiles] = useState({});
   const [totalFiles, setTotalFiles] = useState(0);
@@ -98,7 +98,7 @@ const Delivery = ({ scrollToTop }) => {
               setSelectedFiles(
                 (prev) => {
                   return { ...prev, ...newFiles }; // merge newFiles with previously selected files
-                },
+                }
                 // () => {
                 //   //callback function to update price or value immediately
                 //   const updatedFiles = { ...selectedFiles, ...newFiles };
@@ -152,7 +152,7 @@ const Delivery = ({ scrollToTop }) => {
         file.quantity *
           file.pages *
           (file.bothSide ? shop?.bwDouble / 2 : shop?.bwSingle) +
-        (file.spiralBind && shop?.spiralPrice) +
+        (file.spiralBind && shop?.spiralPrice * file.quantity) +
         (file.plasticCover && shop?.coverPrice)
       );
     }
@@ -231,12 +231,12 @@ const Delivery = ({ scrollToTop }) => {
                       htmlFor="formFileLg"
                       className="u-f-b choosefile d-flex align-items-center justify-content-around"
                     >
-                      <lord-icon
+                      {/* <lord-icon
                         src="https://cdn.lordicon.com/wfadduyp.json"
                         trigger="loop"
                         colors="primary:white"
                         style={{ width: "33px" }}
-                      ></lord-icon>
+                      ></lord-icon> */}
                       Upload Files
                       <input
                         multiple
@@ -380,6 +380,7 @@ const Delivery = ({ scrollToTop }) => {
                                 </span>
                               </h4>
                               {/* ___Bind____ */}
+
                               <div className="d-flex my-3 row bind">
                                 <div className="col-lg-3">
                                   <span className="fw-bold dim mx-4">
@@ -460,6 +461,7 @@ const Delivery = ({ scrollToTop }) => {
                                 </div>
                               </div>
                               {/* ___ Setup____ */}
+
                               <div className="d-flex my-3 setup row">
                                 <div className="col-lg-3">
                                   <span className="fw-bold dim mx-4">
@@ -621,7 +623,8 @@ const Delivery = ({ scrollToTop }) => {
                                 </div>
                               </div>
                             </div>
-                            {/* ------Delete Icon -------*/}
+                            {/* ------Delete Icon adn Price Per File -------*/}
+
                             <div className="col-lg-2 py-4 position-relative   deleteIcon">
                               <button
                                 className="shadow-out my-1 trash shadow-btn text-danger px-2 center
@@ -653,12 +656,12 @@ const Delivery = ({ scrollToTop }) => {
                         className="u-f-b  d-flex align-items-center justify-content-around"
                         style={{ width: "11rem" }}
                       >
-                        <lord-icon
+                        {/* <lord-icon
                           src="https://cdn.lordicon.com/wfadduyp.json"
                           trigger="loop"
                           colors="primary:white"
                           style={{ width: "33px" }}
-                        ></lord-icon>
+                        ></lord-icon> */}
                         Upload More?
                         <input
                           multiple
@@ -715,12 +718,12 @@ const Delivery = ({ scrollToTop }) => {
                       <form>
                         <span className="dim fs-5 mx-3 d-flex align-items-center">
                           Enter your Address{" "}
-                          <lord-icon
+                          {/* <lord-icon
                             src="https://cdn.lordicon.com/oaflahpk.json"
                             trigger="loop"
                             colors="primary:#5b4af1"
                             style={{ width: "40px" }}
-                          ></lord-icon>
+                          ></lord-icon> */}
                         </span>
                         <hr className="dim fs-4" style={{ height: "1.2px" }} />
                         <div className="d-flex row mx-2 my-4 ">
@@ -798,12 +801,12 @@ const Delivery = ({ scrollToTop }) => {
                               className="dim fs-5 d-flex align-items-center"
                             >
                               Price Details
-                              <lord-icon
+                              {/* <lord-icon
                                 src="https://cdn.lordicon.com/pmegrqxm.json"
                                 trigger="loop"
                                 colors="primary:#5b4af1"
                                 style={{ width: "27px", marginLeft: ".5rem" }}
-                              ></lord-icon>
+                              ></lord-icon> */}
                             </th>
                             <th scope="col" className="dim"></th>
                           </tr>
@@ -824,7 +827,7 @@ const Delivery = ({ scrollToTop }) => {
                         </tbody>
                       </table>
                       <div className="d-flex justify-content-around mt-3">
-                        <div className="d-flex">
+                        <div className="d-flex align-items-center">
                           <input
                             type="checkbox"
                             name="standard"
@@ -843,7 +846,7 @@ const Delivery = ({ scrollToTop }) => {
                           />
                           Standard Delivery
                         </div>
-                        <div className="dim d-flex">
+                        <div className="dim d-flex align-items-center">
                           <input
                             type="checkbox"
                             name="fast"
@@ -860,7 +863,7 @@ const Delivery = ({ scrollToTop }) => {
                               });
                             }}
                           />
-                          <div className="d-flex align-items-center">
+                          <div className="d-flex align-items-center ">
                             Fast Delivery
                             <i className="fa-solid dim p-2 fa-rocket fs-4 fa-beat"></i>
                           </div>

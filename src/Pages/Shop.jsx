@@ -43,7 +43,6 @@ const Shop = () => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          // "x-auth-token": localStorage.getItem("filedesk"),
         },
         body: JSON.stringify(inputDetails),
       }

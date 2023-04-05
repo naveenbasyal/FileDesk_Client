@@ -9,7 +9,6 @@ const ShopProvider = ({ children }) => {
 
 
   const getShop = async () => {
-    console.log("first")
     setLoading(true);
     const res = await fetch(
       `${process.env.REACT_APP_SERVER_URL}/api/shop/details`,

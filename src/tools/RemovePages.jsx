@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { PDFDocument } from "pdf-lib";
 
 export default function RemovePages() {
@@ -81,7 +80,7 @@ export default function RemovePages() {
             Total Pages : {pdfPagesCount}
           </span>
           <label htmlFor="remove-pages" className="u-f-b">
-            {pdfPagesCount == 0 ? "Upload Files" : "Upload More?"}
+            {pdfPagesCount === 0 ? "Upload Files" : "Upload More?"}
             <input
               type="file"
               className="form-control"

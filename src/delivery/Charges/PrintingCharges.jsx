@@ -1,17 +1,9 @@
 import React from "react";
-import { motion } from "framer-motion";
 const PaperCharges = ({bwSingle, bwDouble, color}) => {
   return (
     <>
       <table
-        initial={{ x: "100vw" }}
-        animate={{ x: 0 }}
-        transition={{
-          duration: 0.6,
-          type: "spring",
-          bounce: 0.5,
-          // damping: 5,
-        }}
+       
         className="table"
       >
         <thead>

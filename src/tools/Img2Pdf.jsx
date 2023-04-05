@@ -97,7 +97,7 @@ function App() {
             htmlFor="formFileLg"
             className="u-f-b choosefile m-2"
           >
-            {images.length == 0 ? "Upload Files" : "Upload More?"}
+            {images.length === 0 ? "Upload Files" : "Upload More?"}
             <input
               multiple
               className="form-control u-f-b form-control-lg choosefile shadow-in hidden"

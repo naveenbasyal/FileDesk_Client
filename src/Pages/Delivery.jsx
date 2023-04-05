@@ -10,20 +10,20 @@ import * as pdfjsLibs from "pdfjs-dist/webpack";
 import BindingCharges from "../delivery/Charges/BindingCharges";
 import PaperCharges from "../delivery/Charges/PrintingCharges";
 import Footer from "../components/Footer";
-<<<<<<< HEAD
+// <<<<<<< HEAD
 import { uploadPdf } from "../utils/uploadPdf";
 
+import { ShopContext } from "../Context/ShopProvider";
 const Delivery = ({ scrollToTop }) => {
   const navigate = useNavigate()
-=======
-import { ShopContext } from "../Context/ShopProvider";
+// =======
 
-const Delivery = ({ scrollToTop }) => {
+
   // _______________ Context API____________________
-  const token = getToken();
-  const { setshop, getShop, shop, loading } = useContext(ShopContext);
+  // const token = getToken();
+  // const { setshop, getShop, shop, loading } = useContext(ShopContext);
 
->>>>>>> 1431b50c03c86c43107a4fcda682e62d8415aef7
+// >>>>>>> 1431b50c03c86c43107a4fcda682e62d8415aef7
   const [selectedFiles, setSelectedFiles] = useState({});
   const [totalFiles, setTotalFiles] = useState(0);
   //  _ _ _ _ _ For the array of files _ _ _  _ _ _ _  _
@@ -68,7 +68,7 @@ const Delivery = ({ scrollToTop }) => {
   // _____Colors____-
   const [color, setColor] = useState("bw");
 
-<<<<<<< HEAD
+// <<<<<<< HEAD
   const [loading, setLoading] = useState(false);
   const [paymentLoading, setPaymentLoading] = useState(false)
 
@@ -92,8 +92,8 @@ const Delivery = ({ scrollToTop }) => {
     }
     setShop(data.msg);
   };
-=======
->>>>>>> 1431b50c03c86c43107a4fcda682e62d8415aef7
+// =======
+// >>>>>>> 1431b50c03c86c43107a4fcda682e62d8415aef7
   // __________ On File change __________
   const handleFileChange = (e) => {
     const files = e.target.files;
@@ -231,14 +231,14 @@ const Delivery = ({ scrollToTop }) => {
         : (totalPrice += shop?.fastDeliveryPrice);
     }
     setTotalPrice(totalPrice);
-<<<<<<< HEAD
+// <<<<<<< HEAD
     // console.log("___ All Files Array___");
     // console.log(selectedFilesArray);
-=======
+// =======
     console.log("___ All Files Array___");
     console.log(selectedFilesArray);
     console.log(selectedFiles);
->>>>>>> 1431b50c03c86c43107a4fcda682e62d8415aef7
+// >>>>>>> 1431b50c03c86c43107a4fcda682e62d8415aef7
   }, [selectedFiles, deliveryOptions]);
 
 
@@ -468,10 +468,10 @@ const Delivery = ({ scrollToTop }) => {
                     {Object.entries(selectedFiles).map(
                       ([name, file], index) => (
                         <motion.div key={index}>
-<<<<<<< HEAD
+{/* <<<<<<< HEAD */}
                           {/* {console.log(file)} */}
-=======
->>>>>>> 1431b50c03c86c43107a4fcda682e62d8415aef7
+{/* =======
+>>>>>>> 1431b50c03c86c43107a4fcda682e62d8415aef7 */}
                           <motion.div
                             data-aos="zoom-in"
                             whileHover={{ scale: 1.05 }}

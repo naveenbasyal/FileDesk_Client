@@ -12,6 +12,10 @@ const DocToPdf = () => {
       `${process.env.REACT_APP_SERVER_URL}/file/doctopdf`,
       {
         method: "POST",
+        headers: {
+          "Secret-Key": `${process.env.REACT_APP_SECRET_KEY}`,
+        },
+        
         body: formData,
       }
     );

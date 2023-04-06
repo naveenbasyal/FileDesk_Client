@@ -3,7 +3,9 @@ import Dashboard from "./Dashboard";
 import { HashLoader } from "react-spinners";
 import { toast } from "react-hot-toast";
 import { ShopContext } from "../Context/ShopProvider";
+import getToken from "../utils/getToken";
 const Shop = () => {
+  const token = getToken()
   const { getShop, shop, inputDetails, setInputDetails, setShop } =
     useContext(ShopContext);
 
@@ -43,7 +45,8 @@ const Shop = () => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          // "x-auth-token": localStorage.getItem("filedesk"),
+          "Secret-Key": `${process.env.REACT_APP_SECRET_KEY}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(inputDetails),
       }

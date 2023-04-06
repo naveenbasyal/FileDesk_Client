@@ -7,12 +7,13 @@ const Orders = () => {
   const token = getToken()
   const fetchOrders = async () => {
     const data = await fetch(
-      `${process.env.REACT_APP_SERVER_URL}/api/adminorders`, // /api/userorders for getting orders of users
+      `${process.env.REACT_APP_SERVER_URL}/api/adminorders`, // /api/userorders for getting orders of users /api/adminorders for getting orders of admins
       {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
+          "Secret-Key": `${process.env.REACT_APP_SECRET_KEY}`
         }
       }
     )

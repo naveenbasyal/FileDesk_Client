@@ -82,6 +82,7 @@ const Delivery = ({ scrollToTop }) => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+         "Secret-Key" : `${process.env.REACT_APP_SECRET_KEY}`
         },
       }
     );
@@ -256,13 +257,14 @@ const Delivery = ({ scrollToTop }) => {
       handler: async function (response) {
         try {
           const verifyResponse = await fetch(
-            `${process.env.REACT_APP_SERVER_URL}/api/payment/verify`
+            `${process.env.REACT_APP_SERVER_URL}/api/verifyorder`
             ,
             {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
+                "Secret-Key": `${process.env.REACT_APP_SECRET_KEY}`
               },
               body: JSON.stringify(response)
             }
@@ -326,12 +328,13 @@ const Delivery = ({ scrollToTop }) => {
     console.log(data)
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_SERVER_URL}/api/payment/orders`,
+        `${process.env.REACT_APP_SERVER_URL}/api/createorder`,
         {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
+            "Secret-Key": `${process.env.REACT_APP_SECRET_KEY}`
           },
           body: JSON.stringify({
             data,

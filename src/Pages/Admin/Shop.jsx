@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useContext } from "react";
-import Dashboard from "./Dashboard";
+import Dashboard from "../Dashboard";
 import { HashLoader } from "react-spinners";
 import { toast } from "react-hot-toast";
-import { ShopContext, useGlobalShop } from "../Context/ShopProvider";
+import { useGlobalShop } from "../../Context/ShopProvider";
 const Shop = () => {
   const { getShop, shop, inputDetails, setInputDetails, setShop } =
     useGlobalShop();

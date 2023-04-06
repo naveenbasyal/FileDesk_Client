@@ -11,19 +11,16 @@ import BindingCharges from "../delivery/Charges/BindingCharges";
 import PaperCharges from "../delivery/Charges/PrintingCharges";
 import Footer from "../components/Footer";
 import { uploadPdf } from "../utils/uploadPdf";
-import { ShopContext } from "../Context/ShopProvider";
 
-import { ShopContext } from "../Context/ShopProvider";
+import { useGlobalShop } from "../Context/ShopProvider";
 const Delivery = ({ scrollToTop }) => {
   const navigate = useNavigate()
-// =======
+  const {getShop, shop,loading } = useGlobalShop();
 
 
   // _______________ Context API____________________
-  // const token = getToken();
-  // const { getShop, shop, loading } = useGlobalShop();
-
-// >>>>>>> 1431b50c03c86c43107a4fcda682e62d8415aef7
+  const token = getToken();
+  
   const [selectedFiles, setSelectedFiles] = useState({});
   const [totalFiles, setTotalFiles] = useState(0);
   //  _ _ _ _ _ For the array of files _ _ _  _ _ _ _  _
@@ -68,32 +65,9 @@ const Delivery = ({ scrollToTop }) => {
   // _____Colors____-
   const [color, setColor] = useState("bw");
 
-// <<<<<<< HEAD
-  const [loading, setLoading] = useState(false);
+
   const [paymentLoading, setPaymentLoading] = useState(false)
 
-  const [shop, setShop] = useState({});
-  const token = getToken();
-  const getShop = async () => {
-    setLoading(true);
-    const res = await fetch(
-      `${process.env.REACT_APP_SERVER_URL}/api/shop/details`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    setLoading(false);
-    const data = await res.json();
-    if (data.error) {
-      console.log(data.error);
-    }
-    setShop(data.msg);
-  };
-// =======
-// >>>>>>> 1431b50c03c86c43107a4fcda682e62d8415aef7
   // __________ On File change __________
   const handleFileChange = (e) => {
     const files = e.target.files;
@@ -231,14 +205,6 @@ const Delivery = ({ scrollToTop }) => {
         : (totalPrice += shop?.fastDeliveryPrice);
     }
     setTotalPrice(totalPrice);
-// <<<<<<< HEAD
-    // console.log("___ All Files Array___");
-    // console.log(selectedFilesArray);
-// =======
-    console.log("___ All Files Array___");
-    console.log(selectedFilesArray);
-    console.log(selectedFiles);
-// >>>>>>> 1431b50c03c86c43107a4fcda682e62d8415aef7
   }, [selectedFiles, deliveryOptions]);
 
 

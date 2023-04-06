@@ -24,7 +24,6 @@ const ShopProvider = ({ children }) => {
     if (data.error) {
       console.log(data.error);
     }
-    console.log("Shop Charges -->",data.msg);
     setShop(data.msg);
     setInputDetails(data.msg);
   };

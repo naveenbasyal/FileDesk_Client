@@ -1,4 +1,3 @@
-# Problem to solve :- 
+# Lines of code (ClientSide):- 
 
-### when selecting eye button in mobile view all eyes of the file are opening 
-        
+### 5240

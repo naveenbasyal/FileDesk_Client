@@ -397,6 +397,291 @@ input::-webkit-inner-spin-button {
     background-color: hsl(200, 20%, 95%);
   }
 }
+.delivery_header {
+  margin: 4rem 5rem;
+  padding: 1rem 3rem;
+  color: rgba(0, 0, 0, 0.76);
+ 
+}
+input {
+  cursor: pointer;
+}
+
+.icons {
+  width: 3rem;
+}
+.price_chart {
+  font-size: 1.15rem;
+}
+.totalPrice .container {
+  width: 40%;
+}
+
+.choosefile:active,
+.choosefile:focus {
+  background: var(--primary-light);
+  outline: none;
+  transform: scale(0.9);
+}
+
+.arrowUp {
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  right: 5rem;
+  position: fixed;
+  bottom: 5rem;
+  z-index: 1000000;
+  backdrop-filter: blur(8px);
+}
+.pricearrowUp {
+  border-radius: 6px;
+  padding: .7rem .6rem!important;
+  right: 5rem;
+  position: fixed;
+  bottom: 10rem;
+  z-index: 1000000;
+  backdrop-filter: blur(8px);
+}
+.arrowUp:active {
+  box-shadow: var(--shadow-in);
+}
+.pdfImg {
+  width: 8rem;
+}
+.add_to_cart {
+  background: var(--greyLight-1);
+  text-decoration: none;
+  border-radius: 6px;
+  padding: 0.6rem;
+  transition: 0.2s ease;
+}
+.add_to_cart:hover {
+  color: var(--primary);
+  transform: scale(0.9);
+}
+
+.form-check-input:focus,
+.form-check-input:active {
+  outline: none !important;
+  box-shadow: none !important;
+}
+label {
+  cursor: pointer;
+}
+.instructions {
+  box-shadow: var(--shadow-in);
+  background: var(--greyLight-1);
+}
+/* --------copies---------- */
+.copies input {
+  width: 3rem;
+  background: var(--greyLight-1);
+  border: none;
+}
+.copies button {
+  background: var(--greyLight-1);
+  width: 2rem;
+  border-radius: 6px;
+  height: 2rem;
+  border: none;
+}
+.fileprice {
+  background: var(--greyLight-1);
+  width: 4rem;
+  border-radius: 6px;
+  height: 2rem;
+  border: none;
+}
+.fileprice:active {
+  box-shadow: var(--shadow-in);
+}
+.copies button:active {
+  box-shadow: var(--shadow-in);
+}
+.form-control:checked {
+  box-shadow: none !important;
+  background: red;
+}
+.form-control:focus,
+.form-control:active {
+  outline: none !important;
+  background: var(--greyLight-1);
+  box-shadow: var(--shadow-out) !important;
+  border: none;
+}
+.form-check-input:checked {
+  background-color: var(--primary);
+}
+.u-f-b {
+  padding: 10px 10px;
+  width: 10rem;
+  background: var(--primary);
+  color: var(--greyLight-1);
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.u-f-b input {
+  display: none;
+}
+
+a.u-f-b:hover {
+  color: white;
+}
+.colorBox {
+  width: 25px;
+  height: 25px;
+  border-radius: 10%;
+  margin: 0 5px;
+  cursor: pointer;
+  background: linear-gradient(
+    to left bottom,
+    #ff0000 0%,
+    #ff0000 25%,
+    #ffff00 25%,
+    #ffff00 50%,
+    #00ff00 50%,
+    #00ff00 75%,
+    #0000ff 75%,
+    #0000ff 100%
+  );
+}
+.bwBox {
+  width: 25px;
+  height: 25px;
+  border-radius: 10%;
+  margin: 0 5px;
+  cursor: pointer;
+  background: linear-gradient(to left bottom, black 50%, white 50%);
+}
+.colorBox:hover,
+.bwBox:hover {
+  opacity: 0.8;
+}
+
+.colorBox.active,
+.bwBox.active {
+  /* border: 2px solid var(--primary); */
+  outline: 2px solid var(--primary);
+  outline-offset: 1px;
+  scale: 1.1;
+}
+.pageBox {
+  width: 40px;
+  height: 40px;
+  border-radius: 10%;
+  cursor: pointer;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(128, 128, 128, 0.444);
+  margin-right: 5px;
+}
+.pageBox:hover {
+  opacity: 0.8;
+}
+.pageBox.active {
+  color: var(--primary);
+  background: white;
+  outline: 2px solid var(--primary);
+}
+.deleteAll {
+  border: 2px solid #dc3545;
+  margin: 0 !important;
+}
+.deleteAll:hover {
+  background: #dc3545;
+  color: #ffffff !important;
+}
+@media screen and (max-width: 450px) {
+  .delivery_header {
+    margin: 0.5rem 0.4rem;
+    padding: 1rem 1rem;
+  }
+  .pd {
+    margin: 0 1rem !important;
+  }
+  .margin-0 {
+    margin: 0 !important;
+  }
+  .delivery_header .rubber {
+    padding: 0.25rem;
+  }
+  .tools_header .rubber {
+    padding: 0.04rem;
+  }
+  .main_delivery_section {
+    margin: 1rem 1rem !important;
+  }
+  .main_delivery_section .Options {
+    padding: 1rem 1rem !important;
+  }
+  #formFileLg {
+    font-size: 1rem !important;
+  }
+  .totalPrice .container {
+    width: 80%;
+  }
+  .pdfImg {
+    width: 13rem;
+    transition: 0.5s ease-in-out;
+    margin: 0rem 0 0.9rem 0;
+    /* display: none; */
+  }
+  .deliveryCard h4 {
+    display: grid;
+    place-items: center;
+    text-transform: capitalize;
+    font-size: 1.03rem !important;
+  }
+  .filePrice {
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+    right: 0;
+    padding: 0 1rem;
+  }
+  .bind span {
+    margin: 0 0.5rem !important;
+  }
+  .setup span {
+    margin: 0 0.5rem !important;
+  }
+  .color span {
+    margin: 0 0.5rem !important;
+  }
+  .arrowUp {
+    right: 1.8rem;
+    bottom: 2.5rem;
+    z-index: 111111;
+    backdrop-filter: blur(10px);
+  }
+  
+
+  .pricearrowUp {
+    right: 1.8rem;
+    bottom: 6.5rem;
+    z-index: 111111;
+    /* backdrop-filter: blur(10px); */
+  }
+  .deleteIcon {
+    display: flex !important;
+    padding: 0rem 1rem !important;
+    width: 100% !important;
+    justify-content: space-around;
+    align-items: center;
+  }
+  .fileprice {
+    /* right: 2rem !important; */
+    position: relative !important;
+    padding: 0 !important;
+    display: flex;
+    align-items: center;
+  }
+  .deliveryCard .col-lg-2 {
+    width: 100% !important;
+  }
+}
 
 @media screen and (max-width: 450px) {
   .card_tools {

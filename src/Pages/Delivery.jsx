@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import DeliveryHeader from "../delivery/components/DeliveryHeader";
-import "../styles/delivery.css";
+// import "../styles/delivery.css";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion"; // Framer Motion for cursor animation
 import getToken from "../utils/getToken";
@@ -284,6 +284,14 @@ const Delivery = ({ scrollToTop }) => {
       toast.error("Please fill the Address Details");
       return;
     }
+    if (nameError) {
+      toast.error("Please enter a valid name");
+      return;
+    }
+    if (phoneError) {
+      toast.error("Please enter a valid phone number");
+      return;
+    }
     setPaymentLoading(true);
     const files = selectedFilesArray;
     const delivery = deliveryOptions;
@@ -357,9 +365,7 @@ const Delivery = ({ scrollToTop }) => {
       <section>
         {/* --------header---------- */}
         <DeliveryHeader />
-        <span
-          className=" text-danger pricearrowUp  p-2 d-flex align-items-center pointer "
-        >
+        <span className=" text-danger pricearrowUp  p-2 d-flex align-items-center pointer ">
           <i className="fas p-1 fa-inr"></i>
           <span className="fw-bold ">{subTotalPrice}</span>
         </span>
@@ -1050,7 +1056,7 @@ const Delivery = ({ scrollToTop }) => {
                           </p>
                         ) : null}
                         <button
-                          disabled={totalPrice < 50 || paymentLoading}
+                          disabled={totalPrice < 50 || paymentLoading }
                           onClick={handleOrder}
                           className="shadow-btn shadow-out dim fw-bold"
                         >

@@ -31,7 +31,9 @@ const Reset = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Secret-Key": `${process.env.REACT_APP_SECRET_KEY}`
         },
+
         body: JSON.stringify({
           password,
         }),

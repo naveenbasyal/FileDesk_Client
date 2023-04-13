@@ -6,12 +6,13 @@ import Navbar from "./components/Navbar";
 import "./styles/Footer.css";
 import { ShopProvider } from "./Context/ShopProvider";
 import ErrorPage from "./Pages/ErrorPage";
+import UserOrders from "./Pages/User/UserOrders";
 
 const Delivery = lazy(() => import("./Pages/Delivery"));
 const Tools = lazy(() => import("./Pages/Tools"));
 const Auth = lazy(() => import("./Pages/Auth"));
 const Dashboard = lazy(() => import("./Pages/Dashboard"));
-const Shop = lazy(() => import("./Pages/Admin/Shop"));a
+const Shop = lazy(() => import("./Pages/Admin/Shop"));
 const Orders = lazy(() => import("./Pages/Admin/Orders"));
 const Reset = lazy(() => import("./Pages/Reset"));
 const VerifyEmail = lazy(() => import("./Pages/VerifyEmail"));
@@ -74,6 +75,7 @@ const App = () => {
               <Route path="/tools/doc-to-pdf" element={<DocToPdf />} />
               <Route path="/tools/convert-zip" element={<ConvertToZip />} />
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/orders" element={<UserOrders />} />
               <Route
                 path="/dashboard/shop"
                 element={

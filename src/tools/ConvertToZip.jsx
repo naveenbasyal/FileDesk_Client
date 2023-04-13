@@ -5,14 +5,18 @@ const ConvertToZip = () => {
   const [file, setFile] = useState({});
   const [zip, setZip] = useState("");
 
-  const convert = async () => {
-    const formData = new FormData();
-    formData.append("file", file);
-    const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/file/zip`, {
-      method: "POST",
-      body: formData,
-    });
-    const data = await res.json();
+    const convert = async () => { 
+        const formData = new FormData()
+        formData.append('file', file)
+        const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/file/zip`, {
+            method: 'POST',
+            headers:{
+                'Secret-Key': `${process.env.REACT_APP_SECRET_KEY}`
+
+            },
+            body: formData
+        })
+        const data = await res.json()
 
     if (data.error) {
       toast.error(data.error);

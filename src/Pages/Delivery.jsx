@@ -5,7 +5,7 @@ import "../styles/delivery.css";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion"; // Framer Motion for cursor animation
 import getToken from "../utils/getToken";
-import { HashLoader } from "react-spinners";
+import { BeatLoader, HashLoader } from "react-spinners";
 import * as pdfjsLibs from "pdfjs-dist/webpack";
 import BindingCharges from "../delivery/Charges/BindingCharges";
 import PaperCharges from "../delivery/Charges/PrintingCharges";
@@ -14,26 +14,26 @@ import { uploadPdf } from "../utils/uploadPdf";
 
 import { useGlobalShop } from "../Context/ShopProvider";
 const Delivery = ({ scrollToTop }) => {
-  const navigate = useNavigate()
-  const {getShop, shop,loading } = useGlobalShop();
-
+  const navigate = useNavigate();
+  const { getShop, shop, loading } = useGlobalShop();
 
   // _______________ Context API____________________
   const token = getToken();
-  
+
   const [selectedFiles, setSelectedFiles] = useState({});
   const [totalFiles, setTotalFiles] = useState(0);
   //  _ _ _ _ _ For the array of files _ _ _  _ _ _ _  _
   const [selectedFilesArray, setSelectedFilesArray] = useState([]);
   const [error, setError] = useState("");
   const [showThumbail, setshowThumbail] = useState(false);
-
+  const [nameError, setNameError] = useState("");
+  const [phoneError, setPhoneError] = useState("");
   const [address, setAddress] = useState({
-    name: '',
-    phone: '',
-    address: '',
-    block: '',
-  })
+    name: "",
+    phone: "",
+    address: "",
+    block: "",
+  });
 
   const handleAddress = (e) => {
     const { name, value } = e.target;
@@ -41,9 +41,28 @@ const Delivery = ({ scrollToTop }) => {
       return {
         ...prev,
         [name]: value,
+      };
+    });
+    // validate name field
+    if (name === "name") {
+      const nameRegex = /^[a-zA-Z\s]*$/;
+      if (!nameRegex.test(value) || value === "") {
+        setNameError("Enter valid Name (only alphabets)");
+      } else {
+        setNameError("");
       }
-    })
-  }
+    }
+
+    // validate phone field
+    if (name === "phone") {
+      const phoneRegex = /^\d{10}$/;
+      if (!phoneRegex.test(value)) {
+        setPhoneError("Phone number should be 10 digits");
+      } else {
+        setPhoneError("");
+      }
+    }
+  };
   // _______ Delivery Options _______
   const [deliveryOptions, setDeliveryOptions] = useState({
     standard: true,
@@ -61,12 +80,10 @@ const Delivery = ({ scrollToTop }) => {
   const [singleSide, setSingleSide] = useState(true);
   const [bothside, setBothSide] = useState(false);
 
-
   // _____Colors____-
   const [color, setColor] = useState("bw");
 
-
-  const [paymentLoading, setPaymentLoading] = useState(false)
+  const [paymentLoading, setPaymentLoading] = useState(false);
 
   // __________ On File change __________
   const handleFileChange = (e) => {
@@ -175,8 +192,8 @@ const Delivery = ({ scrollToTop }) => {
     } else {
       return (
         file.quantity *
-        file.pages *
-        (file.bothSide ? shop?.bwDouble / 2 : shop?.bwSingle) +
+          file.pages *
+          (file.bothSide ? shop?.bwDouble / 2 : shop?.bwSingle) +
         (file.spiralBind && shop?.spiralPrice) +
         (file.plasticCover && shop?.coverPrice)
       );
@@ -207,7 +224,6 @@ const Delivery = ({ scrollToTop }) => {
     setTotalPrice(totalPrice);
   }, [selectedFiles, deliveryOptions]);
 
-
   //  __________ Handle Order __________
 
   const initPayment = (data, user) => {
@@ -222,52 +238,53 @@ const Delivery = ({ scrollToTop }) => {
       handler: async function (response) {
         try {
           const verifyResponse = await fetch(
-            `${process.env.REACT_APP_SERVER_URL}/api/payment/verify`
-            ,
+            `${process.env.REACT_APP_SERVER_URL}/api/verifyorder`,
             {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
+                "Secret-Key": `${process.env.REACT_APP_SECRET_KEY}`,
               },
-              body: JSON.stringify(response)
+              body: JSON.stringify(response),
             }
-          )
+          );
           const verifyData = await verifyResponse.json();
           if (verifyData?.data === "Payment Successful") {
-            console.log(verifyData)
-            setPaymentLoading(false)
+            console.log(verifyData);
+            setPaymentLoading(false);
             toast.success("Payment Successful");
-            navigate('/dashboard/orders')
-            DeleteAllFiles()
-          }
-          else {
+            navigate("/orders");
+            DeleteAllFiles();
+          } else {
             toast.error("Payment Failed");
           }
         } catch (error) {
-          console.log(error)
+          console.log(error);
         }
       },
       prefill: {
         name: user.name,
         email: user.email,
-        contact: user.phone
+        contact: user.phone,
       },
       notes: {
-        address: user.address
+        address: user.address,
       },
       theme: {
-        color: "#3399cc"
-
-      }
+        color: "#3399cc",
+      },
     };
     const paymentObject = new window.Razorpay(options);
     paymentObject.open();
-  }
-
+  };
 
   const handleOrder = async () => {
-    setPaymentLoading(true)
+    if (!address.name || !address.phone || !address.address || !address.block) {
+      toast.error("Please fill the Address Details");
+      return;
+    }
+    setPaymentLoading(true);
     const files = selectedFilesArray;
     const delivery = deliveryOptions;
     const data = await Promise.all(
@@ -289,15 +306,16 @@ const Delivery = ({ scrollToTop }) => {
       })
     );
 
-    console.log(data)
+    console.log(data);
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_SERVER_URL}/api/payment/orders`,
+        `${process.env.REACT_APP_SERVER_URL}/api/createorder`,
         {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
+            "Secret-Key": `${process.env.REACT_APP_SECRET_KEY}`,
           },
           body: JSON.stringify({
             data,
@@ -305,26 +323,24 @@ const Delivery = ({ scrollToTop }) => {
             totalPrice,
             totalPages,
             address,
-            totalFiles
+            totalFiles,
           }),
         }
-
-      )
-      const res = await response.json()
+      );
+      const res = await response.json();
       console.log("___ Response ___");
       console.log(res);
       if (res?.error) {
-        setPaymentLoading(false)
-        toast.error(res?.error)
-        return
+        setPaymentLoading(false);
+        toast.error(res?.error);
+        return;
       }
       if (res?.data) {
-        await initPayment(res?.data, res?.user)
-        setPaymentLoading(false)
+        await initPayment(res?.data, res?.user);
+        setPaymentLoading(false);
       }
 
       if (response.error) {
-
         console.log(response.error);
       } else {
         console.log(response.msg);
@@ -334,27 +350,25 @@ const Delivery = ({ scrollToTop }) => {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   return (
     <>
       <section>
         {/* --------header---------- */}
         <DeliveryHeader />
-        <motion.span
-          whileHover={{ scale: 1.1 }}
+        <span
           className=" text-danger pricearrowUp  p-2 d-flex align-items-center pointer "
         >
           <i className="fas p-1 fa-inr"></i>
           <span className="fw-bold ">{subTotalPrice}</span>
-        </motion.span>
-        <motion.span
-          whileHover={{ scale: 1.1 }}
+        </span>
+        <span
           className="shadow-out arrowUp  p-2 d-flex align-items-center pointer "
           onClick={scrollToTop}
         >
           <i className="fa-solid fa-arrow-up fs-5 px-2 py-1 stroke"></i>
-        </motion.span>
+        </span>
 
         {/* ------------Main Delivery section---------- */}
         {loading && (
@@ -382,12 +396,7 @@ const Delivery = ({ scrollToTop }) => {
                       htmlFor="formFileLg"
                       className="u-f-b choosefile d-flex align-items-center justify-content-around"
                     >
-                      {/* <lord-icon
-                        src="https://cdn.lordicon.com/wfadduyp.json"
-                        trigger="loop"
-                        colors="primary:white"
-                        style={{ width: "33px" }}
-                      ></lord-icon> */}
+                      <i className="fa-solid fa-upload"></i>
                       Upload Files
                       <input
                         multiple
@@ -433,11 +442,7 @@ const Delivery = ({ scrollToTop }) => {
                   <div>
                     {Object.entries(selectedFiles).map(
                       ([name, file], index) => (
-                        <motion.div key={index}>
-{/* <<<<<<< HEAD */}
-                          {/* {console.log(file)} */}
-{/* =======
->>>>>>> 1431b50c03c86c43107a4fcda682e62d8415aef7 */}
+                        <div key={index}>
                           <motion.div
                             data-aos="zoom-in"
                             whileHover={{ scale: 1.05 }}
@@ -446,8 +451,9 @@ const Delivery = ({ scrollToTop }) => {
                             <div className="col-lg-3 center">
                               {window.screen.width < 500 ? (
                                 <i
-                                  className={`fa-solid fa-eye my-2 pointer fs-3 ${showThumbail ? "dim" : ""
-                                    }`}
+                                  className={`fa-solid fa-eye my-2 pointer fs-3 ${
+                                    showThumbail ? "dim" : ""
+                                  }`}
                                   onClick={() => setshowThumbail(!showThumbail)}
                                 ></i>
                               ) : (
@@ -517,10 +523,11 @@ const Delivery = ({ scrollToTop }) => {
                             </div>
                             <div className="col-lg-7 py-3">
                               <h4
-                                className={`dim fs-5 d-flex ${window.screen.width < 500
-                                  ? " justify-content-center "
-                                  : ""
-                                  } `}
+                                className={`dim fs-5 d-flex ${
+                                  window.screen.width < 500
+                                    ? " justify-content-center "
+                                    : ""
+                                } `}
                               >
                                 {name}{" "}
                                 <span className="text-danger mx-2">
@@ -718,8 +725,9 @@ const Delivery = ({ scrollToTop }) => {
                                 </div>
                                 <div className="col-lg-9 my-3 d-flex justify-content-around ">
                                   <div
-                                    className={`bwBox tt mx-4 ${file.blackandwhite ? "active" : ""
-                                      }`}
+                                    className={`bwBox tt mx-4 ${
+                                      file.blackandwhite ? "active" : ""
+                                    }`}
                                     data-tooltip="Black and White"
                                     onClick={(e) => {
                                       setColor("bw");
@@ -742,8 +750,9 @@ const Delivery = ({ scrollToTop }) => {
                                     }}
                                   ></div>
                                   <div
-                                    className={`colorBox tt mx-4 ${file.color ? "active" : ""
-                                      }`}
+                                    className={`colorBox tt mx-4 ${
+                                      file.color ? "active" : ""
+                                    }`}
                                     disabled={file.bothSide}
                                     data-tooltip="Coloured"
                                     onClick={(e) => {
@@ -793,7 +802,7 @@ const Delivery = ({ scrollToTop }) => {
                               </div>
                             </div>
                           </motion.div>
-                        </motion.div>
+                        </div>
                       )
                     )}
                   </div>
@@ -807,12 +816,7 @@ const Delivery = ({ scrollToTop }) => {
                         className="u-f-b  d-flex align-items-center justify-content-around"
                         style={{ width: "11rem" }}
                       >
-                        {/* <lord-icon
-                          src="https://cdn.lordicon.com/wfadduyp.json"
-                          trigger="loop"
-                          colors="primary:white"
-                          style={{ width: "33px" }}
-                        ></lord-icon> */}
+                        <i className="fas fa-circle-plus fa-beat p-2"></i>
                         Upload More?
                         <input
                           multiple
@@ -831,7 +835,6 @@ const Delivery = ({ scrollToTop }) => {
               <div className="ms-4 ps-5 ">
                 <Link
                   to={"/auth"}
-                  whileHover={{ scale: 1.2 }}
                   htmlFor="formFileLg"
                   className="u-f-b choosefile "
                 >
@@ -869,12 +872,7 @@ const Delivery = ({ scrollToTop }) => {
                       <form>
                         <span className="dim fs-5 mx-3 d-flex align-items-center">
                           Enter your Address{" "}
-                          {/* <lord-icon
-                            src="https://cdn.lordicon.com/oaflahpk.json"
-                            trigger="loop"
-                            colors="primary:#5b4af1"
-                            style={{ width: "40px" }}
-                          ></lord-icon> */}
+                          <i className="fa-solid fa-location-crosshairs fa-beat mx-3"></i>
                         </span>
                         <hr className="dim fs-4" style={{ height: "1.2px" }} />
                         <div className="d-flex row mx-2 my-4 ">
@@ -895,6 +893,11 @@ const Delivery = ({ scrollToTop }) => {
                               />
                               <span className="placeholder">Name</span>
                             </label>
+                            {nameError && (
+                              <div className="text-danger ms-2">
+                                {nameError}
+                              </div>
+                            )}
                           </div>
                           <div className="col-lg-6 my-2 col-sm-12">
                             <label
@@ -913,21 +916,24 @@ const Delivery = ({ scrollToTop }) => {
                               />
                               <span className="placeholder">Phone no</span>
                             </label>
+                            {phoneError && (
+                              <div className="text-danger">{phoneError}</div>
+                            )}
                           </div>
                         </div>
                         <div className="col-lg-12  col-sm-12 my-2 center">
                           <select
                             className="bg-color blocks pointer shadow-out p-2"
-
                             id=""
                             required
                             style={{ width: "50%" }}
                             value={address.block}
                             onChange={handleAddress}
                             name="block"
-
                           >
-                            <option value="" disabled>Select Block</option>
+                            <option value="" disabled>
+                              Select Block
+                            </option>
                             <option value="Block 1">Block 1</option>
                             <option value="Block 2">Block 2</option>
                             <option value="Block 3">Block 3</option>
@@ -967,12 +973,7 @@ const Delivery = ({ scrollToTop }) => {
                               className="dim fs-5 d-flex align-items-center"
                             >
                               Price Details
-                              {/* <lord-icon
-                                src="https://cdn.lordicon.com/pmegrqxm.json"
-                                trigger="loop"
-                                colors="primary:#5b4af1"
-                                style={{ width: "27px", marginLeft: ".5rem" }}
-                              ></lord-icon> */}
+                              <i className="fa-solid fa-sack-dollar mx-3 fa-shake"></i>
                             </th>
                             <th scope="col" className="dim"></th>
                           </tr>
@@ -1049,27 +1050,19 @@ const Delivery = ({ scrollToTop }) => {
                           </p>
                         ) : null}
                         <button
-                          disabled={totalPrice < 50 ||
-                            !address.name ||
-                            !address.phone ||
-                            !address.address ||
-                            !address.block ||
-                            paymentLoading
-
-                          }
+                          disabled={totalPrice < 50 || paymentLoading}
                           onClick={handleOrder}
                           className="shadow-btn shadow-out dim fw-bold"
                         >
-                          {
-                            paymentLoading ? (
-                              <div className="spinner-border text-light" role="status">
-                                <span className="visually-hidden">Loading...</span>
-                              </div>
-                            ) : (
-                              "Place Order"
-                            )
-
-                          }
+                          {paymentLoading ? (
+                            <BeatLoader
+                              color="#5b4af1"
+                              size={7}
+                              className="px-4"
+                            />
+                          ) : (
+                            "Place Order"
+                          )}
                         </button>
                       </div>
                     </div>

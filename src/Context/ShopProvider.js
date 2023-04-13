@@ -6,8 +6,6 @@ const ShopProvider = ({ children }) => {
   const [shop, setShop] = useState({});
   const [inputDetails, setInputDetails] = useState({});
   const [loading, setLoading] = useState(false);
-
-
   const getShop = async () => {
     setLoading(true);
     const res = await fetch(
@@ -16,6 +14,7 @@ const ShopProvider = ({ children }) => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          "Secret-Key": `${process.env.REACT_APP_SECRET_KEY}`,
         },
       }
     );
@@ -30,7 +29,7 @@ const ShopProvider = ({ children }) => {
 
   return (
     <ShopContext.Provider
-      value={{ getShop, shop, setShop, inputDetails, setInputDetails ,loading}}
+      value={{ getShop, shop, setShop, inputDetails, setInputDetails, loading }}
     >
       {children}
     </ShopContext.Provider>

@@ -12,7 +12,8 @@ const VerifyEmail = () => {
     const res = await fetch(`${process.env.REACT_APP_SERVER_URL}/api/user/verifyemail/${token}`, {
       method: "GET",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Secret-Key": `${process.env.REACT_APP_SECRET_KEY}`
       }
     })
     const data = await res.json();

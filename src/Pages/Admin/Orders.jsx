@@ -13,6 +13,7 @@ const Orders = () => {
   const token = getToken();
   const fetchOrders = async () => {
     setloading(true);
+    console.log("loading");
     const data = await fetch(
       `${process.env.REACT_APP_SERVER_URL}/api/adminorders`, // /api/userorders for getting orders of users
       {
@@ -24,9 +25,10 @@ const Orders = () => {
         },
       }
     );
+    console.log("loading stops");
 
-    const res = await data.json();
     setloading(false);
+    const res = await data.json();
     if (res?.orders) {
       setOrders(res?.orders);
     }
@@ -40,9 +42,10 @@ const Orders = () => {
     <div className="container my-1">
       <div className="row center">
         <Dashboard />
+        <h4 className="center fs-3 dim my-4">All Orders</h4>
+
         {orders.length > 0 ? (
           <>
-            <h4 className="dim center fs-4">Orders</h4>
             <div className="row center">
               {orders.map((order, i) => {
                 return (
@@ -50,50 +53,58 @@ const Orders = () => {
                     <div
                       className={`card my-4 ${
                         window.screen.width < 500 ? "ps-1" : "ps-4 "
-                      } py-2 bg-color border-none shadow-out`}
+                      } py-2 bg-color border-none ${!loading ? "shadow-out" : ""}`}
                       key={i}
                     >
                       <div className="card-body position-relative">
-                        <p className="card-text">
-                          <span>Delivery Type : </span>
-                          <span
-                            className={`${
-                              order?.deliveryType === "standard"
-                                ? "text-success"
-                                : "text-danger"
-                            } `}
-                            style={{ textTransform: "capitalize" }}
-                          >
-                            {" " + order?.deliveryType}
-                          </span>
-                        </p>
-                        {/* -------------dropdown Button ----------- */}
-                        <button
-                          title="Show details"
-                          className={`border-none ms-1 shadow-btn shadow-out position-absolute
+                        {loading ? (
+                          <div className="center"  style={{ height: "20vh" }}>
+                            <HashLoader color="#5b4af1" size={70} />
+                          </div>
+                        ) : (
+                          <>
+                            <p className="card-text">
+                              <span>Delivery Type : </span>
+                              <span
+                                className={`${
+                                  order?.deliveryType === "standard"
+                                    ? "text-success"
+                                    : "text-danger"
+                                } `}
+                                style={{ textTransform: "capitalize" }}
+                              >
+                                {" " + order?.deliveryType}
+                              </span>
+                            </p>
+                            {/* -------------dropdown Button ----------- */}
+                            <button
+                              title="Show details"
+                              className={`border-none ms-1 shadow-btn shadow-out position-absolute
                           ${
                             window.screen.width < 500
                               ? "dropdown-mobile"
                               : "dropdown-pc"
                           }
                              copy roundedBorder`}
-                          onClick={() => {
-                            setOrders((prevOrders) => {
-                              const newOrders = [...prevOrders];
-                              newOrders[i] = {
-                                ...newOrders[i],
-                                dropdownOpen: !newOrders[i].dropdownOpen,
-                              };
-                              return newOrders;
-                            });
-                          }}
-                        >
-                          <i
-                            className={`fa-solid fa-chevron-${
-                              order.dropdownOpen ? "up" : "down"
-                            } dim`}
-                          ></i>
-                        </button>
+                              onClick={() => {
+                                setOrders((prevOrders) => {
+                                  const newOrders = [...prevOrders];
+                                  newOrders[i] = {
+                                    ...newOrders[i],
+                                    dropdownOpen: !newOrders[i].dropdownOpen,
+                                  };
+                                  return newOrders;
+                                });
+                              }}
+                            >
+                              <i
+                                className={`fa-solid fa-chevron-${
+                                  order.dropdownOpen ? "up" : "down"
+                                } dim`}
+                              ></i>
+                            </button>
+                          </>
+                        )}
                         {order.dropdownOpen && (
                           <>
                             {/* --------- ---- Order Id -------------------- */}

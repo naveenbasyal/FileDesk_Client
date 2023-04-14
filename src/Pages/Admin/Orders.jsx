@@ -50,16 +50,7 @@ const Orders = () => {
                 return (
                   <div key={i} className="col-lg-10 col-sm-12">
                     <div
-                      onClick={() => {
-                        setOrders((prevOrders) => {
-                          const newOrders = [...prevOrders];
-                          newOrders[i] = {
-                            ...newOrders[i],
-                            dropdownOpen: !newOrders[i].dropdownOpen,
-                          };
-                          return newOrders;
-                        });
-                      }}
+                    
                       className={`pointer card my-4 ${
                         window.screen.width < 500 ? "ps-1" : "ps-4 "
                       } py-2 bg-color border-none ${

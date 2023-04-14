@@ -25,7 +25,6 @@ const Orders = () => {
     );
 
     setloading(false);
-    console.log(data);
     const res = await data.json();
     console.log(res);
     if (res?.orders) {
@@ -136,12 +135,11 @@ const Orders = () => {
                                     </button>
                                   </div>
                                 )}
+                                {/* ---------Payment Null ? Delete Order  */}
                                 {order?.orderPaymentId === null && (
-                                  <div className="col-lg-2 ">
-                                    <button className="btn btn-outline-danger">
-                                      Delete Order
-                                    </button>
-                                  </div>
+                                  <button className="col-lg-2 btn btn-outline-danger">
+                                    Delete Order
+                                  </button>
                                 )}
                               </div>
                             </div>
@@ -249,6 +247,8 @@ const Orders = () => {
                                         <th scope="col">Color</th>
                                         <th scope="col">Spiral</th>
                                         <th scope="col">Cover</th>
+                                        <th scope="col">Single</th>
+                                        <th scope="col">Both</th>
                                       </tr>
                                     </thead>
                                     {order?.orderItems.map((item, i) => {
@@ -290,6 +290,20 @@ const Orders = () => {
                                             </td>
                                             <td>
                                               {item.cover ? (
+                                                <span className="dim">YES</span>
+                                              ) : (
+                                                "NO"
+                                              )}
+                                            </td>
+                                            <td>
+                                              {item.singleSide ? (
+                                                <span className="dim">YES</span>
+                                              ) : (
+                                                "NO"
+                                              )}
+                                            </td>
+                                            <td>
+                                              {item.bothSide ? (
                                                 <span className="dim">YES</span>
                                               ) : (
                                                 "NO"

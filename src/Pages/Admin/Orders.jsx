@@ -85,7 +85,8 @@ const Orders = () => {
                                 </div>
                                 <div className="col-lg-4">
                                   <span className="text-success">
-                                    <i className="fa-solid fa-inr mx-1"></i>{order?.orderTotal}
+                                    <i className="fa-solid fa-inr mx-1"></i>
+                                    {order?.orderTotal}
                                   </span>
                                 </div>
                               </div>

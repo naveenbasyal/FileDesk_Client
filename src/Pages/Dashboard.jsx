@@ -19,7 +19,7 @@ const Dashboard = () => {
               to="/dashboard/orders"
               className={` p-2 dim fw-bold ${
                 active === "orders" ? "shadow-in" : "shadow-out "
-              } mx-4 tt shadow-btn`}
+              } mx-2 tt shadow-btn`}
               onClick={() => setActive("orders")}
             >
               <i className="fa-brands fa-shopify fs-4 mx-2 fa-shake"></i>
@@ -30,7 +30,7 @@ const Dashboard = () => {
               to="/dashboard/shop"
               className={`tt p-2  ${
                 active === "charges" ? "shadow-in" : "shadow-out"
-              } dim fw-bold  mx-4 shadow-btn`}
+              } dim fw-bold  mx-2 shadow-btn`}
               onClick={() => setActive("charges")}
             >
               <i className="fa-solid fa-sack-dollar fs-4 mx-2 fa-fade"></i>

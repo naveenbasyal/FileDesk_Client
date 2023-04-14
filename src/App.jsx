@@ -28,7 +28,13 @@ const ConvertToZip = lazy(() => import("./tools/ConvertToZip"));
 
 const scrollToTop = () => {
   window.scrollTo({
-    top: 0,
+    top: 100,
+    behavior: "smooth",
+  });
+};
+const scrollToBottom = () => {
+  window.scrollTo({
+    top: document.documentElement.scrollHeight,
     behavior: "smooth",
   });
 };
@@ -59,7 +65,7 @@ const App = () => {
                 path="/"
                 element={
                   <ShopProvider>
-                    <Delivery scrollToTop={scrollToTop} />
+                    <Delivery scrollToTop={scrollToTop} scrollToBottom={scrollToBottom} />
                   </ShopProvider>
                 }
               />

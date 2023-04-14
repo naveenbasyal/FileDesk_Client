@@ -380,13 +380,14 @@ input::-webkit-inner-spin-button {
 .dropdown-mobile{
   top: .8rem;
   right: 1rem;
-  box-shadow: none!important;
+  /* box-shadow: none!important; */
   /* bottom: .5rem; */
 }
+
 .dropdown-pc{
   right: 2rem;
   /* bottom: 1rem; */
-  top: 1rem;
+  top: .8rem;
 
 }
 @keyframes loading {

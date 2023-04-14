@@ -13,7 +13,7 @@ import Footer from "../components/Footer";
 import { uploadPdf } from "../utils/uploadPdf";
 
 import { useGlobalShop } from "../Context/ShopProvider";
-const Delivery = ({ scrollToTop }) => {
+const Delivery = ({ scrollToTop,scrollToBottom }) => {
   const navigate = useNavigate();
   const { getShop, shop, loading } = useGlobalShop();
 
@@ -134,6 +134,7 @@ const Delivery = ({ scrollToTop }) => {
                 bothSide: false,
                 color: false,
                 blackandwhite: true,
+                dropdown: false,
                 price: pages * shop?.bwSingle,
               }; // add file name, number of pages, price, and image data URI to newFiles object
 
@@ -365,7 +366,9 @@ const Delivery = ({ scrollToTop }) => {
       <section>
         {/* --------header---------- */}
         <DeliveryHeader />
-        <span className=" text-danger pricearrowUp  p-2 d-flex align-items-center pointer ">
+        <span
+        onClick={subTotalPrice > 0 ? scrollToBottom : null}
+         className=" text-danger pricearrowUp  p-2 d-flex align-items-center pointer ">
           <i className="fas p-1 fa-inr"></i>
           <span className="fw-bold ">{subTotalPrice}</span>
         </span>
@@ -450,363 +453,425 @@ const Delivery = ({ scrollToTop }) => {
                       ([name, file], index) => (
                         <div key={index}>
                           <motion.div
-                            data-aos="zoom-in"
-                            whileHover={{ scale: 1.05 }}
-                            className="my-5 row shadow-out py-3 deliveryCard"
+                            whileHover={{ scale: 1.001 }}
+                            className="my-5 row shadow-out  py-3 deliveryCard"
                           >
-                            <div className="col-lg-3 center">
-                              {window.screen.width < 500 ? (
-                                <i
-                                  className={`fa-solid fa-eye my-2 pointer fs-3 ${
-                                    showThumbail ? "dim" : ""
-                                  }`}
-                                  onClick={() => setshowThumbail(!showThumbail)}
-                                ></i>
-                              ) : (
-                                <motion.img
-                                  whileHover={{ scale: 1.03 }}
-                                  src={file.imageDataUri}
-                                  className={`img-fluid pdfImg shadow-out p-1`}
-                                  alt=""
-                                />
-                              )}
-                              {/* ------Thumbnail---------- */}
-                              {showThumbail && (
-                                <motion.img
-                                  whileHover={{ scale: 1.03 }}
-                                  src={file.imageDataUri}
-                                  className={`img-fluid pdfImg shadow-out p-1`}
-                                  alt=""
-                                />
-                              )}
-                              {/* ---------Copies------ */}
-                              <div className="copies d-flex">
-                                <button
-                                  onClick={() => {
-                                    if (file.quantity > 1) {
-                                      file.quantity--;
-                                      file.price = calculatePrice(file);
-                                    }
-                                    setSelectedFiles((prev) => {
-                                      return {
-                                        ...prev,
-                                        [name]: {
-                                          ...file,
-                                          quantity: file.quantity,
-                                        },
-                                      };
-                                    });
-                                  }}
-                                  className="center fw-bolder shadow-out "
-                                >
-                                  -
-                                </button>
-                                <input
-                                  type="text"
-                                  value={file.quantity}
-                                  disabled
-                                  className="text-center shadow-in bg-color px-2 mx-2 form-control"
-                                />
-                                <button
-                                  onClick={() => {
-                                    file.quantity++;
-                                    setSelectedFiles((prev) => {
-                                      return {
-                                        ...prev,
-                                        [name]: {
-                                          ...file,
-                                          quantity: file.quantity,
-                                          price: calculatePrice(file),
-                                        },
-                                      };
-                                    });
-                                  }}
-                                  className=" shadow-out center fw-bolder"
-                                >
-                                  +
-                                </button>
-                              </div>
-                            </div>
-                            <div className="col-lg-7 py-3">
-                              <h4
-                                className={`dim fs-5 d-flex ${
-                                  window.screen.width < 500
-                                    ? " justify-content-center "
-                                    : ""
-                                } `}
-                              >
-                                {name}{" "}
-                                <span className="text-danger mx-2">
-                                  {" "}
-                                  (
-                                  <span className="dim">
-                                    Pages: {file.pages}
-                                  </span>
-                                  )
-                                </span>
-                              </h4>
-                              {/* ___Bind____ */}
-
-                              <div className="d-flex my-3 row bind">
-                                <div className="col-lg-3">
-                                  <span className="fw-bold dim mx-4">
-                                    Bindings:
-                                  </span>
-                                </div>
-                                <div className="col-lg-9 d-flex justify-content-around">
-                                  <div className="col-lg-5">
-                                    <div className="form-check margin-0 mx-3">
-                                      <label className="form-check-label">
-                                        <input
-                                          onClick={() =>
-                                            setSpiralBinding(!spiralBinding)
-                                          }
-                                          className="form-check-input"
-                                          type="checkbox"
-                                          checked={file?.spiralBind}
-                                          onChange={(e) => {
-                                            const value = e.target.checked;
-                                            setSelectedFiles((prev) => {
-                                              const updatedFile = {
-                                                ...prev[name],
-                                                spiralBind: value,
-                                                plasticCover: false,
-                                                price: calculatePrice({
-                                                  ...prev[name],
-                                                  spiralBind: value,
-                                                  plasticCover: false,
-                                                }),
-                                              };
-                                              return {
-                                                ...prev,
-                                                [name]: updatedFile,
-                                              };
-                                            });
-                                          }}
-                                          id="spiralBinding"
-                                        />
-                                        Spiral Bind
-                                      </label>
-                                    </div>
-                                  </div>
-                                  <div className="col-lg-5">
-                                    <div className="form-check margin-0 mx-3">
-                                      <input
-                                        onClick={() =>
-                                          setPlasticCover(!plasticCover)
-                                        }
-                                        className="form-check-input"
-                                        type="checkbox"
-                                        checked={file?.plasticCover}
-                                        onChange={(e) => {
-                                          const value = e.target.checked;
-                                          setSelectedFiles((prev) => {
-                                            const updatedFile = {
-                                              ...prev[name],
-                                              plasticCover: value,
-                                              spiralBind: false,
-                                              price: calculatePrice({
-                                                ...prev[name],
-                                                plasticCover: value,
-                                                spiralBind: false,
-                                              }),
-                                            };
-                                            return {
-                                              ...prev,
-                                              [name]: updatedFile,
-                                            };
-                                          });
-                                        }}
-                                        id="plasticCover"
-                                      />
-                                      <label className="form-check-label">
-                                        Plastic Cover
-                                      </label>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              {/* ___ Setup____ */}
-
-                              <div className="d-flex my-3 setup row">
-                                <div className="col-lg-3">
-                                  <span className="fw-bold dim mx-4">
-                                    Sides:
-                                  </span>
-                                </div>
-                                <div className="col-lg-9 d-flex optionIcon justify-content-around">
-                                  <div className="col-lg-5 ">
-                                    <div className="form-check margin-0 mx-3">
-                                      <input
-                                        className="form-check-input"
-                                        type="checkbox"
-                                        value=""
-                                        onClick={() => {
-                                          setSingleSide(!singleSide);
-                                          setBothSide(!singleSide);
-                                        }}
-                                        checked={file?.singleSide}
-                                        onChange={(e) => {
-                                          const value = e.target.checked;
-                                          setSelectedFiles((prev) => {
-                                            const updatedFile = {
-                                              ...prev[name],
-                                              singleSide: value,
-                                              bothSide: !value,
-                                              color: false,
-                                              blackandwhite: true,
-                                              price: calculatePrice({
-                                                ...prev[name],
-                                                singleSide: value,
-                                                bothSide: !value,
-                                                color: false,
-                                                blackandwhite: true,
-                                              }),
-                                            };
-                                            return {
-                                              ...prev,
-                                              [name]: updatedFile,
-                                            };
-                                          });
-                                        }}
-                                        id="ss"
-                                      />
-                                      <label className="form-check-label">
-                                        Single Side
-                                      </label>
-                                    </div>
-                                  </div>
-                                  <div className="col-lg-5">
-                                    <div className="form-check mx-3 margin-0">
-                                      <input
-                                        onClick={() => {
-                                          setBothSide(!bothside);
-                                          setSingleSide(!bothside);
-                                          setColor("bw");
-                                        }}
-                                        checked={file?.bothSide}
-                                        onChange={(e) => {
-                                          const value = e.target.checked;
-                                          setColor("bw");
-                                          setSelectedFiles((prev) => {
-                                            const updatedFile = {
-                                              ...prev[name],
-                                              bothSide: value,
-                                              singleSide: !value,
-                                              color: false,
-                                              blackandwhite: true,
-                                              price: calculatePrice({
-                                                ...prev[name],
-                                                bothSide: value,
-                                                singleSide: !value,
-                                                color: false,
-                                                blackandwhite: true,
-                                              }),
-                                            };
-                                            return {
-                                              ...prev,
-                                              [name]: updatedFile,
-                                            };
-                                          });
-                                        }}
-                                        className="form-check-input"
-                                        type="checkbox"
-                                        value=""
-                                        id="bs"
-                                        disabled={file.color}
-                                      />
-                                      <label className="form-check-label">
-                                        Both Side
-                                      </label>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                              {/* Colors */}
-                              <div className="d-flex my-3 color  row align-items-center">
-                                <div className="col-lg-3">
-                                  <span className="fw-bold dim mx-4">
-                                    Colors:
-                                  </span>
-                                </div>
-                                <div className="col-lg-9 my-3 d-flex justify-content-around ">
-                                  <div
-                                    className={`bwBox tt mx-4 ${
-                                      file.blackandwhite ? "active" : ""
-                                    }`}
-                                    data-tooltip="Black and White"
-                                    onClick={(e) => {
-                                      setColor("bw");
-                                      setSelectedFiles((prev) => {
-                                        const updatedFile = {
-                                          ...prev[name],
-                                          color: false,
-                                          blackandwhite: true,
-                                          price: calculatePrice({
-                                            ...prev[name],
-                                            color: false,
-                                            blackandwhite: true,
-                                          }),
-                                        };
-                                        return {
-                                          ...prev,
-                                          [name]: updatedFile,
-                                        };
-                                      });
-                                    }}
-                                  ></div>
-                                  <div
-                                    className={`colorBox tt mx-4 ${
-                                      file.color ? "active" : ""
-                                    }`}
-                                    disabled={file.bothSide}
-                                    data-tooltip="Coloured"
-                                    onClick={(e) => {
-                                      setColor("color");
-                                      setBothSide(false);
-                                      setSelectedFiles((prev) => {
-                                        const updatedFile = {
-                                          ...prev[name],
-                                          bothSide: false,
-                                          color: true,
-                                          blackandwhite: false,
-                                          singleSide: true,
-                                          price: calculatePrice({
-                                            ...prev[name],
-                                            bothSide: false,
-                                            blackandwhite: false,
-                                            color: true,
-                                            singleSide: true,
-                                          }),
-                                        };
-                                        return {
-                                          ...prev,
-                                          [name]: updatedFile,
-                                        };
-                                      });
-                                    }}
-                                  ></div>
-                                </div>
-                              </div>
-                            </div>
-                            {/* ------Delete Icon adn Price Per File -------*/}
-
-                            <div className="col-lg-2 py-4 position-relative   deleteIcon">
-                              <button
-                                className="shadow-out my-1 trash shadow-btn text-danger px-2 center
-                               "
+                            <>
+                              <div
                                 onClick={() =>
-                                  handleDeleteFile(name, file.price)
+                                  setSelectedFiles({
+                                    ...selectedFiles,
+                                    [name]: {
+                                      ...file,
+                                      dropdown: !file.dropdown,
+                                    },
+                                  })
                                 }
+                                className="card-text position-relative py-2 pointer"
                               >
-                                <i className="fa-solid fa-trash  fa-shake fs-5"></i>
-                              </button>
-                              {/* ------------- Single Pdf Price------- */}
-                              <div className="position-absolute fileprice  bottom-0 filePrice pb-5 mb-2">
-                                <i className="fas stroke p-1 fa-inr"></i>
-                                <span className="dim">{file?.price}</span>
+                                <div className="row px-3 d-flex justify-content-around">
+                                  <div className="col-lg-4">
+                                    <span className="dim">File Name :</span>{" "}
+                                    {name}
+                                  </div>
+                                  <div className="col-lg-4">
+                                    <span className="dim">
+                                      {"File Price  :  "}
+                                    </span>&nbsp;
+                                    <i className="fa-solid fa-inr"></i>&nbsp;
+                                    {file.price}{" "}
+                                  </div>
+                                  <div className="col-lg-4"></div>
+                                </div>
+                                {/* --------- dropdown button --------- */}
+                                <button
+                                  onClick={() =>
+                                    setSelectedFiles({
+                                      ...selectedFiles,
+                                      [name]: {
+                                        ...file,
+                                        dropdown: !file.dropdown,
+                                      },
+                                    })
+                                  }
+                                  style={{ top: "0rem" }}
+                                  title="Show Details"
+                                  className={`border-none ms-1 shadow-btn  position-absolute
+                                  ${
+                                    window.screen.width < 500
+                                      ? "dropdown-mobile"
+                                      : "dropdown-pc"
+                                  }
+                                     dim fs-5 roundedBorder`}
+                                >
+                                  <i
+                                    className={`fa-solid fa-chevron-circle-${
+                                      file.dropdown ? "up" : "down"
+                                    }`}
+                                  ></i>
+                                </button>
                               </div>
-                            </div>
+                            </>
+
+                            {file.dropdown && (
+                              <>
+                                <div className="col-lg-3 center">
+                                  {window.screen.width < 500 ? (
+                                    <i
+                                      className={`fa-solid fa-eye my-2 pointer fs-3 ${
+                                        showThumbail ? "dim" : ""
+                                      }`}
+                                      onClick={() =>
+                                        setshowThumbail(!showThumbail)
+                                      }
+                                    ></i>
+                                  ) : (
+                                    <motion.img
+                                      whileHover={{ scale: 1.03 }}
+                                      src={file.imageDataUri}
+                                      className={`img-fluid pdfImg shadow-out p-1`}
+                                      alt=""
+                                    />
+                                  )}
+                                  {/* ------Thumbnail---------- */}
+                                  {showThumbail && (
+                                    <motion.img
+                                      whileHover={{ scale: 1.03 }}
+                                      src={file.imageDataUri}
+                                      className={`img-fluid pdfImg shadow-out p-1`}
+                                      alt=""
+                                    />
+                                  )}
+                                  {/* ---------Copies------ */}
+                                  <div className="copies d-flex">
+                                    <button
+                                      onClick={() => {
+                                        if (file.quantity > 1) {
+                                          file.quantity--;
+                                          file.price = calculatePrice(file);
+                                        }
+                                        setSelectedFiles((prev) => {
+                                          return {
+                                            ...prev,
+                                            [name]: {
+                                              ...file,
+                                              quantity: file.quantity,
+                                            },
+                                          };
+                                        });
+                                      }}
+                                      className="center fw-bolder shadow-out "
+                                    >
+                                      -
+                                    </button>
+                                    <input
+                                      type="text"
+                                      value={file.quantity}
+                                      disabled
+                                      className="text-center shadow-in bg-color px-2 mx-2 form-control"
+                                    />
+                                    <button
+                                      onClick={() => {
+                                        file.quantity++;
+                                        setSelectedFiles((prev) => {
+                                          return {
+                                            ...prev,
+                                            [name]: {
+                                              ...file,
+                                              quantity: file.quantity,
+                                              price: calculatePrice(file),
+                                            },
+                                          };
+                                        });
+                                      }}
+                                      className=" shadow-out center fw-bolder"
+                                    >
+                                      +
+                                    </button>
+                                  </div>
+                                </div>
+                                <div className="col-lg-7 py-3">
+                                  <h4
+                                    className={`dim fs-5 d-flex ${
+                                      window.screen.width < 500
+                                        ? " justify-content-center "
+                                        : ""
+                                    } `}
+                                  >
+                                    {name}{" "}
+                                    <span className="text-danger mx-2">
+                                      {" "}
+                                      (
+                                      <span className="dim">
+                                        Pages: {file.pages}
+                                      </span>
+                                      )
+                                    </span>
+                                  </h4>
+                                  {/* ___Bind____ */}
+
+                                  <div className="d-flex my-3 row bind">
+                                    <div className="col-lg-3">
+                                      <span className="fw-bold dim mx-4">
+                                        Bindings:
+                                      </span>
+                                    </div>
+                                    <div className="col-lg-9 d-flex justify-content-around">
+                                      <div className="col-lg-5">
+                                        <div className="form-check margin-0 mx-3">
+                                          <label className="form-check-label">
+                                            <input
+                                              onClick={() =>
+                                                setSpiralBinding(!spiralBinding)
+                                              }
+                                              className="form-check-input"
+                                              type="checkbox"
+                                              checked={file?.spiralBind}
+                                              onChange={(e) => {
+                                                const value = e.target.checked;
+                                                setSelectedFiles((prev) => {
+                                                  const updatedFile = {
+                                                    ...prev[name],
+                                                    spiralBind: value,
+                                                    plasticCover: false,
+                                                    price: calculatePrice({
+                                                      ...prev[name],
+                                                      spiralBind: value,
+                                                      plasticCover: false,
+                                                    }),
+                                                  };
+                                                  return {
+                                                    ...prev,
+                                                    [name]: updatedFile,
+                                                  };
+                                                });
+                                              }}
+                                              id="spiralBinding"
+                                            />
+                                            Spiral Bind
+                                          </label>
+                                        </div>
+                                      </div>
+                                      <div className="col-lg-5">
+                                        <div className="form-check margin-0 mx-3">
+                                          <input
+                                            onClick={() =>
+                                              setPlasticCover(!plasticCover)
+                                            }
+                                            className="form-check-input"
+                                            type="checkbox"
+                                            checked={file?.plasticCover}
+                                            onChange={(e) => {
+                                              const value = e.target.checked;
+                                              setSelectedFiles((prev) => {
+                                                const updatedFile = {
+                                                  ...prev[name],
+                                                  plasticCover: value,
+                                                  spiralBind: false,
+                                                  price: calculatePrice({
+                                                    ...prev[name],
+                                                    plasticCover: value,
+                                                    spiralBind: false,
+                                                  }),
+                                                };
+                                                return {
+                                                  ...prev,
+                                                  [name]: updatedFile,
+                                                };
+                                              });
+                                            }}
+                                            id="plasticCover"
+                                          />
+                                          <label className="form-check-label">
+                                            Plastic Cover
+                                          </label>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  {/* ___ Setup____ */}
+
+                                  <div className="d-flex my-3 setup row">
+                                    <div className="col-lg-3">
+                                      <span className="fw-bold dim mx-4">
+                                        Sides:
+                                      </span>
+                                    </div>
+                                    <div className="col-lg-9 d-flex optionIcon justify-content-around">
+                                      <div className="col-lg-5 ">
+                                        <div className="form-check margin-0 mx-3">
+                                          <input
+                                            className="form-check-input"
+                                            type="checkbox"
+                                            value=""
+                                            onClick={() => {
+                                              setSingleSide(!singleSide);
+                                              setBothSide(!singleSide);
+                                            }}
+                                            checked={file?.singleSide}
+                                            onChange={(e) => {
+                                              const value = e.target.checked;
+                                              setSelectedFiles((prev) => {
+                                                const updatedFile = {
+                                                  ...prev[name],
+                                                  singleSide: value,
+                                                  bothSide: !value,
+                                                  color: false,
+                                                  blackandwhite: true,
+                                                  price: calculatePrice({
+                                                    ...prev[name],
+                                                    singleSide: value,
+                                                    bothSide: !value,
+                                                    color: false,
+                                                    blackandwhite: true,
+                                                  }),
+                                                };
+                                                return {
+                                                  ...prev,
+                                                  [name]: updatedFile,
+                                                };
+                                              });
+                                            }}
+                                            id="ss"
+                                          />
+                                          <label className="form-check-label">
+                                            Single Side
+                                          </label>
+                                        </div>
+                                      </div>
+                                      <div className="col-lg-5">
+                                        <div className="form-check mx-3 margin-0">
+                                          <input
+                                            onClick={() => {
+                                              setBothSide(!bothside);
+                                              setSingleSide(!bothside);
+                                              setColor("bw");
+                                            }}
+                                            checked={file?.bothSide}
+                                            onChange={(e) => {
+                                              const value = e.target.checked;
+                                              setColor("bw");
+                                              setSelectedFiles((prev) => {
+                                                const updatedFile = {
+                                                  ...prev[name],
+                                                  bothSide: value,
+                                                  singleSide: !value,
+                                                  color: false,
+                                                  blackandwhite: true,
+                                                  price: calculatePrice({
+                                                    ...prev[name],
+                                                    bothSide: value,
+                                                    singleSide: !value,
+                                                    color: false,
+                                                    blackandwhite: true,
+                                                  }),
+                                                };
+                                                return {
+                                                  ...prev,
+                                                  [name]: updatedFile,
+                                                };
+                                              });
+                                            }}
+                                            className="form-check-input"
+                                            type="checkbox"
+                                            value=""
+                                            id="bs"
+                                            disabled={file.color}
+                                          />
+                                          <label className="form-check-label">
+                                            Both Side
+                                          </label>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  {/* Colors */}
+                                  <div className="d-flex my-3 color  row align-items-center">
+                                    <div className="col-lg-3">
+                                      <span className="fw-bold dim mx-4">
+                                        Colors:
+                                      </span>
+                                    </div>
+                                    <div className="col-lg-9 my-3 d-flex justify-content-around ">
+                                      <div
+                                        className={`bwBox tt mx-4 ${
+                                          file.blackandwhite ? "active" : ""
+                                        }`}
+                                        data-tooltip="Black and White"
+                                        onClick={(e) => {
+                                          setColor("bw");
+                                          setSelectedFiles((prev) => {
+                                            const updatedFile = {
+                                              ...prev[name],
+                                              color: false,
+                                              blackandwhite: true,
+                                              price: calculatePrice({
+                                                ...prev[name],
+                                                color: false,
+                                                blackandwhite: true,
+                                              }),
+                                            };
+                                            return {
+                                              ...prev,
+                                              [name]: updatedFile,
+                                            };
+                                          });
+                                        }}
+                                      ></div>
+                                      <div
+                                        className={`colorBox tt mx-4 ${
+                                          file.color ? "active" : ""
+                                        }`}
+                                        disabled={file.bothSide}
+                                        data-tooltip="Coloured"
+                                        onClick={(e) => {
+                                          setColor("color");
+                                          setBothSide(false);
+                                          setSelectedFiles((prev) => {
+                                            const updatedFile = {
+                                              ...prev[name],
+                                              bothSide: false,
+                                              color: true,
+                                              blackandwhite: false,
+                                              singleSide: true,
+                                              price: calculatePrice({
+                                                ...prev[name],
+                                                bothSide: false,
+                                                blackandwhite: false,
+                                                color: true,
+                                                singleSide: true,
+                                              }),
+                                            };
+                                            return {
+                                              ...prev,
+                                              [name]: updatedFile,
+                                            };
+                                          });
+                                        }}
+                                      ></div>
+                                    </div>
+                                  </div>
+                                </div>
+                                {/* ------Delete Icon and Price Per File -------*/}
+
+                                <div className="col-lg-2 py-4 position-relative   deleteIcon">
+                                  <button
+                                    className="shadow-out my-1 trash shadow-btn text-danger px-2 center
+                               "
+                                    onClick={() =>
+                                      handleDeleteFile(name, file.price)
+                                    }
+                                  >
+                                    <i className="fa-solid fa-trash  fa-shake fs-5"></i>
+                                  </button>
+                                  {/* ------------- Single Pdf Price------- */}
+                                  <div className="position-absolute fileprice  bottom-0 filePrice pb-5 mb-2">
+                                    <i className="fas stroke p-1 fa-inr"></i>
+                                    <span className="dim">{file?.price}</span>
+                                  </div>
+                                </div>
+                              </>
+                            )}
                           </motion.div>
                         </div>
                       )
@@ -1056,7 +1121,7 @@ const Delivery = ({ scrollToTop }) => {
                           </p>
                         ) : null}
                         <button
-                          disabled={totalPrice < 50 || paymentLoading }
+                          disabled={totalPrice < 50 || paymentLoading}
                           onClick={handleOrder}
                           className="shadow-btn shadow-out dim fw-bold"
                         >

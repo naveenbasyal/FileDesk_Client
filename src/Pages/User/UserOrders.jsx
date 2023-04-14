@@ -41,7 +41,7 @@ const Orders = () => {
       {orders.length > 0 ? (
         <>
           <div className="row d-flex justify-content-around">
-            {orders.map((order, i) => {
+            {orders.map((order, i) => { 
               return (
                 <div key={i} className="col-lg-5 col-sm-12">
                   <div

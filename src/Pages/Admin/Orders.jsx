@@ -4,7 +4,6 @@ import getToken from "../../utils/getToken";
 import { HashLoader } from "react-spinners";
 import { toast } from "react-hot-toast";
 import moment from "moment";
-import { formatDistanceToNow, formatDistance, format } from "date-fns";
 
 const Orders = () => {
   const [orders, setOrders] = useState([{ dropdownOpen: false }]);
@@ -13,7 +12,6 @@ const Orders = () => {
   const token = getToken();
   const fetchOrders = async () => {
     setloading(true);
-    console.log("loading");
     const data = await fetch(
       `${process.env.REACT_APP_SERVER_URL}/api/adminorders`, // /api/userorders for getting orders of users
       {
@@ -25,7 +23,6 @@ const Orders = () => {
         },
       }
     );
-    console.log("loading stops");
 
     setloading(false);
     const res = await data.json();
@@ -53,29 +50,46 @@ const Orders = () => {
                     <div
                       className={`card my-4 ${
                         window.screen.width < 500 ? "ps-1" : "ps-4 "
-                      } py-2 bg-color border-none ${!loading ? "shadow-out" : ""}`}
+                      } py-2 bg-color border-none ${
+                        !loading ? "shadow-out" : ""
+                      }`}
                       key={i}
                     >
                       <div className="card-body position-relative">
                         {loading ? (
-                          <div className="center"  style={{ height: "20vh" }}>
+                          <div className="center" style={{ height: "20vh" }}>
                             <HashLoader color="#5b4af1" size={70} />
                           </div>
                         ) : (
                           <>
-                            <p className="card-text">
-                              <span>Delivery Type : </span>
-                              <span
-                                className={`${
-                                  order?.deliveryType === "standard"
-                                    ? "text-success"
-                                    : "text-danger"
-                                } `}
-                                style={{ textTransform: "capitalize" }}
-                              >
-                                {" " + order?.deliveryType}
-                              </span>
-                            </p>
+                            <div className="card-text">
+                              <div className="row">
+                                <div className="col-lg-4">
+                                  <span style={{ textTransform: "capitalize" }}>
+                                    Delivery Type : &nbsp;
+                                    <span
+                                      className={`${
+                                        order?.deliveryType === "standard"
+                                          ? "text-success"
+                                          : "text-danger"
+                                      } `}
+                                    >
+                                      {order?.deliveryType}
+                                    </span>
+                                  </span>
+                                </div>
+                                <div className="col-lg-4">
+                                  <span className="text-secondary">
+                                    {moment(order?.createdAt).fromNow()}
+                                  </span>
+                                </div>
+                                <div className="col-lg-4">
+                                  <span className="text-success">
+                                    <i className="fa-solid fa-inr mx-1"></i>{order?.orderTotal}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
                             {/* -------------dropdown Button ----------- */}
                             <button
                               title="Show details"

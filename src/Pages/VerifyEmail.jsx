@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-hot-toast";
 const VerifyEmail = () => {
   const { token } = useParams();
-  const { decodedToken, isExpired } = useJwt(token);
+  const {  isExpired } = useJwt(token);
   const navigate = useNavigate();
 
   const verifyEmail = async () => {

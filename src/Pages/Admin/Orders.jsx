@@ -26,7 +26,7 @@ const Orders = () => {
 
     setloading(false);
     const res = await data.json();
-    console.log(res);
+
     if (res?.orders) {
       setOrders(res?.orders);
     }
@@ -35,6 +35,50 @@ const Orders = () => {
     document.title = "FileDesk | Dashboard | Orders";
     fetchOrders();
   }, []);
+
+  const deleteOrder = async (orderId) => {
+    const data = await fetch(
+      `${process.env.REACT_APP_SERVER_URL}/api/deleteorder/${orderId}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          "Secret-Key": `${process.env.REACT_APP_SECRET_KEY}`,
+        },
+      }
+    );
+    const res = await data.json();
+
+    if (res?.message) {
+      toast.success(res?.message);
+      fetchOrders();
+    } else {
+      toast.error(res?.message);
+    }
+  };
+
+  const updateStatus = async (id)=>{
+    const data = await fetch(
+      `${process.env.REACT_APP_SERVER_URL}/api/updateStatus/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          "Secret-Key": `${process.env.REACT_APP_SECRET_KEY}`,
+        },
+      }
+    );
+    const res = await data.json();
+
+    if (res?.message) {
+      toast.success(res?.message);
+      fetchOrders();
+    } else {
+      toast.error(res?.error ? res.error : res?.message);
+    }
+  }
 
   return (
     <div className="container my-1">
@@ -49,11 +93,9 @@ const Orders = () => {
                 return (
                   <div key={i} className="col-lg-10 col-sm-12">
                     <div
-                      className={`card my-4 ${
-                        window.screen.width < 500 ? "ps-1" : "ps-4 "
-                      } py-2 bg-color border-none ${
-                        !loading ? "shadow-out" : ""
-                      }`}
+                      className={`card my-4 ${window.screen.width < 500 ? "ps-1" : "ps-4 "
+                        } py-2 bg-color border-none ${!loading ? "shadow-out" : ""
+                        }`}
                       key={i}
                     >
                       <div className="card-body position-relative">
@@ -80,11 +122,10 @@ const Orders = () => {
                                 <div className="col-lg-2">
                                   <span
                                     style={{ textTransform: "capitalize" }}
-                                    className={`${
-                                      order?.deliveryType === "standard"
+                                    className={`${order?.deliveryType === "standard"
                                         ? "text-dark"
                                         : "text-danger"
-                                    } `}
+                                      } `}
                                   >
                                     {order?.deliveryType}
                                   </span>
@@ -137,7 +178,7 @@ const Orders = () => {
                                 )}
                                 {/* ---------Payment Null ? Delete Order  */}
                                 {order?.orderPaymentId === null && (
-                                  <button className="col-lg-2 btn btn-outline-danger">
+                                  <button className="col-lg-2 btn btn-outline-danger" onClick={() => deleteOrder(order?.orderId)}>
                                     Delete Order
                                   </button>
                                 )}
@@ -148,11 +189,10 @@ const Orders = () => {
                             <button
                               title="Show details"
                               className={`border-none ms-1 shadow-btn shadow-out position-absolute
-                          ${
-                            window.screen.width < 500
-                              ? "dropdown-mobile"
-                              : "dropdown-pc"
-                          }
+                          ${window.screen.width < 500
+                                  ? "dropdown-mobile"
+                                  : "dropdown-pc"
+                                }
                              copy roundedBorder`}
                               onClick={() => {
                                 setOrders((prevOrders) => {
@@ -166,9 +206,8 @@ const Orders = () => {
                               }}
                             >
                               <i
-                                className={`fa-solid fa-chevron-${
-                                  order.dropdownOpen ? "up" : "down"
-                                } dim`}
+                                className={`fa-solid fa-chevron-${order.dropdownOpen ? "up" : "down"
+                                  } dim`}
                               ></i>
                             </button>
                           </>
@@ -184,9 +223,8 @@ const Orders = () => {
                                 </span>
                                 <button
                                   title="Copy Order ID"
-                                  className={`border-none ${
-                                    window.screen.width < 500 ? "ms-1" : "mx-3"
-                                  }  shadow-btn copy roundedBorder`}
+                                  className={`border-none ${window.screen.width < 500 ? "ms-1" : "mx-3"
+                                    }  shadow-btn copy roundedBorder`}
                                   onClick={() => {
                                     navigator.clipboard.writeText(
                                       order?.orderId
@@ -203,11 +241,10 @@ const Orders = () => {
                                   Payment ID - {" " + order?.orderPaymentId}
                                   <button
                                     title="Copy Payment ID"
-                                    className={`border-none ${
-                                      window.screen.width < 500
+                                    className={`border-none ${window.screen.width < 500
                                         ? "ms-1"
                                         : "mx-3"
-                                    } shadow-btn copy roundedBorder`}
+                                      } shadow-btn copy roundedBorder`}
                                     onClick={() => {
                                       navigator.clipboard.writeText(
                                         order?.orderPaymentId
@@ -262,6 +299,7 @@ const Orders = () => {
                                                 target="_blank"
                                                 title="download pdf"
                                                 href={item.file}
+                                                rel="noreferrer"
                                               >
                                                 {item.filename}
                                               </a>

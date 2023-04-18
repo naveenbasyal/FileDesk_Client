@@ -71,7 +71,6 @@ const Orders = () => {
       }
     );
     const res = await data.json();
-
     if (res?.message) {
       toast.success(res?.message);
       fetchOrders();

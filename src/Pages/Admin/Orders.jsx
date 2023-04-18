@@ -7,8 +7,8 @@ import moment from "moment";
 
 const Orders = () => {
   const [orders, setOrders] = useState([{ dropdownOpen: false }]);
+  const [mainOrders, setMainOrders] = useState()
   const [loading, setloading] = useState(false);
-
   const token = getToken();
   const fetchOrders = async () => {
     setloading(true);
@@ -26,17 +26,43 @@ const Orders = () => {
 
     setloading(false);
     const res = await data.json();
-
+    console.log(res)
     if (res?.orders) {
       setOrders(res?.orders);
+      setMainOrders(res?.orders)
     }
   };
-  useEffect(() => {
-    document.title = "FileDesk | Dashboard | Orders";
-    fetchOrders();
-  }, []);
+  const updateStatus = async (id) => {
+    const data = await fetch(
+      `${process.env.REACT_APP_SERVER_URL}/api/updateStatus/${id}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          "Secret-Key": `${process.env.REACT_APP_SECRET_KEY}`,
+        },
+      }
+    );
+    const res = await data.json();
+    console.log("status", res);
+    if (res?.message) {
+      toast.success(res?.message);
+      const newOrders = orders.map((order) => {
+        if (order._id === id) {
+          return { ...order, orderStatus: order.orderStatus + 1 }
+        }
+        return order
+      })
+      setOrders(newOrders)
+      setMainOrders(newOrders)
+    } else {
+      toast.error(res?.error ? res.error : res?.message);
+    }
+  };
 
   const deleteOrder = async (orderId) => {
+    setloading(true);
     const data = await fetch(
       `${process.env.REACT_APP_SERVER_URL}/api/deleteorder/${orderId}`,
       {
@@ -49,7 +75,7 @@ const Orders = () => {
       }
     );
     const res = await data.json();
-
+    setloading(false);
     if (res?.message) {
       toast.success(res?.message);
       fetchOrders();
@@ -57,33 +83,54 @@ const Orders = () => {
       toast.error(res?.message);
     }
   };
-
-  const updateStatus = async (id)=>{
-    const data = await fetch(
-      `${process.env.REACT_APP_SERVER_URL}/api/updateStatus/${id}`,
-      {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-          "Secret-Key": `${process.env.REACT_APP_SECRET_KEY}`,
-        },
-      }
-    );
-    const res = await data.json();
-    if (res?.message) {
-      toast.success(res?.message);
-      fetchOrders();
-    } else {
-      toast.error(res?.error ? res.error : res?.message);
-    }
-  }
+  useEffect(() => {
+    document.title = "FileDesk | Dashboard | Orders";
+    fetchOrders();
+  }, []);
 
   return (
     <div className="container my-1">
       <div className="row center">
         <Dashboard />
-        <h4 className="center fs-3 dim my-4">All Orders</h4>
+        <div className="row d-flex align-items-center justify-content-around">
+          <div className="col-4">
+            <h4 className="center fs-3 dim my-4 fw-bold">All Orders</h4>
+          </div>
+          {/* -------Fiter Order---------- */}
+          <div className="col-4">
+            <div className="row">
+              <select
+                className="form-select bg-color"
+                name="delivery type"
+                id=""
+                defaultValue={'all'}
+                onChange={(e) => {
+                  const filter = e.target.value;
+                  console.log(filter);
+
+                  if (filter === "all") {
+                    setOrders(mainOrders)
+                  } else {
+                    console.log(mainOrders)
+                    const filtered = mainOrders.filter(
+                      (order) => order.deliveryType === filter || order.orderStatus === parseInt(filter)
+                    );
+                    setOrders(filtered);
+                  }
+                }}
+              >
+                <option value="all">All</option>
+                <option value="standard">Standard</option>
+                <option value="fast">Fast</option>
+                <option value="0">New Order</option>
+                <option value="1">In Progress</option>
+                <option value="2">Out for Delivery</option>
+                <option value="3">Delivered</option>
+
+              </select>
+            </div>
+          </div>
+        </div>
 
         {orders.length > 0 ? (
           <>
@@ -104,26 +151,14 @@ const Orders = () => {
                           </div>
                         ) : (
                           <>
-                            <div
-                              onClick={() => {
-                                setOrders((prevOrders) => {
-                                  const newOrders = [...prevOrders];
-                                  newOrders[i] = {
-                                    ...newOrders[i],
-                                    dropdownOpen: !newOrders[i].dropdownOpen,
-                                  };
-                                  return newOrders;
-                                });
-                              }}
-                              className="card-text pointer"
-                            >
+                            <div className="card-text ">
                               <div className="row">
                                 <div className="col-lg-2">
                                   <span
                                     style={{ textTransform: "capitalize" }}
                                     className={`${order?.deliveryType === "standard"
-                                        ? "text-dark"
-                                        : "text-danger"
+                                      ? "text-dark"
+                                      : "text-danger"
                                       } `}
                                   >
                                     {order?.deliveryType}
@@ -140,7 +175,7 @@ const Orders = () => {
                                     {order?.orderTotal}
                                   </span>
                                 </div>
-                                <div className="col-lg-3">
+                                <div className="col-lg-3 d-flex " >
                                   <p className="card-text">
                                     {order?.orderStatus === 0 ? (
                                       <span className="text-success">
@@ -166,6 +201,14 @@ const Orders = () => {
                                       </>
                                     ) : null}
                                   </p>
+                                  <button
+                                    disabled={order?.orderStatus === 3 ? true : false}
+                                    onClick={() => updateStatus(order?._id)}
+                                    title="Update Status"
+                                    className="me-2 ms-3 center   shadow-btn shadow-out"
+                                  >
+                                    <i className="fa-solid fa-chevron-up"></i>
+                                  </button>
                                 </div>
                                 {/* ------Delete File ------ */}
                                 {order?.orderStatus == 3 && (
@@ -175,10 +218,13 @@ const Orders = () => {
                                     </button>
                                   </div>
                                 )}
-                                {/* ---------Payment Null ? Delete Order  */}
+                                {/* ---------Payment Null or order completed ? Delete Order  */}
                                 {order?.orderPaymentId === null && (
-                                  <button className="col-lg-2 btn btn-outline-danger" onClick={() => deleteOrder(order?.orderId)}>
-                                    Delete Order
+                                  <button
+                                    className="col-lg-2 btn btn-outline-danger"
+                                    onClick={() => deleteOrder(order?.orderId)}
+                                  >
+                                    {loading ? "Deleting..." : "Delete Order"}
                                   </button>
                                 )}
                               </div>
@@ -194,6 +240,7 @@ const Orders = () => {
                                 }
                              copy roundedBorder`}
                               onClick={() => {
+
                                 setOrders((prevOrders) => {
                                   const newOrders = [...prevOrders];
                                   newOrders[i] = {
@@ -241,8 +288,8 @@ const Orders = () => {
                                   <button
                                     title="Copy Payment ID"
                                     className={`border-none ${window.screen.width < 500
-                                        ? "ms-1"
-                                        : "mx-3"
+                                      ? "ms-1"
+                                      : "mx-3"
                                       } shadow-btn copy roundedBorder`}
                                     onClick={() => {
                                       navigator.clipboard.writeText(

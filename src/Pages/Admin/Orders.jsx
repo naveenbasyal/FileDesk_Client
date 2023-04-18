@@ -31,34 +31,7 @@ const Orders = () => {
       setOrders(res?.orders);
     }
   };
-  useEffect(() => {
-    document.title = "FileDesk | Dashboard | Orders";
-    fetchOrders();
-  }, []);
-
-  const deleteOrder = async (orderId) => {
-    const data = await fetch(
-      `${process.env.REACT_APP_SERVER_URL}/api/deleteorder/${orderId}`,
-      {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-          "Secret-Key": `${process.env.REACT_APP_SECRET_KEY}`,
-        },
-      }
-    );
-    const res = await data.json();
-
-    if (res?.message) {
-      toast.success(res?.message);
-      fetchOrders();
-    } else {
-      toast.error(res?.message);
-    }
-  };
-
-  const updateStatus = async (id)=>{
+  const updateStatus = async (id) => {
     const data = await fetch(
       `${process.env.REACT_APP_SERVER_URL}/api/updateStatus/${id}`,
       {
@@ -71,6 +44,7 @@ const Orders = () => {
       }
     );
     const res = await data.json();
+    console.log("status", res);
 
     if (res?.message) {
       toast.success(res?.message);
@@ -78,13 +52,69 @@ const Orders = () => {
     } else {
       toast.error(res?.error ? res.error : res?.message);
     }
-  }
+  };
+
+  const deleteOrder = async (orderId) => {
+    setloading(true);
+    const data = await fetch(
+      `${process.env.REACT_APP_SERVER_URL}/api/deleteorder/${orderId}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          "Secret-Key": `${process.env.REACT_APP_SECRET_KEY}`,
+        },
+      }
+    );
+    const res = await data.json();
+    setloading(false);
+    if (res?.message) {
+      toast.success(res?.message);
+      fetchOrders();
+    } else {
+      toast.error(res?.message);
+    }
+  };
+  useEffect(() => {
+    document.title = "FileDesk | Dashboard | Orders";
+    fetchOrders();
+  }, []);
 
   return (
     <div className="container my-1">
       <div className="row center">
         <Dashboard />
-        <h4 className="center fs-3 dim my-4">All Orders</h4>
+        <div className="row d-flex align-items-center justify-content-around">
+          <div className="col-4">
+            <h4 className="center fs-3 dim my-4 fw-bold">All Orders</h4>
+          </div>
+          {/* -------Fiter Order---------- */}
+          <div className="col-4">
+            <div className="row">
+              <select
+                className="form-select bg-color"
+                name="delivery type"
+                id=""
+                onChange={(e) => {
+                  const filter = e.target.value;
+                  if (filter === "all") {
+                    fetchOrders();
+                  } else {
+                    const filtered = orders.filter(
+                      (order) => order.deliveryType === filter
+                    );
+                    setOrders(filtered);
+                  }
+                }}
+              >
+                <option value="all">All</option>
+                <option value="standard">Standard</option>
+                <option value="fast">Fast</option>
+              </select>
+            </div>
+          </div>
+        </div>
 
         {orders.length > 0 ? (
           <>
@@ -93,9 +123,11 @@ const Orders = () => {
                 return (
                   <div key={i} className="col-lg-10 col-sm-12">
                     <div
-                      className={`card my-4 ${window.screen.width < 500 ? "ps-1" : "ps-4 "
-                        } py-2 bg-color border-none ${!loading ? "shadow-out" : ""
-                        }`}
+                      className={`card my-4 ${
+                        window.screen.width < 500 ? "ps-1" : "ps-4 "
+                      } py-2 bg-color border-none ${
+                        !loading ? "shadow-out" : ""
+                      }`}
                       key={i}
                     >
                       <div className="card-body position-relative">
@@ -105,27 +137,16 @@ const Orders = () => {
                           </div>
                         ) : (
                           <>
-                            <div
-                              onClick={() => {
-                                setOrders((prevOrders) => {
-                                  const newOrders = [...prevOrders];
-                                  newOrders[i] = {
-                                    ...newOrders[i],
-                                    dropdownOpen: !newOrders[i].dropdownOpen,
-                                  };
-                                  return newOrders;
-                                });
-                              }}
-                              className="card-text pointer"
-                            >
+                            <div className="card-text ">
                               <div className="row">
                                 <div className="col-lg-2">
                                   <span
                                     style={{ textTransform: "capitalize" }}
-                                    className={`${order?.deliveryType === "standard"
+                                    className={`${
+                                      order?.deliveryType === "standard"
                                         ? "text-dark"
                                         : "text-danger"
-                                      } `}
+                                    } `}
                                   >
                                     {order?.deliveryType}
                                   </span>
@@ -141,7 +162,7 @@ const Orders = () => {
                                     {order?.orderTotal}
                                   </span>
                                 </div>
-                                <div className="col-lg-3">
+                                <div className="col-lg-3 d-flex ">
                                   <p className="card-text">
                                     {order?.orderStatus === 0 ? (
                                       <span className="text-success">
@@ -167,6 +188,19 @@ const Orders = () => {
                                       </>
                                     ) : null}
                                   </p>
+                                  <button
+                                    onClick={() => updateStatus(order?._id)}
+                                    title="Update Status"
+                                    className="me-2 ms-3 center   shadow-btn shadow-out"
+                                  >
+                                    <i className="fa-solid fa-chevron-up"></i>
+                                  </button>
+                                  <button
+                                    title="Undo Update"
+                                    className="mx-2 shadow-btn center shadow-out"
+                                  >
+                                    <i className="fa-solid fa-chevron-down"></i>
+                                  </button>
                                 </div>
                                 {/* ------Delete File ------ */}
                                 {order?.orderStatus == 3 && (
@@ -176,10 +210,13 @@ const Orders = () => {
                                     </button>
                                   </div>
                                 )}
-                                {/* ---------Payment Null ? Delete Order  */}
+                                {/* ---------Payment Null or order completed ? Delete Order  */}
                                 {order?.orderPaymentId === null && (
-                                  <button className="col-lg-2 btn btn-outline-danger" onClick={() => deleteOrder(order?.orderId)}>
-                                    Delete Order
+                                  <button
+                                    className="col-lg-2 btn btn-outline-danger"
+                                    onClick={() => deleteOrder(order?.orderId)}
+                                  >
+                                    {loading ? "Deleting..." : "Delete Order"}
                                   </button>
                                 )}
                               </div>
@@ -189,10 +226,11 @@ const Orders = () => {
                             <button
                               title="Show details"
                               className={`border-none ms-1 shadow-btn shadow-out position-absolute
-                          ${window.screen.width < 500
-                                  ? "dropdown-mobile"
-                                  : "dropdown-pc"
-                                }
+                          ${
+                            window.screen.width < 500
+                              ? "dropdown-mobile"
+                              : "dropdown-pc"
+                          }
                              copy roundedBorder`}
                               onClick={() => {
                                 setOrders((prevOrders) => {
@@ -206,8 +244,9 @@ const Orders = () => {
                               }}
                             >
                               <i
-                                className={`fa-solid fa-chevron-${order.dropdownOpen ? "up" : "down"
-                                  } dim`}
+                                className={`fa-solid fa-chevron-${
+                                  order.dropdownOpen ? "up" : "down"
+                                } dim`}
                               ></i>
                             </button>
                           </>
@@ -223,8 +262,9 @@ const Orders = () => {
                                 </span>
                                 <button
                                   title="Copy Order ID"
-                                  className={`border-none ${window.screen.width < 500 ? "ms-1" : "mx-3"
-                                    }  shadow-btn copy roundedBorder`}
+                                  className={`border-none ${
+                                    window.screen.width < 500 ? "ms-1" : "mx-3"
+                                  }  shadow-btn copy roundedBorder`}
                                   onClick={() => {
                                     navigator.clipboard.writeText(
                                       order?.orderId
@@ -241,10 +281,11 @@ const Orders = () => {
                                   Payment ID - {" " + order?.orderPaymentId}
                                   <button
                                     title="Copy Payment ID"
-                                    className={`border-none ${window.screen.width < 500
+                                    className={`border-none ${
+                                      window.screen.width < 500
                                         ? "ms-1"
                                         : "mx-3"
-                                      } shadow-btn copy roundedBorder`}
+                                    } shadow-btn copy roundedBorder`}
                                     onClick={() => {
                                       navigator.clipboard.writeText(
                                         order?.orderPaymentId

@@ -458,18 +458,9 @@ const Delivery = ({ scrollToTop,scrollToBottom }) => {
                           >
                             <>
                               <div
-                                onClick={() =>
-                                  setSelectedFiles({
-                                    ...selectedFiles,
-                                    [name]: {
-                                      ...file,
-                                      dropdown: !file.dropdown,
-                                    },
-                                  })
-                                }
                                 className="card-text position-relative py-2 pointer"
                               >
-                                <div className="row px-3 d-flex justify-content-around">
+                                {/* <div className="row px-3 d-flex justify-content-around">
                                   <div className="col-lg-4">
                                     <span className="dim">File Name :</span>{" "}
                                     {name}
@@ -482,9 +473,9 @@ const Delivery = ({ scrollToTop,scrollToBottom }) => {
                                     {file.price}{" "}
                                   </div>
                                   <div className="col-lg-4"></div>
-                                </div>
+                                </div> */}
                                 {/* --------- dropdown button --------- */}
-                                <button
+                                {/* <button
                                   onClick={() =>
                                     setSelectedFiles({
                                       ...selectedFiles,
@@ -509,11 +500,11 @@ const Delivery = ({ scrollToTop,scrollToBottom }) => {
                                       file.dropdown ? "up" : "down"
                                     }`}
                                   ></i>
-                                </button>
+                                </button> */}
                               </div>
                             </>
 
-                            {file.dropdown && (
+                            {/* {file.dropdown && ( */}
                               <>
                                 <div className="col-lg-3 center">
                                   {window.screen.width < 500 ? (
@@ -871,7 +862,7 @@ const Delivery = ({ scrollToTop,scrollToBottom }) => {
                                   </div>
                                 </div>
                               </>
-                            )}
+                            {/* // )} */}
                           </motion.div>
                         </div>
                       )

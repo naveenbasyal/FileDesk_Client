@@ -9,6 +9,8 @@ const Orders = () => {
   const [orders, setOrders] = useState([{ dropdownOpen: false }]);
   const [mainOrders, setMainOrders] = useState();
   const [loading, setloading] = useState(false);
+  const [deleteloading, setdeleteloading] = useState(false);
+  const [loadingstatus, setloadingstatus] = useState(false);
   const token = getToken();
   const fetchOrders = async () => {
     setloading(true);
@@ -26,13 +28,14 @@ const Orders = () => {
 
     setloading(false);
     const res = await data.json();
-    console.log(res);
+    // console.log(res);
     if (res?.orders) {
       setOrders(res?.orders);
       setMainOrders(res?.orders);
     }
   };
   const updateStatus = async (id) => {
+    setloadingstatus(true);
     const data = await fetch(
       `${process.env.REACT_APP_SERVER_URL}/api/updateStatus/${id}`,
       {
@@ -45,7 +48,8 @@ const Orders = () => {
       }
     );
     const res = await data.json();
-    console.log("status", res);
+    // console.log("status", res);
+    setloadingstatus(false);
     if (res?.message) {
       toast.success(res?.message);
       const newOrders = orders.map((order) => {
@@ -62,7 +66,7 @@ const Orders = () => {
   };
 
   const deleteOrder = async (orderId) => {
-    setloading(true);
+    setdeleteloading(true);
     const data = await fetch(
       `${process.env.REACT_APP_SERVER_URL}/api/deleteorder/${orderId}`,
       {
@@ -75,7 +79,7 @@ const Orders = () => {
       }
     );
     const res = await data.json();
-    setloading(false);
+    setdeleteloading(false);
     if (res?.message) {
       toast.success(res?.message);
       fetchOrders();
@@ -89,7 +93,7 @@ const Orders = () => {
   }, []);
 
   return (
-    <div className="container my-1">
+    <div className="container adminorders my-1">
       <div className="row center">
         <Dashboard />
         <div className="row d-flex align-items-center justify-content-around">
@@ -106,12 +110,12 @@ const Orders = () => {
                 defaultValue={"all"}
                 onChange={(e) => {
                   const filter = e.target.value;
-                  console.log(filter);
+                  // console.log(filter);
 
                   if (filter === "all") {
                     setOrders(mainOrders);
                   } else {
-                    console.log(mainOrders);
+                    // console.log(mainOrders);
                     const filtered = mainOrders.filter(
                       (order) =>
                         order.deliveryType === filter ||
@@ -143,8 +147,8 @@ const Orders = () => {
                       className={`card my-4 ${
                         window.screen.width < 500 ? "ps-1" : "ps-4 "
                       } py-2 bg-color border-none ${
-                        !loading ? "shadow-out" : ""
-                      }`}
+                        loading ? "" : "shadow-out"
+                      } `}
                       key={i}
                     >
                       <div className="card-body position-relative">
@@ -155,7 +159,7 @@ const Orders = () => {
                         ) : (
                           <>
                             <div className="card-text ">
-                              <div className="row">
+                              <div className="row align-items-center">
                                 <div className="col-lg-2">
                                   <span
                                     style={{ textTransform: "capitalize" }}
@@ -168,19 +172,19 @@ const Orders = () => {
                                     {order?.deliveryType}
                                   </span>
                                 </div>
-                                <div className="col-lg-2">
+                                <div className="col-lg-2 time">
                                   <span className="text-secondary">
                                     {moment(order?.createdAt).fromNow()}
                                   </span>
                                 </div>
-                                <div className="col-lg-1">
+                                <div className="col-lg-1 totalprice">
                                   <span className="dim">
                                     <i className="fa-solid fa-inr mx-1"></i>
                                     {order?.orderTotal}
                                   </span>
                                 </div>
-                                <div className="col-lg-3 d-flex ">
-                                  <p className="card-text">
+                                <div className="col-lg-3 d-flex status justify-content-between align-items-center">
+                                  <p className="card-text mb-0">
                                     {order?.orderStatus === 0 ? (
                                       <span className="text-success">
                                         <i className="fa-solid fa-circle-check fa-beat mx-2"></i>
@@ -211,34 +215,45 @@ const Orders = () => {
                                     }
                                     onClick={() => updateStatus(order?._id)}
                                     title="Update Status"
-                                    className="me-2 ms-3 center   shadow-btn shadow-out"
+                                    className="me-2 ms-3 center shadow-btn shadow-out"
                                   >
-                                    <i className="fa-solid fa-chevron-up"></i>
+                                    <i
+                                      className={`fa-solid ${
+                                        loadingstatus
+                                          ? "fa-spinner fa-spin-pulse"
+                                          : "fa-chevron-up"
+                                      } `}
+                                    ></i>
                                   </button>
                                 </div>
                                 {/* ------Delete File ------ */}
-                                {order?.orderStatus == 3 && (
+                                {order?.orderStatus === 3 ||
+                                order?.orderPaymentId === null ? (
                                   <div className="col-lg-1">
                                     <button
                                       title="Delete Order"
                                       onClick={() =>
                                         deleteOrder(order?.orderId)
                                       }
-                                      className="shadow-btn mx-2"
+                                      className="shadow-btn mx-2 shadow-out"
                                     >
-                                      <i className="fa-solid fa-trash"></i>
+                                      {deleteloading ? (
+                                        "deleting..."
+                                      ) : (
+                                        <i className="fa-solid fa-trash text-danger"></i>
+                                      )}
                                     </button>
                                   </div>
-                                )}
+                                ) : null}
                                 {/* ---------Payment Null or order completed ? Delete Order  */}
-                                {order?.orderPaymentId === null && (
+                                {/* {order?.orderPaymentId === null && (
                                   <button
                                     className="col-lg-2 btn btn-outline-danger"
                                     onClick={() => deleteOrder(order?.orderId)}
                                   >
-                                    {loading ? "Deleting..." : "Delete Order"}
+                                    {deleteloading ? "Deleting..." : "Deny Order"}
                                   </button>
-                                )}
+                                )} */}
                               </div>
                             </div>
 
@@ -355,7 +370,10 @@ const Orders = () => {
                                           <tr>
                                             <th scope="row">{i + 1}</th>
 
-                                            <td>
+                                            <td
+                                              data-cell="name"
+                                              className="mt-5"
+                                            >
                                               <a
                                                 target="_blank"
                                                 title="download pdf"
@@ -365,48 +383,28 @@ const Orders = () => {
                                                 {item.filename}
                                               </a>
                                             </td>
-                                            <td>{item.quantity}</td>
-                                            <td>
-                                              {item.blackandwhite ? (
-                                                <span className="dim">YES</span>
-                                              ) : (
-                                                "NO"
-                                              )}
+                                            <td data-cell="Qty">
+                                              {item.quantity}
                                             </td>
-                                            <td>
-                                              {item.color ? (
-                                                <span className="dim">YES</span>
-                                              ) : (
-                                                "NO"
-                                              )}
+                                            <td data-cell="B&W">
+                                              {item.blackandwhite
+                                                ? "YES"
+                                                : "NO"}
                                             </td>
-                                            <td>
-                                              {item.spiral ? (
-                                                <span className="dim">YES</span>
-                                              ) : (
-                                                "NO"
-                                              )}
+                                            <td data-cell="color">
+                                              {item.color ? "YES" : "NO"}
                                             </td>
-                                            <td>
-                                              {item.cover ? (
-                                                <span className="dim">YES</span>
-                                              ) : (
-                                                "NO"
-                                              )}
+                                            <td data-cell="spiral">
+                                              {item.spiral ? "YES" : "NO"}
                                             </td>
-                                            <td>
-                                              {item.singleSide ? (
-                                                <span className="dim">YES</span>
-                                              ) : (
-                                                "NO"
-                                              )}
+                                            <td data-cell="cover">
+                                              {item.cover ? "YES" : "NO"}
                                             </td>
-                                            <td>
-                                              {item.bothSide ? (
-                                                <span className="dim">YES</span>
-                                              ) : (
-                                                "NO"
-                                              )}
+                                            <td data-cell="single side">
+                                              {item.singleSide ? "YES" : "NO"}
+                                            </td>
+                                            <td data-cell="both side">
+                                              {item.bothSide ? "YES" : "NO"}
                                             </td>
                                           </tr>
                                         </tbody>
@@ -429,10 +427,18 @@ const Orders = () => {
                                     </thead>
                                     <tbody key={i}>
                                       <tr>
-                                        <td>{order?.orderAddress.name}</td>
-                                        <td>{order?.orderAddress.address}</td>
-                                        <td>{order?.orderAddress.block}</td>
-                                        <td>{order?.orderAddress.phone}</td>
+                                        <td data-cell="Name">
+                                          {order?.orderAddress.name}
+                                        </td>
+                                        <td data-cell="Address">
+                                          {order?.orderAddress.address}
+                                        </td>
+                                        <td data-cell="block">
+                                          {order?.orderAddress.block}
+                                        </td>
+                                        <td data-cell="phone no">
+                                          {order?.orderAddress.phone}
+                                        </td>
                                       </tr>
                                     </tbody>
                                   </table>

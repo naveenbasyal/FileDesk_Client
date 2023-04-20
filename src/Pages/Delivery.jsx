@@ -399,14 +399,14 @@ const Delivery = ({ scrollToTop, scrollToBottom }) => {
 
             {token ? (
               <div className="col-lg-8 col-sm-12 px-5 Options">
-                <div className="mx-4 margin-0">
+                <div className="mx-4 margin-0 upload-btn">
                   {totalFiles === 0 ? (
                     <motion.label
                       whileHover={{ scale: 1.2 }}
                       htmlFor="formFileLg"
-                      className="u-f-b choosefile d-flex align-items-center justify-content-around"
+                      className="u-f-b fa-beat choosefile d-flex align-items-center justify-content-around"
                     >
-                      <i className="fa-solid fa-upload"></i>
+                      <i className="fa-solid fa-beat fa-upload"></i>
                       Upload Files
                       <input
                         multiple
@@ -414,7 +414,7 @@ const Delivery = ({ scrollToTop, scrollToBottom }) => {
                         id="formFileLg"
                         type="file"
                         onChange={handleFileChange}
-                        accept=".pdf"
+                        accept ="application/pdf, .pdf"
                       />
                     </motion.label>
                   ) : null}

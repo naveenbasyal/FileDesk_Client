@@ -7,7 +7,7 @@ import moment from "moment";
 
 const Orders = () => {
   const [orders, setOrders] = useState([{ dropdownOpen: false }]);
-  const [mainOrders, setMainOrders] = useState()
+  const [mainOrders, setMainOrders] = useState();
   const [loading, setloading] = useState(false);
   const token = getToken();
   const fetchOrders = async () => {
@@ -26,10 +26,10 @@ const Orders = () => {
 
     setloading(false);
     const res = await data.json();
-    console.log(res)
+    console.log(res);
     if (res?.orders) {
       setOrders(res?.orders);
-      setMainOrders(res?.orders)
+      setMainOrders(res?.orders);
     }
   };
   const updateStatus = async (id) => {
@@ -50,12 +50,12 @@ const Orders = () => {
       toast.success(res?.message);
       const newOrders = orders.map((order) => {
         if (order._id === id) {
-          return { ...order, orderStatus: order.orderStatus + 1 }
+          return { ...order, orderStatus: order.orderStatus + 1 };
         }
-        return order
-      })
-      setOrders(newOrders)
-      setMainOrders(newOrders)
+        return order;
+      });
+      setOrders(newOrders);
+      setMainOrders(newOrders);
     } else {
       toast.error(res?.error ? res.error : res?.message);
     }
@@ -103,17 +103,19 @@ const Orders = () => {
                 className="form-select bg-color"
                 name="delivery type"
                 id=""
-                defaultValue={'all'}
+                defaultValue={"all"}
                 onChange={(e) => {
                   const filter = e.target.value;
                   console.log(filter);
 
                   if (filter === "all") {
-                    setOrders(mainOrders)
+                    setOrders(mainOrders);
                   } else {
-                    console.log(mainOrders)
+                    console.log(mainOrders);
                     const filtered = mainOrders.filter(
-                      (order) => order.deliveryType === filter || order.orderStatus === parseInt(filter)
+                      (order) =>
+                        order.deliveryType === filter ||
+                        order.orderStatus === parseInt(filter)
                     );
                     setOrders(filtered);
                   }
@@ -126,7 +128,6 @@ const Orders = () => {
                 <option value="1">In Progress</option>
                 <option value="2">Out for Delivery</option>
                 <option value="3">Delivered</option>
-
               </select>
             </div>
           </div>
@@ -139,9 +140,11 @@ const Orders = () => {
                 return (
                   <div key={i} className="col-lg-10 col-sm-12">
                     <div
-                      className={`card my-4 ${window.screen.width < 500 ? "ps-1" : "ps-4 "
-                        } py-2 bg-color border-none ${!loading ? "shadow-out" : ""
-                        }`}
+                      className={`card my-4 ${
+                        window.screen.width < 500 ? "ps-1" : "ps-4 "
+                      } py-2 bg-color border-none ${
+                        !loading ? "shadow-out" : ""
+                      }`}
                       key={i}
                     >
                       <div className="card-body position-relative">
@@ -156,10 +159,11 @@ const Orders = () => {
                                 <div className="col-lg-2">
                                   <span
                                     style={{ textTransform: "capitalize" }}
-                                    className={`${order?.deliveryType === "standard"
-                                      ? "text-dark"
-                                      : "text-danger"
-                                      } `}
+                                    className={`${
+                                      order?.deliveryType === "standard"
+                                        ? "text-dark"
+                                        : "text-danger"
+                                    } `}
                                   >
                                     {order?.deliveryType}
                                   </span>
@@ -175,7 +179,7 @@ const Orders = () => {
                                     {order?.orderTotal}
                                   </span>
                                 </div>
-                                <div className="col-lg-3 d-flex " >
+                                <div className="col-lg-3 d-flex ">
                                   <p className="card-text">
                                     {order?.orderStatus === 0 ? (
                                       <span className="text-success">
@@ -202,7 +206,9 @@ const Orders = () => {
                                     ) : null}
                                   </p>
                                   <button
-                                    disabled={order?.orderStatus === 3 ? true : false}
+                                    disabled={
+                                      order?.orderStatus === 3 ? true : false
+                                    }
                                     onClick={() => updateStatus(order?._id)}
                                     title="Update Status"
                                     className="me-2 ms-3 center   shadow-btn shadow-out"
@@ -213,7 +219,13 @@ const Orders = () => {
                                 {/* ------Delete File ------ */}
                                 {order?.orderStatus == 3 && (
                                   <div className="col-lg-1">
-                                    <button className="shadow-btn mx-2">
+                                    <button
+                                      title="Delete Order"
+                                      onClick={() =>
+                                        deleteOrder(order?.orderId)
+                                      }
+                                      className="shadow-btn mx-2"
+                                    >
                                       <i className="fa-solid fa-trash"></i>
                                     </button>
                                   </div>
@@ -234,13 +246,13 @@ const Orders = () => {
                             <button
                               title="Show details"
                               className={`border-none ms-1 shadow-btn shadow-out position-absolute
-                          ${window.screen.width < 500
-                                  ? "dropdown-mobile"
-                                  : "dropdown-pc"
-                                }
+                          ${
+                            window.screen.width < 500
+                              ? "dropdown-mobile"
+                              : "dropdown-pc"
+                          }
                              copy roundedBorder`}
                               onClick={() => {
-
                                 setOrders((prevOrders) => {
                                   const newOrders = [...prevOrders];
                                   newOrders[i] = {
@@ -252,8 +264,9 @@ const Orders = () => {
                               }}
                             >
                               <i
-                                className={`fa-solid fa-chevron-${order.dropdownOpen ? "up" : "down"
-                                  } dim`}
+                                className={`fa-solid fa-chevron-${
+                                  order.dropdownOpen ? "up" : "down"
+                                } dim`}
                               ></i>
                             </button>
                           </>
@@ -269,8 +282,9 @@ const Orders = () => {
                                 </span>
                                 <button
                                   title="Copy Order ID"
-                                  className={`border-none ${window.screen.width < 500 ? "ms-1" : "mx-3"
-                                    }  shadow-btn copy roundedBorder`}
+                                  className={`border-none ${
+                                    window.screen.width < 500 ? "ms-1" : "mx-3"
+                                  }  shadow-btn copy roundedBorder`}
                                   onClick={() => {
                                     navigator.clipboard.writeText(
                                       order?.orderId
@@ -287,10 +301,11 @@ const Orders = () => {
                                   Payment ID - {" " + order?.orderPaymentId}
                                   <button
                                     title="Copy Payment ID"
-                                    className={`border-none ${window.screen.width < 500
-                                      ? "ms-1"
-                                      : "mx-3"
-                                      } shadow-btn copy roundedBorder`}
+                                    className={`border-none ${
+                                      window.screen.width < 500
+                                        ? "ms-1"
+                                        : "mx-3"
+                                    } shadow-btn copy roundedBorder`}
                                     onClick={() => {
                                       navigator.clipboard.writeText(
                                         order?.orderPaymentId
